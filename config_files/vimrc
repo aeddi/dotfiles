@@ -13,9 +13,10 @@
 "	B. 42 NORM C/C++
 "		1. Space & Tab
 "		2. Parenthesis
-"		3. Auto header
-"		4. Auto .h protect
-"		5. Auto .sh env
+"		3. Line size limit
+"		4. Auto header
+"		5. Auto .h protect
+"		6. Auto .sh env
 "
 "	C. PERSISTENCE
 "		1. Backups
@@ -165,12 +166,19 @@ autocmd ColorScheme * highlight EmptyParenthesis ctermbg=red guibg=red
 autocmd BufEnter *.{c,cpp,h,hpp} call matchadd('EmptyParenthesis' , "()")
 "--------------------
 
-"3" Auto header
+"3" Line size limit
+"--------------------
+highlight TooLongLine ctermbg=blue guibg=blue
+autocmd ColorScheme * highlight TooLongLine ctermbg=red guibg=red
+autocmd BufEnter *.{c,cpp,h,hpp} call matchadd('TooLongLine' , '\%>80v.\+', -1)
+"--------------------
+
+"4" Auto header
 "--------------------
 " Waiting for 42 template - autocmd BufNewFile *.{c,cpp,h,hpp}
 "--------------------
 
-"4" Auto .h protect
+"5" Auto .h protect
 "--------------------
 function! s:insert_gates()
 let gatename = substitute(toupper(expand("%:t")), "\\.", "_", "g")
@@ -184,7 +192,7 @@ autocmd BufNewFile *.{h,hpp} call <SID>insert_gates()
 autocmd BufNewFile *.{h,hpp} :3
 "--------------------
 
-"5" Auto .sh env
+"6" Auto .sh env
 "--------------------
 function! s:insert_env()
 	execute "normal! i#!/bin/sh"
