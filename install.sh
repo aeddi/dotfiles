@@ -4,7 +4,7 @@ then
    echo "Installing .myvimrc"
 else
    ln -s ~/.dotfiles/config_files/vimrc ~/.vimrc
-   echo "Installing .myvimrc"
+   echo "Installing .vimrc"
 fi
 
 echo "Installing Pathogen"
@@ -21,7 +21,7 @@ git clone https://github.com/scrooloose/nerdtree.git
 
 echo "Installing Mustang theme"
 mkdir -p ~/.vim/color
-ln -s ~/.dotfiles/config_files/mustang.vim ~/.myvimrc
+ln -s ~/.dotfiles/config_files/mustang.vim ~/.vim/colors
 
 echo "Setting alliases :"
 if [ -f ~/.myzshrc ];
@@ -54,7 +54,7 @@ fi
 if [ -f ~/.zshrc ];
 then
    echo "For zshrc"
-      echo "alias cdc='source ~/.zshrc ; cd /'
+   echo "alias cdc='source ~/.zshrc ; cd /'
 alias fav="sed -i '' '1s?.*?'alias\ cdc=\'source\ \~\/.zshrc\ \;\ cd\ `pwd`\''?' ~/.zshrc && source ~/.zshrc" 
 
 alias vimrs='vim -S .mysession.vim'
@@ -81,7 +81,7 @@ fi
 if [ -f ~/.bashrc ];~/
 then
    echo "For bashrc"
-      echo "alias cdc='source ~/.bashrc ; cd /'
+   echo "alias cdc='source ~/.bashrc ; cd /'
 alias fav="sed -i '' '1s?.*?'alias\ cdc=\'source\ \~\/.bashrc\ \;\ cd\ `pwd`\''?' ~/.bashrc && source ~/.bashrc" 
 
 alias vimrs='vim -S .mysession.vim'
