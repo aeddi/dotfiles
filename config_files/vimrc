@@ -275,7 +275,7 @@ let NERDTreeShowBookmarks=1
 let NERDTreeIgnore=['.*\.o$', '.*\~$', '.*\.out$', '.*\.so$', '.*\.a$']
 "--------------------
 
-"3d" NERDCommenter
+"3" NERDCommenter
 "--------------------
 filetype plugin on
 "--------------------
