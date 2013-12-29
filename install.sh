@@ -23,6 +23,8 @@ echo "Installing Mustang theme"
 mkdir -p ~/.vim/colors
 ln -s ~/.dotfiles/config_files/mustang.vim ~/.vim/colors
 
+read -p "Do you want setting alliases ? [y/n]" answer
+if [[ $answer = y ]] ; then
 echo "Setting alliases :"
 if [ -f ~/.myzshrc ];
 then
@@ -118,4 +120,5 @@ alias 4.='cd ../../../..'
 alias 5.='cd ../../../../..'
 
 alias auteur="echo 'aeddi' > auteur"" >> ~/.shrc
+fi
 fi
