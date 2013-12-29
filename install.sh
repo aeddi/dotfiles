@@ -23,8 +23,10 @@ echo "Installing Mustang theme"
 mkdir -p ~/.vim/colors
 ln -s ~/.dotfiles/config_files/mustang.vim ~/.vim/colors
 
-read -p "Do you want setting alliases ? [y/n]" answer
-if [[ $answer = y ]] ; then
+echo "Do you want setting alliases ? [y/n]"
+read answer
+if [ "$answer" = "y" ]
+then
 echo "Setting alliases :"
 if [ -f ~/.myzshrc ];
 then
