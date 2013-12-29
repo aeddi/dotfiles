@@ -20,17 +20,14 @@ echo "Installing NerdTree"
 git clone https://github.com/scrooloose/nerdtree.git
 
 echo "Installing Mustang theme"
-mkdir -p ~/.vim/color
+mkdir -p ~/.vim/colors
 ln -s ~/.dotfiles/config_files/mustang.vim ~/.vim/colors
 
 echo "Setting alliases :"
 if [ -f ~/.myzshrc ];
 then
    echo "For myzshrc"
-   echo "alias cdc='source ~/.myzshrc ; cd /'
-alias fav="sed -i '' '1s?.*?'alias\ cdc=\'source\ \~\/.myzshrc\ \;\ cd\ `pwd`\''?' ~/.myzshrc && source ~/.myzshrc" 
-
-alias vimrs='vim -S .mysession.vim'
+   echo "alias vimrs='vim -S .mysession.vim'
 
 alias gccW='gcc -Wall -Werror -Wextra'
 
@@ -54,10 +51,7 @@ fi
 if [ -f ~/.zshrc ];
 then
    echo "For zshrc"
-   echo "alias cdc='source ~/.zshrc ; cd /'
-alias fav="sed -i '' '1s?.*?'alias\ cdc=\'source\ \~\/.zshrc\ \;\ cd\ `pwd`\''?' ~/.zshrc && source ~/.zshrc" 
-
-alias vimrs='vim -S .mysession.vim'
+   echo "alias vimrs='vim -S .mysession.vim'
 
 alias gccW='gcc -Wall -Werror -Wextra'
 
@@ -81,10 +75,7 @@ fi
 if [ -f ~/.bashrc ];~/
 then
    echo "For bashrc"
-   echo "alias cdc='source ~/.bashrc ; cd /'
-alias fav="sed -i '' '1s?.*?'alias\ cdc=\'source\ \~\/.bashrc\ \;\ cd\ `pwd`\''?' ~/.bashrc && source ~/.bashrc" 
-
-alias vimrs='vim -S .mysession.vim'
+   echo "alias vimrs='vim -S .mysession.vim'
 
 alias gccW='gcc -Wall -Werror -Wextra'
 
@@ -108,10 +99,7 @@ fi
 if [ -f ~/.shrc ];
 then
    echo "For shrc"
-   echo "alias cdc='source ~/.shrc ; cd /'
-alias fav="sed -i '' '1s?.*?'alias\ cdc=\'source\ \~\/.shrc\ \;\ cd\ `pwd`\''?' ~/.shrc && source ~/.shrc" 
-
-alias vimrs='vim -S .mysession.vim'
+   echo "alias vimrs='vim -S .mysession.vim'
 
 alias gccW='gcc -Wall -Werror -Wextra'
 
