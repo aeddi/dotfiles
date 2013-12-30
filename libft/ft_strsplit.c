@@ -6,7 +6,7 @@
 /*   By: aeddi <aeddi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2013/11/25 15:04:22 by aeddi             #+#    #+#             */
-/*   Updated: 2013/12/01 20:45:37 by aeddi            ###   ########.fr       */
+/*   Updated: 2013/12/22 22:05:02 by aeddi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,17 +41,17 @@ static char	**tab_maker(char const *s, char c)
 
 	index = 0;
 	count = 0;
-	while (s[index])
+	while (s[index] != '\0')
 	{
 		if (s[index] != c)
 		{
 			count++;
-			while (s[index] != c)
+			while (s[index] != c && s[index] != '\0')
 				index++;
 		}
 		index++;
 	}
-	tab = ft_memalloc(sizeof(char *) * (count + 1));
+	tab = (char **)ft_memalloc(sizeof(char *) * (count + 1));
 	return (tab);
 }
 
@@ -61,8 +61,7 @@ char	**ft_strsplit(char const *s, char c)
 	size_t	count;
 	char	**tab;
 
-	index = 0;
-	count = 0;
+	index = count = 0;
 	if (!s)
 		return (NULL);
 	tab = tab_maker(s, c);

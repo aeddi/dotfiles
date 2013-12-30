@@ -49,7 +49,9 @@ alias 3.='cd ../../..'
 alias 4.='cd ../../../..'
 alias 5.='cd ../../../../..'
 
-alias auteur="echo 'aeddi' > auteur"" >> ~/.myzshrc
+alias auteur="echo 'aeddi' > auteur"
+alias gitignore="cp ~/.dotfiles/gitignore ./.gitignore"
+alias newp="auteur; gitignore; mkdir -p sources; mkdir -p includes; cp -r  ~/.dotfiles/libft  ~/.dotfiles/Makefile ."" >> ~/.myzshrc
 fi
 
 if [ -f ~/.zshrc ];
@@ -73,7 +75,9 @@ alias 3.='cd ../../..'
 alias 4.='cd ../../../..'
 alias 5.='cd ../../../../..'
 
-alias auteur="echo 'aeddi' > auteur"" >> ~/.zshrc
+alias auteur="echo 'aeddi' > auteur"
+alias gitignore="cp ~/.dotfiles/gitignore ./.gitignore"
+alias newp="auteur; gitignore; mkdir -p sources; mkdir -p includes; cp -r  ~/.dotfiles/libft  ~/.dotfiles/Makefile ."" >> ~/.zshrc
 fi
 
 if [ -f ~/.bashrc ];~/
@@ -97,7 +101,9 @@ alias 3.='cd ../../..'
 alias 4.='cd ../../../..'
 alias 5.='cd ../../../../..'
 
-alias auteur="echo 'aeddi' > auteur"" >> ~/.bashrc
+alias auteur="echo 'aeddi' > auteur"
+alias gitignore="cp ~/.dotfiles/gitignore ./.gitignore"
+alias newp="auteur; gitignore; mkdir -p sources; mkdir -p includes; cp -r  ~/.dotfiles/libft  ~/.dotfiles/Makefile ."" >> ~/.bashrc
 fi
 
 if [ -f ~/.shrc ];
@@ -121,6 +127,8 @@ alias 3.='cd ../../..'
 alias 4.='cd ../../../..'
 alias 5.='cd ../../../../..'
 
-alias auteur="echo 'aeddi' > auteur"" >> ~/.shrc
+alias auteur="echo 'aeddi' > auteur"
+alias gitignore="cp ~/.dotfiles/gitignore ./.gitignore"
+alias newp="auteur; gitignore; mkdir -p sources; mkdir -p includes; cp -r  ~/.dotfiles/libft  ~/.dotfiles/Makefile ."" >> ~/.shrc
 fi
 fi

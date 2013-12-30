@@ -1,28 +1,42 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_memcpy.c                                        :+:      :+:    :+:   */
+/*   dlst_add_head.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: aeddi <aeddi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2013/11/22 11:04:48 by aeddi             #+#    #+#             */
-/*   Updated: 2013/12/27 19:54:24 by aeddi            ###   ########.fr       */
+/*   Created: 2013/12/20 17:58:40 by aeddi             #+#    #+#             */
+/*   Updated: 2013/12/22 10:53:42 by aeddi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-void	*ft_memcpy(void *s1, const void *s2, size_t n)
+t_dlst		*dlst_add_head(t_dlst *dl, long int ind, void *cont)
 {
-	char	*s1_bis;
-	char	*s2_bis;
+	t_elem	*new;
 
-	s1_bis = (char *) s1;
-	s2_bis = (char *) s2;
-	while (n > 0)
+	if (dl != NULL)
 	{
-		n--;
-		s1_bis[n] = s2_bis[n];
+		new = (t_elem *)malloc(sizeof(t_elem));
+		if (new != NULL && ++dl->len)
+		{
+			new->ind = ind;
+			new->cont = cont;
+			new->prev = NULL;
+			if (dl->tail == NULL)
+			{
+				new->next = NULL;
+				dl->head = new;
+				dl->tail = new;
+			}
+			else
+			{
+				dl->head->prev = new;
+				new->next = dl->head;
+				dl->head = new;
+			}
+		}
 	}
-	return (s1);
+	return (dl);
 }

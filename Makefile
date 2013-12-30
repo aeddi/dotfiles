@@ -6,33 +6,39 @@
 #    By: aeddi <aeddi@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2013/12/14 16:00:35 by aeddi             #+#    #+#              #
-#    Updated: 2013/12/20 11:06:57 by aeddi            ###   ########.fr        #
+#    Updated: 2013/12/28 17:24:41 by aeddi            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-NAME			=	fdf
+NAME			=	
 CC				=	gcc
-CFLAGS			=	-Wall -Wextra -Werror -O3 -I $(LIBFT_DIR) -I $(INCS_DIR)
+DEBUG			?=	0
+ifeq ($(DEBUG), 1)
+	CFLAGS		=	-Wall -Wextra -Werror -g3 -I $(LIBFT_DIR) -I $(INCS_DIR)
+else
+	CFLAGS		=	-Wall -Wextra -Werror -O3 -I $(LIBFT_DIR) -I $(INCS_DIR)
+endif
 LFLAGS			=	-L $(LIBFT_DIR) -lft
 LIBFT_DIR		=	libft
 INCS_DIR		=	includes
 OBJS_DIR		=	objects
 SRCS_DIR		=	sources
-SRCS			=	main.c
-
 OBJS			=	$(patsubst %.c, $(OBJS_DIR)/%.o, $(SRCS))
+SRCS			=	
 
 all				:	$(NAME)
 
-$(NAME)			:	comp_lib $(OBJS)
+$(NAME)			:	$(OBJS_DIR) $(OBJS)
 	$(CC) -o $(NAME) $(OBJS) $(LFLAGS)
 
-comp_lib		:
-	$(MAKE) -C $(LIBFT_DIR)
-
 $(OBJS_DIR)/%.o	:	$(addprefix $(SRCS_DIR)/, %.c)
-	@mkdir -p $(OBJS_DIR)
 	$(CC) $(CFLAGS) -o $@ -c $^
+
+$(OBJS_DIR)		:	make_libft
+	@mkdir -p $(OBJS_DIR)
+
+make_libft		:
+	@$(MAKE) -C $(LIBFT_DIR)
 
 fclean			:	clean
 	rm -f $(NAME)

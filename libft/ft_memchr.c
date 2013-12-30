@@ -6,13 +6,13 @@
 /*   By: aeddi <aeddi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2013/12/01 20:11:10 by aeddi             #+#    #+#             */
-/*   Updated: 2013/12/01 20:12:55 by aeddi            ###   ########.fr       */
+/*   Updated: 2013/12/24 14:33:47 by aeddi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-void *ft_memchr(const void *s, int c, size_t n)
+void	*ft_memchr(const void *s, int c, size_t n)
 {
 	unsigned char	*s_bis;
 

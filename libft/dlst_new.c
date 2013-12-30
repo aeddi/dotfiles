@@ -1,28 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_memcpy.c                                        :+:      :+:    :+:   */
+/*   dlst_new.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: aeddi <aeddi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2013/11/22 11:04:48 by aeddi             #+#    #+#             */
-/*   Updated: 2013/12/27 19:54:24 by aeddi            ###   ########.fr       */
+/*   Created: 2013/12/20 17:17:04 by aeddi             #+#    #+#             */
+/*   Updated: 2013/12/20 19:22:20 by aeddi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-void	*ft_memcpy(void *s1, const void *s2, size_t n)
+t_dlst		*dlst_new(void)
 {
-	char	*s1_bis;
-	char	*s2_bis;
+	t_dlst	*new;
 
-	s1_bis = (char *) s1;
-	s2_bis = (char *) s2;
-	while (n > 0)
+	new = (t_dlst *)malloc(sizeof(t_dlst));
+	if (new != NULL)
 	{
-		n--;
-		s1_bis[n] = s2_bis[n];
+		new->len = 0;
+		new->head = NULL;
+		new->tail = NULL;
 	}
-	return (s1);
+	return (new);
 }

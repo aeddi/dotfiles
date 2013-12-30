@@ -1,28 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_memcpy.c                                        :+:      :+:    :+:   */
+/*   ft_tablen.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: aeddi <aeddi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2013/11/22 11:04:48 by aeddi             #+#    #+#             */
-/*   Updated: 2013/12/27 19:54:24 by aeddi            ###   ########.fr       */
+/*   Created: 2013/12/26 11:12:53 by aeddi             #+#    #+#             */
+/*   Updated: 2013/12/26 11:26:50 by aeddi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-void	*ft_memcpy(void *s1, const void *s2, size_t n)
+size_t		ft_tablen(char **tab)
 {
-	char	*s1_bis;
-	char	*s2_bis;
+	size_t	i;
 
-	s1_bis = (char *) s1;
-	s2_bis = (char *) s2;
-	while (n > 0)
-	{
-		n--;
-		s1_bis[n] = s2_bis[n];
-	}
-	return (s1);
+	i = 0;
+	while (tab[i] != '\0')
+		i++;
+	return (i);
 }

@@ -1,12 +1,12 @@
 # **************************************************************************** #
 #                                                                              #
 #                                                         :::      ::::::::    #
-#    makefile                                           :+:      :+:    :+:    #
+#    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
 #    By: aeddi <aeddi@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2013/11/22 12:06:57 by aeddi             #+#    #+#              #
-#    Updated: 2013/12/18 17:25:55 by aeddi            ###   ########.fr        #
+#    Updated: 2013/12/26 11:12:25 by aeddi            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -78,7 +78,12 @@ SRCS			=	ft_memset.c			\
 					ft_revstr.c			\
 					get_next_line.c		\
 					get_next_line_mfd.c	\
-					ft_abs.c
+					ft_abs.c			\
+					ft_tablen.c			\
+					dlst_new.c			\
+					dlst_add_head.c		\
+					dlst_add_tail.c		\
+					dlst_del.c			
 
 
 OBJS			=	$(SRCS:.c=.o)

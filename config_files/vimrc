@@ -22,7 +22,8 @@
 "		1. Backups
 "		2. Swap files
 "		2. Restore session
-"		4. Undo history
+"		4. Save buffers
+"		5. Undo history
 "
 "	D. PLUGINS
 "		1. Pathogen
@@ -41,7 +42,7 @@ set title				" Display filename in title bar
 set ttyfast				" More reactive displaying
 set number				" Show line number
 set mousehide			" Hide mouse cursor when typing
-set mouse=				" Disable mouse support
+set mouse=a			" Disable mouse support
 set showmode			" Show actual mode (full function only on zsh)
 set showcmd				" Show incomplete command
 set wildmenu			" Display command auto-completion with tab
@@ -175,7 +176,7 @@ autocmd BufEnter *.{c,cpp,h,hpp} call matchadd('TooLongLine' , '\%>80v.\+', -1)
 
 "4" Auto header
 "--------------------
-" Waiting for 42 template - autocmd BufNewFile *.{c,cpp,h,hpp}
+autocmd BufNewFile *.{c,cpp,h,hpp} :Stdheader
 "--------------------
 
 "5" Auto .h protect
@@ -233,7 +234,12 @@ set directory+=.
 set viminfo+=n~/.vim/viminfo
 "--------------------
 
-"4" Undo history
+"4" Save buffers
+"--------------------
+map <F5> :mksession! .mysession.vim<CR>
+"--------------------
+
+"5" Undo history
 "--------------------
 if exists("+undofile")
 	if isdirectory($HOME . '/.vim/undo') == 0
@@ -275,7 +281,7 @@ let NERDTreeShowBookmarks=1
 let NERDTreeIgnore=['.*\.o$', '.*\~$', '.*\.out$', '.*\.so$', '.*\.a$']
 "--------------------
 
-"3" NERDCommenter
+"3d" NERDCommenter
 "--------------------
 filetype plugin on
 "--------------------

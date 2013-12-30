@@ -6,7 +6,7 @@
 /*   By: aeddi <aeddi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2013/11/24 16:06:07 by aeddi             #+#    #+#             */
-/*   Updated: 2013/11/27 16:14:20 by aeddi            ###   ########.fr       */
+/*   Updated: 2013/12/22 22:02:07 by aeddi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ char	*ft_strnew(size_t size)
 	char	*str;
 	size_t	index;
 
-	str = malloc(size * sizeof(char) + 1);
+	str = (char *)malloc(size * sizeof(char) + 1);
 	if (!str)
 		return (NULL);
 	index = 0;
