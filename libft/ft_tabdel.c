@@ -1,31 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strsub.c                                        :+:      :+:    :+:   */
+/*   ft_tabdel.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: aeddi <aeddi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2013/11/24 22:01:28 by aeddi             #+#    #+#             */
-/*   Updated: 2013/12/30 12:21:06 by aeddi            ###   ########.fr       */
+/*   Created: 2013/12/31 17:04:59 by aeddi             #+#    #+#             */
+/*   Updated: 2013/12/31 17:10:38 by aeddi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-char	*ft_strsub(char const *s, unsigned int start, size_t len)
+void	ft_tabdel(char ***tab)
 {
-	char			*fresh;
-	unsigned int	index;
+	size_t	i;
 
-	fresh = ft_strnew(len);
-	index = 0;
-	if (!fresh || !s)
-		return (NULL);
-	while (len)
+	i = 0;
+	while (*tab[i])
 	{
-		fresh[index] = s[start + index];
-		index++;
-		len--;
+		ft_strdel(tab[i]);
+		i++;
 	}
-	return (fresh);
+	ft_strdel(*tab);
 }

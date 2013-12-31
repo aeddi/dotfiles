@@ -6,7 +6,7 @@
 #    By: aeddi <aeddi@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2013/11/22 12:06:57 by aeddi             #+#    #+#              #
-#    Updated: 2013/12/26 11:12:25 by aeddi            ###   ########.fr        #
+#    Updated: 2013/12/31 17:12:14 by aeddi            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -79,6 +79,7 @@ SRCS			=	ft_memset.c			\
 					get_next_line.c		\
 					get_next_line_mfd.c	\
 					ft_abs.c			\
+					ft_tabdel.c			\
 					ft_tablen.c			\
 					dlst_new.c			\
 					dlst_add_head.c		\

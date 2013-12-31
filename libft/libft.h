@@ -6,7 +6,7 @@
 /*   By: aeddi <aeddi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2013/11/19 13:39:49 by aeddi             #+#    #+#             */
-/*   Updated: 2013/12/26 11:26:36 by aeddi            ###   ########.fr       */
+/*   Updated: 2013/12/31 17:11:04 by aeddi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,6 +103,7 @@ char		*ft_revstr(char *s);
 int			get_next_line_mfd(int const fd, char **line);
 int			get_next_line(int const fd, char **line);
 long int	ft_abs(long int i);
+void		ft_tabdel(char ***tab);
 size_t		ft_tablen(char **tab);
 
 /*
