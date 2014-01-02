@@ -22,7 +22,12 @@ then
 		ln -s ~/.dotfiles/config_files/vimrc ~/.vimrc
 		echo "\033[32mInstalling .vimrc\033[0m"
 	fi
+fi
 
+echo "\n\033[31mDo you want install vim plugins and theme ? [y/n]\033[0m"
+read answer
+if [ "$answer" = "y" ]
+then
 	echo "\033[32mInstalling Pathogen\033[0m"
 	mkdir -p ~/.vim/autoload ~/.vim/bundle; \
 	curl -Sso ~/.vim/autoload/pathogen.vim \
@@ -40,7 +45,7 @@ then
 	ln -s ~/.dotfiles/config_files/mustang.vim ~/.vim/colors
 fi
 
-echo "\033[31mDo you want setting shell alliases and functions ? [y/n]\033[0m"
+echo "\n\033[31mDo you want setting shell alliases and functions ? [y/n]\033[0m"
 read answer
 if [ "$answer" = "y" ]
 then
