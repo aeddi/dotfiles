@@ -1,134 +1,67 @@
-if [ -f ~/.myvimrc ];
-then
-   ln -s ~/.dotfiles/config_files/vimrc ~/.myvimrc
-   echo "Installing .myvimrc"
-else
-   ln -s ~/.dotfiles/config_files/vimrc ~/.vimrc
-   echo "Installing .vimrc"
-fi
-
-echo "Installing Pathogen"
-mkdir -p ~/.vim/autoload ~/.vim/bundle; \
-curl -Sso ~/.vim/autoload/pathogen.vim \
-    https://raw.github.com/tpope/vim-pathogen/master/autoload/pathogen.vim
-    
-cd ~/.vim/bundle
-echo "Installing Syntastic"
-git clone https://github.com/scrooloose/syntastic.git
-
-echo "Installing NerdTree"
-git clone https://github.com/scrooloose/nerdtree.git
-
-echo "Installing Mustang theme"
-mkdir -p ~/.vim/colors
-ln -s ~/.dotfiles/config_files/mustang.vim ~/.vim/colors
-
-echo "Do you want setting alliases ? [y/n]"
+echo "\033[31mDo you want setting vimrc ? [y/n]\033[0m"
 read answer
 if [ "$answer" = "y" ]
 then
-echo "Setting alliases :"
-if [ -f ~/.myzshrc ];
-then
-   echo "For myzshrc"
-   echo "alias vimrs='vim -S .mysession.vim'
+	if [ -f ~/.myvimrc ];
+	then
+		echo "Old .myvimrc found"
+		mkdir -p ~/.backup_conf_files
+		mv ~/.myvimrc  ~/.backup_conf_files/myvimrc_BAK
+		echo "\033[32mBackup old .myvimrc\033[0m"
+		ln -s ~/.dotfiles/config_files/vimrc ~/.myvimrc
+		echo "\033[32mInstalling new .myvimrc\033[0m"
+	elif [ -f ~/.vimrc ];
+	then
+		echo "Old .vimrc found"
+		mkdir -p ~/.backup_conf_files
+		mv ~/.vimrc  ~/.backup_conf_files/vimrc_BAK
+		echo "\033[32mBackup old .vimrc\033[0m"
+		ln -s ~/.dotfiles/config_files/vimrc ~/.vimrc
+		echo "\033[32mInstalling new .vimrc\033[0m"
+	else
+		ln -s ~/.dotfiles/config_files/vimrc ~/.vimrc
+		echo "\033[32mInstalling .vimrc\033[0m"
+	fi
 
-alias gccW='gcc -Wall -Werror -Wextra'
+	echo "\033[32mInstalling Pathogen\033[0m"
+	mkdir -p ~/.vim/autoload ~/.vim/bundle; \
+	curl -Sso ~/.vim/autoload/pathogen.vim \
+    https://raw.github.com/tpope/vim-pathogen/master/autoload/pathogen.vim
+    
+	cd ~/.vim/bundle
+	echo "\033[32mInstalling Syntastic\033[0m"
+	git clone https://github.com/scrooloose/syntastic.git
 
-alias ls='ls -G'
-alias ll='ls -lAG'
+	echo "\033[32mInstalling NerdTree\033[0m"
+	git clone https://github.com/scrooloose/nerdtree.git
 
-alias rm='rm -i'
-alias cp='cp -i'
-alias mv='mv -i'
-alias ln='ln -i'
-
-alias 1.='cd ..'
-alias 2.='cd ../..'
-alias 3.='cd ../../..'
-alias 4.='cd ../../../..'
-alias 5.='cd ../../../../..'
-
-alias auteur="echo 'aeddi' > auteur"
-alias gitignore="cp ~/.dotfiles/gitignore ./.gitignore"
-alias newp="auteur; gitignore; mkdir -p sources; mkdir -p includes; cp -r  ~/.dotfiles/libft  ~/.dotfiles/Makefile ."" >> ~/.myzshrc
+	echo "\033[32mInstalling Mustang theme\033[0m"
+	mkdir -p ~/.vim/colors
+	ln -s ~/.dotfiles/config_files/mustang.vim ~/.vim/colors
 fi
 
-if [ -f ~/.zshrc ];
+echo "\033[31mDo you want setting shell alliases and functions ? [y/n]\033[0m"
+read answer
+if [ "$answer" = "y" ]
 then
-   echo "For zshrc"
-   echo "alias vimrs='vim -S .mysession.vim'
+	echo "\033[32mSetting alliases \c\033[0m"
+	if [ -f ~/.myzshrc ];
+	then
+	   	echo "\033[32mfor myzshrc\033[0m"
+		mkdir -p ~/.backup_conf_files
+		mv ~/.myzshrc ~/.backup_conf_files/myzshrc_BAK
+		echo "\033[32mBackup old .myzshrc\033[0m"
+		ln -s ~/.dotfiles/conf_files/zshrc ~/.myzshrc
+		echo "\033[32mInstalling .myzshrc\n\033[0m"
+	fi
 
-alias gccW='gcc -Wall -Werror -Wextra'
-
-alias ls='ls -G'
-alias ll='ls -lAG'
-
-alias rm='rm -i'
-alias cp='cp -i'
-alias mv='mv -i'
-alias ln='ln -i'
-
-alias 1.='cd ..'
-alias 2.='cd ../..'
-alias 3.='cd ../../..'
-alias 4.='cd ../../../..'
-alias 5.='cd ../../../../..'
-
-alias auteur="echo 'aeddi' > auteur"
-alias gitignore="cp ~/.dotfiles/gitignore ./.gitignore"
-alias newp="auteur; gitignore; mkdir -p sources; mkdir -p includes; cp -r  ~/.dotfiles/libft  ~/.dotfiles/Makefile ."" >> ~/.zshrc
-fi
-
-if [ -f ~/.bashrc ];~/
-then
-   echo "For bashrc"
-   echo "alias vimrs='vim -S .mysession.vim'
-
-alias gccW='gcc -Wall -Werror -Wextra'
-
-alias ls='ls -G'
-alias ll='ls -lAG'
-
-alias rm='rm -i'
-alias cp='cp -i'
-alias mv='mv -i'
-alias ln='ln -i'
-
-alias 1.='cd ..'
-alias 2.='cd ../..'
-alias 3.='cd ../../..'
-alias 4.='cd ../../../..'
-alias 5.='cd ../../../../..'
-
-alias auteur="echo 'aeddi' > auteur"
-alias gitignore="cp ~/.dotfiles/gitignore ./.gitignore"
-alias newp="auteur; gitignore; mkdir -p sources; mkdir -p includes; cp -r  ~/.dotfiles/libft  ~/.dotfiles/Makefile ."" >> ~/.bashrc
-fi
-
-if [ -f ~/.shrc ];
-then
-   echo "For shrc"
-   echo "alias vimrs='vim -S .mysession.vim'
-
-alias gccW='gcc -Wall -Werror -Wextra'
-
-alias ls='ls -G'
-alias ll='ls -lAG'
-
-alias rm='rm -i'
-alias cp='cp -i'
-alias mv='mv -i'
-alias ln='ln -i'
-
-alias 1.='cd ..'
-alias 2.='cd ../..'
-alias 3.='cd ../../..'
-alias 4.='cd ../../../..'
-alias 5.='cd ../../../../..'
-
-alias auteur="echo 'aeddi' > auteur"
-alias gitignore="cp ~/.dotfiles/gitignore ./.gitignore"
-alias newp="auteur; gitignore; mkdir -p sources; mkdir -p includes; cp -r  ~/.dotfiles/libft  ~/.dotfiles/Makefile ."" >> ~/.shrc
-fi
+	if [ -f ~/.zshrc ];
+	then
+	   	echo "\033[32mfor zshrc\033[0m"
+		mkdir -p ~/.backup_conf_files
+		mv ~/.zshrc ~/.backup_conf_files/zshrc_BAK
+		echo "\033[32mBackup old .zshrc\033[0m"
+		ln -s ~/.dotfiles/conf_files/zshrc ~/.zshrc
+		echo "\033[32mInstalling .zshrc\n\033[0m"
+	fi
 fi

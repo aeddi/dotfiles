@@ -1,0 +1,62 @@
+alias cdc='source ~/.myzshrc ; cd /nfs/zfs-student/users/2013/aeddi/Rendu/Infographie/Wolf3D'
+alias fav="sed -i '' '1s?.*?'alias\ cdc=\'source\ \~\/.myzshrc\ \;\ cd\ `pwd`\''?' ~/.myzshrc && source ~/.myzshrc" 
+
+alias vimrs='vim -S .mysession.vim'
+
+alias gccW='gcc -Wall -Werror -Wextra'
+
+alias ls='ls -G'
+alias ll='ls -lAG'
+
+alias rm='rm -i'
+alias cp='cp -i'
+alias mv='mv -i'
+alias ln='ln -i'
+
+alias 1.='cd ..'
+alias 2.='cd ../..'
+alias 3.='cd ../../..'
+alias 4.='cd ../../../..'
+alias 5.='cd ../../../../..'
+
+alias auteur="echo 'aeddi' > auteur"
+alias gitignore="cp ~/.dotfiles/gitignore ./.gitignore"
+
+export PATH=$PATH:~/.bin
+
+function look()
+{ 
+	for i in $*
+	do
+	printf "\n\033[31m> $i\n\033[0m"
+	ldapsearch -Q uid="$i" | grep -e "^mobile-phone" | sed 's/mobile-phone:/>/'
+	wget -qO - http://dashboard.42.fr/crawler/pull/$i | grep -o 'last_host": [^ .]\+' | sed 's/last_host": "/> /g'
+	done 
+}
+
+function newp()
+{
+	auteur
+	gitignore
+	mkdir -p sources
+	mkdir -p includes
+	cp -r ~/.dotfiles/libft  ~/.dotfiles/Makefile .
+}
+
+function gitdup()
+{ 
+	echo "Are you sure want duplicate this git repo ? [y/n] "
+	read answer
+	if [ "$answer" = "y" ]
+		then
+	REP=$(basename $(pwd))
+	REPLOW=$(echo "$REP" | tr -s  '[:upper:]'  '[:lower:]')
+	curl --user Plastic-1 https://api.bitbucket.org/1.0/repositories/ --data name=$REP
+	git remote add bitbucket https://Plastic-1@bitbucket.org/Plastic-1/$REPLOW.git
+	git add -A
+	git commit -m "First dup"
+	git push bitbucket master
+	echo "[remote \"all\"]" >> .git/config
+	grep url .git/config >> .git/config
+		fi
+} 
