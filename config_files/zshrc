@@ -46,12 +46,12 @@ function newp()
 
 function gitdup()
 { 
-	echo "Are you sure want duplicate this git repo ? [y/n] "
+	echo "\033[31mAre you sure want duplicate this git repo ? [y/n]\033[0m"
 	read answer
 	if [ "$answer" = "y" ]
 	then
 		REP=$(basename $(pwd))
-		REPLOW=$(echo "$REP" | tr -s  '[:upper:]'  '[:lower:]')
+		REPLOW=$(echo "$REP" | tr '[A-Z]'  '[a-z]')
 		curl --user Plastic-1 https://api.bitbucket.org/1.0/repositories/ --data name=$REP
 		git remote add bitbucket https://Plastic-1@bitbucket.org/Plastic-1/$REPLOW.git
 		git add -A
