@@ -1,5 +1,6 @@
 alias cdc='source ~/.dotfiles/config_files/zshrc ; cd /nfs/zfs-student/users/2013/aeddi/Rendu/Infographie/Wolf3D'
 alias fav="sed -i '' '1s?.*?'alias\ cdc=\'source\ \~\/.dotfiles\/config_files\/zshrc\ \;\ cd\ `pwd`\''?' ~/.myzshrc && source ~/.dotfiles/config_files/zshrc" 
+alias pote='fstud fnormand akazian gponsine mcizo dduong rmichelo'
 
 alias vimrs='vim -S .mysession.vim'
 
