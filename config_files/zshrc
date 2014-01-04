@@ -24,17 +24,6 @@ alias gitignore="cp ~/.dotfiles/gitignore ./.gitignore"
 
 export PATH=$PATH:~/.bin
 
-function look()
-{ 
-	for i in $*
-	do
-		printf "\033[31m> $i\n\033[0m"
-		ldapsearch -Q uid="$i" | grep -e "^mobile-phone" | sed 's/mobile-phone:/>/'
-		wget -qO - http://dashboard.42.fr/crawler/pull/$i | grep -o 'last_host": [^ .]\+' | sed 's/last_host": "/> /g'
-		printf "\n"
-	done 
-}
-
 function newp()
 {
 	auteur
@@ -42,6 +31,29 @@ function newp()
 	mkdir -p sources
 	mkdir -p includes
 	cp -r ~/.dotfiles/libft  ~/.dotfiles/Makefile .
+}
+
+function fstud()
+{ 
+	for i in $*
+	do
+		printf "\033[31m\033[47m $i \033[0m\n"
+		PHONE=$(ldapsearch -Q uid="$i" | grep -e "^mobile-phone" | sed 's/mobile-phone: /# /g')
+		if [ -n "$PHONE" ] 
+		then
+			printf "\033[32m$PHONE\n\033[0m"
+		else
+			printf "\033[31m# No phone number\n\033[0m"
+		fi
+		CO=$(wget -qO - http://dashboard.42.fr/crawler/pull/$i | grep -o 'last_host": [^ .]\+' | sed 's/last_host": "/# /g')
+		if [ -n "$CO" ] 
+		then
+			printf "\033[32m$CO\n\033[0m"
+		else
+			printf "\033[31m# Not at school\n\033[0m"
+		fi
+		printf "\n"
+	done 
 }
 
 function gitdup()
