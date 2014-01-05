@@ -118,7 +118,9 @@ set scrolloff=5			" Display minimum five lines around the cursor
 set sidescrolloff=5		" Display minimum five columns around the cursor
 set cursorline			" Display horizontal line on the cursor position
 set nowrap				" Don't wrap text on multiple lines
-"set textwidth=78		" Max columns per line
+" Enable/Disable paste mode
+map <F6> :set paste <CR>
+map <S-F6> :set nopaste <CR>
 "--------------------
 
 " =========================
