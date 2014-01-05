@@ -125,7 +125,6 @@ imap <right> <nop>
 
 "7" Misc :
 "--------------------
-let mapleader = "!"		" Change assignation of leader key \ to !
 set nocompatible		" Disable vi compatibility
 set autoread			" Refresh current file when modified by another editor
 set undolevels=500		" 500 undo history

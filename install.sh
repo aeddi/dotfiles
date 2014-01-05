@@ -40,6 +40,9 @@ then
 	echo "\033[32mInstalling NerdTree\033[0m"
 	git clone https://github.com/scrooloose/nerdtree.git
 
+	echo "\033[32mInstalling Easymotion\033[0m"
+	git clone https://github.com/Lokaltog/vim-easymotion/ easymotion
+
 	echo "\033[32mInstalling Mustang theme\033[0m"
 	mkdir -p ~/.vim/colors
 	ln -s ~/.dotfiles/config_files/mustang.vim ~/.vim/colors
