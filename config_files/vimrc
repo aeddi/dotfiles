@@ -8,7 +8,8 @@
 "		3. Indentation
 "		4. Search
 "		5. Status bar
-"		6. Misc
+"		6. Key mapping
+"		7. Misc
 "
 "	B. 42 NORM C/C++
 "		1. Space & Tab
@@ -106,7 +107,23 @@ set statusline+=\ ASCII:\ 		" Title ASCII
 set statusline+=%3b\ 			" ASCII value
 "--------------------
 
-"6" Misc :
+"6" Key mapping :
+"--------------------
+" Enable/Disable paste mode
+map <F6> :set paste <CR>
+map <S-F6> :set nopaste <CR>
+" Disable arrows keys
+map <up> <nop>
+map <down> <nop>
+map <left> <nop>
+map <right> <nop>
+imap <up> <nop>
+imap <down> <nop>
+imap <left> <nop>
+imap <right> <nop>
+"--------------------
+
+"7" Misc :
 "--------------------
 let mapleader = "!"		" Change assignation of leader key \ to !
 set nocompatible		" Disable vi compatibility
@@ -118,9 +135,6 @@ set scrolloff=5			" Display minimum five lines around the cursor
 set sidescrolloff=5		" Display minimum five columns around the cursor
 set cursorline			" Display horizontal line on the cursor position
 set nowrap				" Don't wrap text on multiple lines
-" Enable/Disable paste mode
-map <F6> :set paste <CR>
-map <S-F6> :set nopaste <CR>
 "--------------------
 
 " =========================

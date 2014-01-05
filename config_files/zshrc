@@ -1,8 +1,8 @@
-alias cdc='source ~/.dotfiles/config_files/zshrc ; cd /nfs/zfs-student/users/2013/aeddi/Rendu/Infographie/Wolf3D'
-alias fav="sed -i '' '1s?.*?'alias\ cdc=\'source\ \~\/.dotfiles\/config_files\/zshrc\ \;\ cd\ `pwd`\''?' ~/.myzshrc && source ~/.dotfiles/config_files/zshrc" 
-alias pote='fstud fnormand akazian gponsine mcizo dduong rmichelo'
+alias cdc='sourcec ; cd /nfs/zfs-student/users/2013/aeddi/Rendu/Infographie/Wolf3D'
+alias fav="sed -i '' '1s?.*?'alias\ cdc=\'sourcec\ \;\ cd\ `pwd`\''?' ~/.dotfiles/config_files/zshrc && sourcec" 
+alias sourcec='source ~/.dotfiles/config_files/zshrc' 
 
-alias vimrs='vim -S .mysession.vim'
+alias pote='fstud fnormand akazian gponsine mcizo dduong rmichelo'
 
 alias gccW='gcc -Wall -Werror -Wextra'
 
@@ -20,6 +20,7 @@ alias 3.='cd ../../..'
 alias 4.='cd ../../../..'
 alias 5.='cd ../../../../..'
 
+alias vimrs='vim -S .mysession.vim'
 alias auteur="echo 'aeddi' > auteur"
 alias gitignore="cp ~/.dotfiles/gitignore ./.gitignore"
 
@@ -30,6 +31,7 @@ function newp()
 	auteur
 	gitignore
 	mkdir -p sources
+	cp ~/.dotfiles/config_files/syntastic_c_config sources/.syntastic_c_config
 	mkdir -p includes
 	cp -r ~/.dotfiles/libft  ~/.dotfiles/Makefile .
 }
@@ -56,6 +58,7 @@ function fstud()
 		printf "\n"
 	done 
 }
+
 
 function gitdup()
 { 
