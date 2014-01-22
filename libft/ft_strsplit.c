@@ -6,7 +6,7 @@
 /*   By: aeddi <aeddi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2013/11/25 15:04:22 by aeddi             #+#    #+#             */
-/*   Updated: 2013/12/22 22:05:02 by aeddi            ###   ########.fr       */
+/*   Updated: 2014/01/17 14:54:21 by aeddi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ static char	**tab_maker(char const *s, char c)
 	return (tab);
 }
 
-char	**ft_strsplit(char const *s, char c)
+char		**ft_strsplit(char const *s, char c)
 {
 	size_t	index;
 	size_t	count;

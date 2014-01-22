@@ -84,7 +84,10 @@ SRCS			=	ft_memset.c			\
 					dlst_new.c			\
 					dlst_add_head.c		\
 					dlst_add_tail.c		\
-					dlst_del.c			
+					dlst_del.c			\
+					ft_strreplace.c		\
+					ft_strcount.c		\
+					ft_strjoin_tw.c
 
 
 OBJS			=	$(SRCS:.c=.o)

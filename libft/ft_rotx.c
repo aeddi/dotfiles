@@ -6,7 +6,7 @@
 /*   By: aeddi <aeddi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2013/11/26 21:41:40 by aeddi             #+#    #+#             */
-/*   Updated: 2013/11/27 15:57:14 by aeddi            ###   ########.fr       */
+/*   Updated: 2014/01/17 14:53:47 by aeddi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ static void	ft_rotdown(const char *s, char *temp, int x)
 		*temp = *s + x;
 }
 
-char	*ft_rotx(const char *s, int x, char space)
+char		*ft_rotx(const char *s, int x, char space)
 {
 	char	*srot;
 	char	*temp;

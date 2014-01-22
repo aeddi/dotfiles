@@ -6,7 +6,7 @@
 /*   By: aeddi <aeddi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2013/11/25 13:57:24 by aeddi             #+#    #+#             */
-/*   Updated: 2013/12/01 20:47:05 by aeddi            ###   ########.fr       */
+/*   Updated: 2014/01/17 14:54:43 by aeddi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ static unsigned int	space_counter(char const *s, int start, int direction)
 	return (count);
 }
 
-char	*ft_strtrim(char const *s)
+char				*ft_strtrim(char const *s)
 {
 	char			*freshtr;
 	unsigned int	start;

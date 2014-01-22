@@ -6,7 +6,7 @@
 /*   By: aeddi <aeddi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2013/11/19 13:39:49 by aeddi             #+#    #+#             */
-/*   Updated: 2013/12/31 17:11:04 by aeddi            ###   ########.fr       */
+/*   Updated: 2014/01/17 14:55:30 by aeddi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@
 */
 void		*ft_memset(void *s, int c, size_t len);
 void		ft_bzero(void *s, size_t n);
-void		*ft_memcpy(void	*s1, const void	*s2, size_t n);
+void		*ft_memcpy(void *s1, const void *s2, size_t n);
 void		*ft_memccpy(void *s1, const void *s2, int c, size_t n);
 void		*ft_memmove(void *s1, const void *s2, size_t n);
 void		*ft_memchr(const void *s, int c, size_t n);
@@ -105,6 +105,9 @@ int			get_next_line(int const fd, char **line);
 long int	ft_abs(long int i);
 void		ft_tabdel(char ***tab);
 size_t		ft_tablen(char **tab);
+int			ft_strcount(const char *s1, const char *s2);
+char		*ft_strreplace(char *s1, char *old, char *new);
+char		*ft_strjoin_tw(const char *s1, const char *s2, const char *s3);
 
 /*
 ** Double linked lists

@@ -1,4 +1,4 @@
-alias cdc='sourcec ; cd /nfs/zfs-student/users/2013/aeddi/Rendu/Infographie/Wolf3D'
+alias cdc='sourcec ; cd /nfs/zfs-student/users/2013/aeddi/Rendu/UNIX/minishell2'
 alias fav="sed -i '' '1s?.*?'alias\ cdc=\'sourcec\ \;\ cd\ `pwd`\''?' ~/.dotfiles/config_files/zshrc && sourcec" 
 alias sourcec='source ~/.dotfiles/config_files/zshrc' 
 
