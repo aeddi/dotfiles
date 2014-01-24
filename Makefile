@@ -6,7 +6,7 @@
 #    By: aeddi <aeddi@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2013/12/14 16:00:35 by aeddi             #+#    #+#              #
-#    Updated: 2014/01/03 11:20:28 by aeddi            ###   ########.fr        #
+#    Updated: 2014/01/22 17:25:45 by aeddi            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,9 +14,9 @@ NAME			=
 CC				=	gcc
 GDB				?=	0
 ifeq ($(GDB), 1)
-	CFLAGS		=	-Wall -Wextra -Werror -g3 -I $(LIBFT_DIR) -I $(INCS_DIR)
+	CFLAGS		=	-Wall -Wextra -Werror -pedantic -g3 -I $(LIBFT_DIR) -I $(INCS_DIR)
 else
-	CFLAGS		=	-Wall -Wextra -Werror -O3 -I $(LIBFT_DIR) -I $(INCS_DIR)
+	CFLAGS		=	-Wall -Wextra -Werror -pedantic -O3 -I $(LIBFT_DIR) -I $(INCS_DIR)
 endif
 LFLAGS			=	-L $(LIBFT_DIR) -lft
 LIBFT_DIR		=	./libft

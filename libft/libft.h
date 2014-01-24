@@ -6,7 +6,7 @@
 /*   By: aeddi <aeddi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2013/11/19 13:39:49 by aeddi             #+#    #+#             */
-/*   Updated: 2014/01/17 14:55:30 by aeddi            ###   ########.fr       */
+/*   Updated: 2014/01/24 21:04:08 by aeddi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,6 +108,7 @@ size_t		ft_tablen(char **tab);
 int			ft_strcount(const char *s1, const char *s2);
 char		*ft_strreplace(char *s1, char *old, char *new);
 char		*ft_strjoin_tw(const char *s1, const char *s2, const char *s3);
+void		ft_skip_space(char **str);
 
 /*
 ** Double linked lists

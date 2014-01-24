@@ -6,7 +6,7 @@
 #    By: aeddi <aeddi@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2013/11/22 12:06:57 by aeddi             #+#    #+#              #
-#    Updated: 2013/12/31 17:12:14 by aeddi            ###   ########.fr        #
+#    Updated: 2014/01/24 21:04:43 by aeddi            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -87,7 +87,8 @@ SRCS			=	ft_memset.c			\
 					dlst_del.c			\
 					ft_strreplace.c		\
 					ft_strcount.c		\
-					ft_strjoin_tw.c
+					ft_strjoin_tw.c		\
+					ft_skip_space.c
 
 
 OBJS			=	$(SRCS:.c=.o)
