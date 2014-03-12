@@ -1,13 +1,13 @@
-alias cdc='sourcec ; cd /nfs/zfs-student/users/2013/aeddi/Rendu/UNIX/minishell2'
+alias cdc='sourcec ; cd /nfs/zfs-student/users/2013/aeddi/Rendu/UNIX/minishell3'
 alias fav="sed -i '' '1s?.*?'alias\ cdc=\'sourcec\ \;\ cd\ `pwd`\''?' ~/.dotfiles/config_files/zshrc && sourcec" 
 alias sourcec='source ~/.dotfiles/config_files/zshrc' 
 
-alias pote='fstud fnormand akazian gponsine mcizo dduong rmichelo'
+alias pote='fstud akazian fnormand gponsine mcizo dduong rmichelo iftaiti'
 
 alias gccW='gcc -Wall -Werror -Wextra'
 
 alias ls='ls -G'
-alias ll='ls -lAG'
+alias ll='ls -lAGh'
 
 alias rm='rm -i'
 alias cp='cp -i'
