@@ -24,7 +24,7 @@ alias vimrs='vim -S .mysession.vim'
 alias auteur="echo 'aeddi' > auteur"
 alias gitignore="cp ~/.dotfiles/gitignore ./.gitignore"
 
-export PATH=$PATH:~/.bin
+export PATH=$PATH:~/.bin:~/.brew/bin
 
 function newp()
 {
