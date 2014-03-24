@@ -38,7 +38,13 @@ function newp()
 
 function fstud()
 { 
-	for i in $*
+if [[ -z $@ ]]
+then
+	echo "Usage: locate.sh <sutdents>";
+	exit -1;
+fi
+crawler="https://dashboard.42.fr/crawler/pull"
+for user in $@
 	do
 		printf "\033[31m\033[47m $i \033[0m\n"
 		PHONE=$(ldapsearch -Q uid="$i" | grep -e "^mobile-phone" | sed 's/mobile-phone: /# /g')
@@ -48,17 +54,18 @@ function fstud()
 		else
 			printf "\033[31m# No phone number\n\033[0m"
 		fi
-		CO=$(wget -qO - http://dashboard.42.fr/crawler/pull/$i | grep -o 'last_host": [^ .]\+' | sed 's/last_host": "/# /g')
-		if [ -n "$CO" ] 
+		crawl=$(curl $crawler/$user/ -s | tr ',\|}' '\n' | tr '\"' '.')
+		poste=$(echo $crawl | grep last_host | cut -d'.' -f4)
+		active=$(echo $crawl | grep last_activity | cut -d'.' -f3 | cut -d' ' -f2)
+		if [ $active ]
 		then
-			printf "\033[32m$CO\n\033[0m"
+			printf "\033[32m# $poste\n\033[0m"
 		else
 			printf "\033[31m# Not at school\n\033[0m"
 		fi
 		printf "\n"
-	done 
+done
 }
-
 
 function gitdup()
 { 
