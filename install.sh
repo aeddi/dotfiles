@@ -48,7 +48,7 @@ then
 	ln -s ~/.dotfiles/config_files/mustang.vim ~/.vim/colors
 
 	echo "\033[32mInstalling skeletons\033[0m"
-	ln -s ~/.dotfiles/config_files/skeleton ~/.vim/skeleton
+	ln -s ~/.dotfiles/config_files/skeletons ~/.vim/skeletons
 fi
 
 echo "\n\033[31mDo you want setting shell alliases and functions ? [y/n]\033[0m"
