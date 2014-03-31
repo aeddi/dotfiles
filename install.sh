@@ -46,6 +46,9 @@ then
 	echo "\033[32mInstalling Mustang theme\033[0m"
 	mkdir -p ~/.vim/colors
 	ln -s ~/.dotfiles/config_files/mustang.vim ~/.vim/colors
+
+	echo "\033[32mInstalling skeletons\033[0m"
+	ln -s ~/.dotfiles/config_files/skeleton ~/.vim/skeleton
 fi
 
 echo "\n\033[31mDo you want setting shell alliases and functions ? [y/n]\033[0m"
