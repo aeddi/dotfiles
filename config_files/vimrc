@@ -311,4 +311,6 @@ filetype plugin on
 "1" Skeletons :
 "--------------------
 au BufNewFile *.html 0r ~/.vim/skeletons/html | let IndentStyle = "html"
+au BufNewFile *.php 0r ~/.vim/skeletons/php | let IndentStyle = "html"
+au BufNewFile *.php :4
 "--------------------
