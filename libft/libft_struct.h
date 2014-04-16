@@ -1,28 +1,38 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_memcpy.c                                        :+:      :+:    :+:   */
+/*   libft_struct.h                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: aeddi <aeddi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2013/11/22 11:04:48 by aeddi             #+#    #+#             */
-/*   Updated: 2014/04/16 14:26:06 by aeddi            ###   ########.fr       */
+/*   Created: 2014/04/16 14:34:26 by aeddi             #+#    #+#             */
+/*   Updated: 2014/04/16 14:35:24 by aeddi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#ifndef LIBFT_STRUCT_H
+# define LIBFT_STRUCT_H
 
-void	*ft_memcpy(void *s1, const void *s2, size_t n)
+typedef struct		s_list
 {
-	char	*s1_bis;
-	char	*s2_bis;
+	void			*content;
+	size_t			content_size;
+	struct s_list	*next;
+}					t_list;
 
-	s1_bis = (char *)s1;
-	s2_bis = (char *)s2;
-	while (n > 0)
-	{
-		n--;
-		s1_bis[n] = s2_bis[n];
-	}
-	return (s1);
-}
+typedef struct		s_elem
+{
+	long int		ind;
+	void			*cont;
+	struct s_elem	*next;
+	struct s_elem	*prev;
+}					t_elem;
+
+typedef struct		s_dlst
+{
+	size_t			len;
+	t_elem			*head;
+	t_elem			*tail;
+}					t_dlst;
+
+#endif

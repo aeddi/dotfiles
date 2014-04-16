@@ -6,7 +6,7 @@
 /*   By: aeddi <aeddi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2013/11/25 15:04:22 by aeddi             #+#    #+#             */
-/*   Updated: 2014/01/17 14:54:21 by aeddi            ###   ########.fr       */
+/*   Updated: 2014/04/16 14:29:08 by aeddi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,8 @@ char		**ft_strsplit(char const *s, char c)
 	size_t	count;
 	char	**tab;
 
-	index = count = 0;
+	index = 0;
+	count = 0;
 	if (!s)
 		return (NULL);
 	tab = tab_maker(s, c);
@@ -76,8 +77,8 @@ char		**ft_strsplit(char const *s, char c)
 				while (s[index] != c && s[index] != '\0')
 					index++;
 			}
-		if (s[index])
-			index++;
+			if (s[index])
+				index++;
 		}
 	}
 	return (tab);

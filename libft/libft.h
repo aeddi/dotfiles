@@ -6,7 +6,7 @@
 /*   By: aeddi <aeddi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2013/11/19 13:39:49 by aeddi             #+#    #+#             */
-/*   Updated: 2014/01/24 21:04:08 by aeddi            ###   ########.fr       */
+/*   Updated: 2014/04/16 14:37:01 by aeddi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 
 # include <unistd.h>
 # include <stdlib.h>
+# include <libft_struct.h>
 
 # define BUFF_SIZE 1024
 
@@ -81,19 +82,12 @@ void		ft_putnbr_fd(int n, int fd);
 /*
 ** Part three
 */
-typedef struct		s_list
-{
-	void			*content;
-	size_t			content_size;
-	struct s_list	*next;
-}					t_list;
-
 t_list		*ft_lstnew(void const *content, size_t content_size);
 void		ft_lstdelone(t_list **alst, void (*del)(void *, size_t));
 void		ft_lstdel(t_list **alst, void (*del)(void *, size_t));
 void		ft_lstadd(t_list **alst, t_list *new);
 void		ft_lstiter(t_list *lst, void (*f)(t_list *elem));
-t_list		*ft_lstmap(t_list *lst, t_list * (*f)(t_list *elem));
+t_list		*ft_lstmap(t_list *lst, t_list *(*f)(t_list *elem));
 
 /*
 ** Part custom
@@ -113,24 +107,9 @@ void		ft_skip_space(char **str);
 /*
 ** Double linked lists
 */
-typedef struct		s_elem
-{
-	long int		ind;
-	void			*cont;
-	struct s_elem	*next;
-	struct s_elem	*prev;
-}					t_elem;
-
-typedef struct		s_dlst
-{
-	size_t			len;
-	t_elem			*head;
-	t_elem			*tail;
-}					t_dlst;
-
 t_dlst		*dlst_new(void);
 t_dlst		*dlst_add_head(t_dlst *dl, long int ind, void *cont);
 t_dlst		*dlst_add_tail(t_dlst *dl, long int ind, void *cont);
 void		dlst_del(t_dlst **dl);
 
-#endif /* !LIBFT_H */
+#endif

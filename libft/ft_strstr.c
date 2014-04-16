@@ -6,7 +6,7 @@
 /*   By: aeddi <aeddi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2013/11/22 19:06:10 by aeddi             #+#    #+#             */
-/*   Updated: 2013/11/27 16:15:45 by aeddi            ###   ########.fr       */
+/*   Updated: 2014/04/16 14:29:33 by aeddi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ char	*ft_strstr(const char *s1, const char *s2)
 	while (s1[index])
 	{
 		index2 = index;
-		match = (char *) s2;
+		match = (char *)s2;
 		while (s1[index2] == *match || *match == '\0')
 		{
 			if (*match == '\0')

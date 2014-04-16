@@ -6,13 +6,13 @@
 /*   By: aeddi <aeddi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2013/11/28 12:32:30 by aeddi             #+#    #+#             */
-/*   Updated: 2013/11/28 14:54:18 by aeddi            ###   ########.fr       */
+/*   Updated: 2014/04/16 14:24:25 by aeddi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-t_list	*ft_lstmap(t_list *lst, t_list * (*f)(t_list *elem))
+t_list	*ft_lstmap(t_list *lst, t_list *(*f)(t_list *elem))
 {
 	t_list	*fresh_lst;
 	t_list	*tmp;

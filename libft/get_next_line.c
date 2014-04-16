@@ -6,7 +6,7 @@
 /*   By: akazian <akazian@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2013/12/14 13:34:18 by akazian           #+#    #+#             */
-/*   Updated: 2013/12/18 12:47:06 by aeddi            ###   ########.fr       */
+/*   Updated: 2014/04/16 14:30:16 by aeddi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,14 +45,14 @@ static int		ft_strlenn(char *str, int max)
 	return (i);
 }
 
-static char		*line_cat(char *line, char* src, int rd)
+static char		*line_cat(char *line, char *src, int rd)
 {
 	char	*tmp;
 	int		i;
 	int		j;
 
 	if (line == NULL)
-		return (ft_strsub((char const *) src, 0, ft_strlenn(src, rd)));
+		return (ft_strsub((char const *)src, 0, ft_strlenn(src, rd)));
 	j = 0;
 	tmp = line;
 	i = ft_strlen(line);
@@ -103,7 +103,7 @@ int				get_next_line(int const fd, char **line)
 		if (*line != buf)
 			return (1);
 		else
-			*line = ft_strsub((const char*) buf, pos, rd - pos);
+			*line = ft_strsub((const char*)buf, pos, rd - pos);
 	}
 	rd = rd_value(fd, line, &pos, buf);
 	if (rd == -1)

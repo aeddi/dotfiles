@@ -6,7 +6,7 @@
 /*   By: aeddi <aeddi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2013/12/22 21:40:32 by aeddi             #+#    #+#             */
-/*   Updated: 2013/12/22 21:40:35 by aeddi            ###   ########.fr       */
+/*   Updated: 2014/04/16 14:30:42 by aeddi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,7 +101,7 @@ static t_list	*fd_to_elem(const size_t fd, t_list *list)
 	return (tmp);
 }
 
-int				get_next_line_mfd(int const fd, char ** line)
+int				get_next_line_mfd(int const fd, char **line)
 {
 	static t_list	*list;
 	t_list			*cur_fd;
