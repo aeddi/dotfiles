@@ -6,7 +6,7 @@
 /*   By: aeddi <aeddi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2013/11/19 13:39:49 by aeddi             #+#    #+#             */
-/*   Updated: 2014/04/16 14:37:01 by aeddi            ###   ########.fr       */
+/*   Updated: 2014/04/16 14:40:45 by aeddi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 
 # include <unistd.h>
 # include <stdlib.h>
-# include <libft_struct.h>
+# include "libft_struct.h"
 
 # define BUFF_SIZE 1024
 
