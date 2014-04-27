@@ -1,25 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strcpy.c                                        :+:      :+:    :+:   */
+/*   ft_revint32.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: aeddi <aeddi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2013/11/21 14:05:37 by aeddi             #+#    #+#             */
-/*   Updated: 2014/04/20 20:17:37 by aeddi            ###   ########.fr       */
+/*   Created: 2014/04/25 17:54:19 by aeddi             #+#    #+#             */
+/*   Updated: 2014/04/27 16:51:15 by aeddi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-char	*ft_strcpy(char *dest, const char *src)
-{
-	int	i;
+#include <stdint.h>
 
-	i = 0;
-	while (src[i] != '\0')
-	{
-		dest[i] = src[i];
-		i++;
-	}
-	dest[i] = '\0';
-	return (dest);
+uint32_t	ft_revint32(uint32_t nb)
+{
+	uint32_t	rev;
+
+	rev = ((nb >> 24) & 0xff) |
+	((nb << 8) & 0xff0000) |
+	((nb >> 8) & 0xff00) |
+	((nb << 24) & 0xff000000);
+	return (rev);
 }
