@@ -88,6 +88,7 @@ SRCS			=	ft_memset.c			\
 					ft_strreplace.c		\
 					ft_strcount.c		\
 					ft_strjoin_tw.c		\
+					ft_isspace.c		\
 					ft_skip_space.c		\
 					ft_revint32.c		\
 					ft_revint64.c

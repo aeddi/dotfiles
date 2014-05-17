@@ -103,6 +103,7 @@ size_t		ft_tablen(char **tab);
 int			ft_strcount(const char *s1, const char *s2);
 char		*ft_strreplace(char *s1, char *old, char *new);
 char		*ft_strjoin_tw(const char *s1, const char *s2, const char *s3);
+int			ft_isspace(char c);
 void		ft_skip_space(char **str);
 uint32_t	ft_revint32(uint32_t nb);
 uint64_t	ft_revint64(uint64_t nb);
