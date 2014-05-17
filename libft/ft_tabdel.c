@@ -22,6 +22,6 @@ void	ft_tabdel(char ***tab)
 		free((*tab)[i]);
 		i++;
 	}
-	free(**tab);
-	**tab = NULL;
+	free(*tab);
+	*tab = NULL;
 }
