@@ -24,6 +24,9 @@ alias vimrs='vim -S .mysession.vim'
 alias auteur="echo 'aeddi' > auteur"
 alias gitignore="cp ~/.dotfiles/gitignore ./.gitignore"
 
+alias python='/nfs/zfs-student-5/users/2013/aeddi/Documents/Django/python/bin/python'
+alias pip='python /nfs/zfs-student-5/users/2013/aeddi/Documents/Django/python/bin/pip'
+
 export PATH=$PATH:~/.bin:~/.brew/bin:$HOME/Documents/MAMP/mysql/bin
 
 function newp()
