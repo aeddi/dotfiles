@@ -35,18 +35,73 @@
 "
 " ==============================================================================
 
-" =========================
-" A. BASIC CONFIG
-" =========================
-"
 set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
 
-Plugin 'https://github.com/sickill/vim-monokai'	"Colorscheme monokai
+Plugin 'https://github.com/Plastic-1/tomorrow-theme.git'	"Colorscheme tomorrow-night
+Plugin 'https://github.com/scrooloose/syntastic.git'		"Syntastic
+Plugin 'https://github.com/sjl/gundo.vim'			"Gundo
+Plugin 'https://github.com/Lokaltog/vim-easymotion.git'		"EasyMotion
+Plugin 'https://github.com/bling/vim-airline.git'		"Airline
+Plugin 'https://github.com/tpope/vim-commentary.git'		"Commentary plugin
+"Plugin 'https://github.com/Valloric/YouCompleteMe.git'		"YouCompleteMe
 
 call vundle#end()
 filetype plugin indent on
-colorscheme monokai		" Enable mustang theme
+
+colorscheme Tomorrow-Night		" Enable mustang theme
+
+" Syntastic :
+"--------------------
+let g:syntastic_c_compiler_options = '-Werror -Wextra -Wall -pedantic'
+let g:syntastic_c_compiler = 'gcc'
+let g:syntastic_cpp_compiler_options = '-Werror -Wextra -Wall -pedantic'
+let g:syntastic_cpp_compiler = 'g++'
+
+set statusline+=%#warningmsg#
+set statusline+=%{SyntasticStatuslineFlag()}
+set statusline+=%*
+
+let g:syntastic_always_populate_loc_list = 1
+let g:syntastic_auto_loc_list = 1
+let g:syntastic_check_on_open = 1
+let g:syntastic_check_on_wq = 0
+
+" Gundo :
+"--------------------
+nnoremap U :GundoToggle<CR>
+
+" YouCompleteMe :
+"--------------------
+
+" EasyMotion :
+"--------------------
+map  / <Plug>(easymotion-sn)
+omap / <Plug>(easymotion-tn)
+
+" Airline :
+"--------------------
+set laststatus=2
+let g:airline_powerline_fonts = 1
+let g:airline_theme= 'tomorrow'
+
+" Paste but don't yank !
+"--------------------
+function! RestoreRegister()
+    let @" = s:restore_reg
+    return ''
+endfunction
+
+function! s:Repl()
+    let s:restore_reg = @"
+    return "p@=RestoreRegister()\<cr>"
+endfunction
+
+vnoremap <silent> <expr> p <sid>Repl()
+
+" =========================
+" A. BASIC CONFIG
+" =========================
 
 "1" Interface :
 "--------------------
@@ -57,6 +112,8 @@ set mousehide			" Hide mouse cursor when typing
 "set mouse=a			" Disable mouse support
 "set showcmd			" Show incomplete command
 "set wildmenu			" Display command auto-completion with tab
+set splitbelow			" New horizontal split appears below
+set splitright			" New vertical split appears on right
 "--------------------
 
 "2" Colors :
@@ -93,6 +150,11 @@ map <S-F6> :set nopaste <CR>
 imap ;j <Esc>
 nmap ;j <Esc>
 vmap ;j <Esc>
+" Move between splits
+nnoremap <C-J> <C-W><C-J>
+nnoremap <C-K> <C-W><C-K>
+nnoremap <C-L> <C-W><C-L>
+nnoremap <C-H> <C-W><C-H>
 "--------------------
 
 "7" Misc :
