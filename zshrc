@@ -69,7 +69,7 @@ function fstud()
 	for user in $@
 	do
 		printf "\033[31m\033[47m $@ \033[0m\n"
-		PHONE=$(ldapsearch -Q uid="$@" | grep -e "^mobile-phone" | sed 's/mobile-phone: /# /g')
+		PHONE=$(ldapsearch -Q uid="$@" | grep -e "^mobile" | sed 's/mobile: /# /g')
 		if [ -n "$PHONE" ] 
 		then
 			printf "\033[32m$PHONE\n\033[0m"
