@@ -55,6 +55,18 @@ function gitdup()
 	fi
 }
 
+function gitf()
+{
+	if [ "$#" -ne 1 ]
+	then
+		echo "Usage: gitf \"Commit message\"";
+	else
+		git add -A
+		git commit -m $1
+		git push
+	fi
+}
+
 
 ### 42 related functions ###
 
@@ -62,31 +74,31 @@ function fstud()
 { 
 	if [[ -z $@ ]]
 	then
-		echo "Usage: locate.sh <sutdents>";
-		exit -1;
+		echo "Usage: fstud <students>";
+	else
+		crawler="https://dashboard.42.fr/crawler/pull"
+		for user in $@
+		do
+			printf "\033[31m\033[47m $@ \033[0m\n"
+			PHONE=$(ldapsearch -Q uid="$@" | grep -e "^mobile" | sed 's/mobile: /# /g')
+			if [ -n "$PHONE" ] 
+			then
+				printf "\033[32m$PHONE\n\033[0m"
+			else
+				printf "\033[31m# No phone number\n\033[0m"
+			fi
+			crawl=$(curl $crawler/$user/ -s | tr ',\|}' '\n' | tr '\"' '.')
+			poste=$(echo $crawl | grep last_host | cut -d'.' -f4)
+			active=$(echo $crawl | grep last_activity | cut -d'.' -f3 | cut -d' ' -f2)
+			if [ $active ]
+			then
+				printf "\033[32m# $poste\n\033[0m"
+			else
+				printf "\033[31m# Not at school\n\033[0m"
+			fi
+			printf "\n"
+		done
 	fi
-	crawler="https://dashboard.42.fr/crawler/pull"
-	for user in $@
-	do
-		printf "\033[31m\033[47m $@ \033[0m\n"
-		PHONE=$(ldapsearch -Q uid="$@" | grep -e "^mobile-phone" | sed 's/mobile-phone: /# /g')
-		if [ -n "$PHONE" ] 
-		then
-			printf "\033[32m$PHONE\n\033[0m"
-		else
-			printf "\033[31m# No phone number\n\033[0m"
-		fi
-		crawl=$(curl $crawler/$user/ -s | tr ',\|}' '\n' | tr '\"' '.')
-		poste=$(echo $crawl | grep last_host | cut -d'.' -f4)
-		active=$(echo $crawl | grep last_activity | cut -d'.' -f3 | cut -d' ' -f2)
-		if [ $active ]
-		then
-			printf "\033[32m# $poste\n\033[0m"
-		else
-			printf "\033[31m# Not at school\n\033[0m"
-		fi
-		printf "\n"
-	done
 }
 
 ### Quick navigation function ###

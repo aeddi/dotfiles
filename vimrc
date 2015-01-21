@@ -44,12 +44,13 @@ Plugin 'https://github.com/sjl/gundo.vim'			"Gundo
 Plugin 'https://github.com/Lokaltog/vim-easymotion.git'		"EasyMotion
 Plugin 'https://github.com/bling/vim-airline.git'		"Airline
 Plugin 'https://github.com/tpope/vim-commentary.git'		"Commentary plugin
+Plugin 'https://github.com/aperezdc/vim-template.git'		"Template
 "Plugin 'https://github.com/Valloric/YouCompleteMe.git'		"YouCompleteMe
 
 call vundle#end()
 filetype plugin indent on
 
-colorscheme Tomorrow-Night		" Enable mustang theme
+silent! colorscheme Tomorrow-Night				" Enable theme with silent! to avoid error on first launch
 
 " Syntastic :
 "--------------------
@@ -84,6 +85,15 @@ omap / <Plug>(easymotion-tn)
 set laststatus=2
 let g:airline_powerline_fonts = 1
 let g:airline_theme= 'tomorrow'
+
+" Template :
+"--------------------
+let g:templates_no_autocmd = 1			"Disable auto-insert for all extensions
+autocmd BufNewFile *.h :Template *.h
+autocmd BufNewFile *.c :Template *.c
+autocmd BufNewFile *.hpp :Template *.hpp
+autocmd BufNewFile *.cpp :Template *.cpp
+autocmd BufNewFile *.sh :Template *.sh
 
 " Paste but don't yank !
 "--------------------
@@ -128,7 +138,7 @@ set noexpandtab			" Disable tab to spaces
 "set tabstop=4			" 4 column by tab
 set autoindent			" Same indent as previous lines
 set smartindent			" Auto-indentation in while, if, etc...
-set shiftwidth=4		" Auto-indent with 4 columns
+"set shiftwidth=4		" Auto-indent with 4 columns
 set backspace=indent,eol,start	" Restore normal backspace comportement
 "--------------------
 
