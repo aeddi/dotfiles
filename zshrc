@@ -1,5 +1,5 @@
 export MARKPATH=$HOME/.marks
-export CONFPATH=$(readlink -f ${0%/*})
+export CONFPATH=${0:A:h}
 
 ### Alias part ###
 

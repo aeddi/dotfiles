@@ -40,9 +40,9 @@ call vundle#begin()
 
 Plugin 'https://github.com/Plastic-1/tomorrow-theme.git'	"Colorscheme tomorrow-night
 Plugin 'https://github.com/scrooloose/syntastic.git'		"Syntastic
-Plugin 'https://github.com/sjl/gundo.vim'			"Gundo
+Plugin 'https://github.com/sjl/gundo.vim'					"Gundo
 Plugin 'https://github.com/Lokaltog/vim-easymotion.git'		"EasyMotion
-Plugin 'https://github.com/bling/vim-airline.git'		"Airline
+Plugin 'https://github.com/bling/vim-airline.git'			"Airline
 Plugin 'https://github.com/tpope/vim-commentary.git'		"Commentary plugin
 Plugin 'https://github.com/aperezdc/vim-template.git'		"Template
 "Plugin 'https://github.com/Valloric/YouCompleteMe.git'		"YouCompleteMe
