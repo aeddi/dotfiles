@@ -101,6 +101,7 @@ function fstud()
 	fi
 }
 
+
 ### Quick navigation function ###
 
 function jump { 
