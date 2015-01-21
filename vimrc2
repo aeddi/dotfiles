@@ -1,0 +1,2 @@
+syntax on
+silent! colorscheme Tomorrow-Night				" Enable theme with silent! to avoid error on first launch

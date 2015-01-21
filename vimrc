@@ -40,12 +40,13 @@ call vundle#begin()
 
 Plugin 'https://github.com/Plastic-1/tomorrow-theme.git'	"Colorscheme tomorrow-night
 Plugin 'https://github.com/scrooloose/syntastic.git'		"Syntastic
-Plugin 'https://github.com/sjl/gundo.vim'					"Gundo
+Plugin 'https://github.com/sjl/gundo.vim'			"Gundo
 Plugin 'https://github.com/Lokaltog/vim-easymotion.git'		"EasyMotion
-Plugin 'https://github.com/bling/vim-airline.git'			"Airline
+Plugin 'https://github.com/bling/vim-airline.git'		"Airline
 Plugin 'https://github.com/tpope/vim-commentary.git'		"Commentary plugin
 Plugin 'https://github.com/aperezdc/vim-template.git'		"Template
-"Plugin 'https://github.com/Valloric/YouCompleteMe.git'		"YouCompleteMe
+Plugin 'https://github.com/Valloric/YouCompleteMe.git'		"YouCompleteMe
+Plugin 'https://github.com/Raimondi/delimitMate.git'		"delimitMate
 
 call vundle#end()
 filetype plugin indent on
@@ -74,6 +75,7 @@ nnoremap U :GundoToggle<CR>
 
 " YouCompleteMe :
 "--------------------
+let g:ycm_global_ycm_extra_conf = "~/.vim/bundle/YouCompleteMe/.ycm_extra_conf.py"
 
 " EasyMotion :
 "--------------------
@@ -83,7 +85,7 @@ omap / <Plug>(easymotion-tn)
 " Airline :
 "--------------------
 set laststatus=2
-let g:airline_powerline_fonts = 1
+" let g:airline_powerline_fonts = 1
 let g:airline_theme= 'tomorrow'
 
 " Template :
