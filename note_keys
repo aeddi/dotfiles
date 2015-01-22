@@ -34,6 +34,8 @@ Ctrl+w >
 "Call gundo
 U
 
+"EasyMotion jump
+<Leader><Leader>s
 <Leader>l <Plug>(easymotion-lineforward)
 <Leader>j <Plug>(easymotion-j)
 <Leader>k <Plug>(easymotion-k)
@@ -53,3 +55,6 @@ buffer  horizontal  up      -->   :leftabove  split
 buffer  horizontal  down    -->   :rightbelow split
 buffer  vertical    left    -->   :leftabove  vsplit
 buffer  vertical    right   -->   :rightbelow vsplit
+
+"Rainbow Parentheses
+<Leader><Leader>(

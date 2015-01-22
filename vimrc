@@ -1,4 +1,4 @@
-" ==============================================================================
+" =============================================================================
 " Plastic's Vim config - 01/2015
 " ==============================================================================
 "
@@ -11,22 +11,14 @@
 "		7. Misc
 "		8. Yankless paste
 "
-"	B. 42 NORM C/C++
-"		1. Space & Tab
-"		2. Parenthesis
-"		3. Line size limit
-"		4. Auto header
-"		5. Auto .h protect
-"		6. Auto .sh env
-"
-"	C. PERSISTENCE
+"	B. PERSISTENCE
 "		1. Backups
 "		2. Swap files
 "		2. Restore session
 "		4. Save buffers
 "		5. Undo history
 "
-"	D. PLUGINS
+"	C. PLUGINS
 "		1. Vundle
 "		2. Tomorrow-night
 "		3. Syntastic
@@ -35,6 +27,8 @@
 "		6. EasyMotion
 "		7. Airline
 "		8. Template
+"		9. Rainbow Parentheses
+"		10. UltiSnips
 "
 " ==============================================================================
 
@@ -124,16 +118,7 @@ vnoremap <silent> <expr> p <sid>Repl()
 
 
 " =========================
-" B. 42 NORM C/C++
-" =========================
-
-" Auto header :
-"--------------------
-"autocmd BufNewFile *.{c,cpp,h,hpp} :Stdheader
-"--------------------
-
-" =========================
-" C. PERSISTENCE
+" B. PERSISTENCE
 " =========================
 
 "1" Backups :
@@ -181,23 +166,32 @@ endif
 
 
 " =========================
-" D. PLUGINS
+" C. PLUGINS
 " =========================
 
 "1" Vundle :
 "--------------------
+filetype off
 set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
 
-Plugin 'https://github.com/Plastic-1/tomorrow-theme.git'	"Colorscheme tomorrow-night
-Plugin 'https://github.com/scrooloose/syntastic.git'		"Syntastic
-Plugin 'https://github.com/sjl/gundo.vim'			"Gundo
-Plugin 'https://github.com/Lokaltog/vim-easymotion.git'		"EasyMotion
-Plugin 'https://github.com/bling/vim-airline.git'		"Airline
-Plugin 'https://github.com/tpope/vim-commentary.git'		"Commentary plugin
-Plugin 'https://github.com/aperezdc/vim-template.git'		"Template
-Plugin 'https://github.com/Valloric/YouCompleteMe.git'		"YouCompleteMe
-Plugin 'https://github.com/Raimondi/delimitMate.git'		"delimitMate
+Plugin 'gmarik/Vundle.vim'			"Vundle
+Plugin 'Plastic-1/tomorrow-theme.git'		"Colorscheme tomorrow-night
+Plugin 'scrooloose/syntastic.git'		"Syntastic
+Plugin 'sjl/gundo.vim'				"Gundo
+Plugin 'Lokaltog/vim-easymotion.git'		"EasyMotion
+Plugin 'bling/vim-airline.git'			"Airline
+Plugin 'tpope/vim-commentary.git'		"Commentary plugin
+Plugin 'aperezdc/vim-template.git'		"Template
+Plugin 'Valloric/YouCompleteMe.git'		"YouCompleteMe
+Plugin 'Raimondi/delimitMate.git'		"delimitMate
+Plugin 'luochen1990/rainbow'			"Rainbow Parentheses
+Plugin 'vim-scripts/matchit.zip.git'		"MatchIt
+Plugin 'tpope/vim-repeat.git'			"RepeatVim
+Plugin 'honza/vim-snippets'			"Snippets
+Plugin 'sirver/ultisnips'			"Ultisnips
+Plugin 'kien/ctrlp.vim.git'			"CtrlP
+Plugin 'Plastic-1/Stdheader'			"Stdheader
 
 call vundle#end()
 filetype plugin indent on
@@ -235,6 +229,11 @@ nnoremap U :GundoToggle<CR>
 let g:ycm_global_ycm_extra_conf = "~/.vim/bundle/YouCompleteMe/.ycm_extra_conf.py"
 let g:ycm_confirm_extra_conf = 1		"Disable confimation message
 let g:ycm_register_as_syntastic_checker = 0	"Don't overide Syntastic plugin
+try
+	set shortmess+=c			"Disable "Pattern not found" message
+catch /E539: Illegal character/
+endtry
+let g:ycm_use_ultisnips_completer = 1		"Display available snippets
 "--------------------
 
 "6" EasyMotion :
@@ -259,4 +258,18 @@ autocmd BufNewFile *.c :Template *.c
 autocmd BufNewFile *.hpp :Template *.hpp
 autocmd BufNewFile *.cpp :Template *.cpp
 autocmd BufNewFile *.sh :Template *.sh
+autocmd BufNewFile *.{c,cpp,h,hpp} :Stdheader	"Insert 42 header < Must be after template autocmd
+"--------------------
+
+"9" Rainbow Parentheses :
+"--------------------
+let g:rainbow_active = 0
+nnoremap <leader><leader>( :RainbowToggle<CR>
+"--------------------
+
+"10" UltiSnips
+"--------------------
+let g:UltiSnipsExpandTrigger="<C-e>"
+let g:UltiSnipsJumpForwardTrigger="<C-e>"
+let g:UltiSnipsJumpBackwardTrigger="<C-S-e>"
 "--------------------
