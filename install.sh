@@ -5,6 +5,7 @@ echo "$SCRIPT_DIR"
 
 VIMRC=~/.vimrc
 ZSHRC=~/.zshrc
+GITCFG=~/.gitconfig
 
 [ -f $VIMRC ] || touch $VIMRC
 echo "source $SCRIPT_DIR/vimrc" >> $VIMRC
@@ -37,3 +38,9 @@ echo "Don't forget to change the police of your term with a powerline compatible
     Monofur
     FiraMono"
 rm -rf fonts
+
+[ -f $GITCFG ] || touch $GITCFG
+echo "[color]
+	interactive = always
+[color "interactive"]
+	error = red bold" >> $GITCFG

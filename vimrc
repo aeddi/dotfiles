@@ -88,6 +88,9 @@ nnoremap <C-L> <C-W><C-L>
 nnoremap <C-H> <C-W><C-H>
 " Check norm
 map <F4> :!norminette **/*.{c,h} <CR>
+" Switch tab
+nnoremap <C-[> :tabprevious <CR>
+nnoremap <C-]> :tabnext <CR>
 "--------------------
 
 "7" Misc :
@@ -178,7 +181,6 @@ set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
 
 Plugin 'gmarik/Vundle.vim'			"Vundle
-Plugin 'Plastic-1/tomorrow-theme.git'		"Colorscheme tomorrow-night
 Plugin 'scrooloose/syntastic.git'		"Syntastic
 Plugin 'sjl/gundo.vim'				"Gundo
 Plugin 'Lokaltog/vim-easymotion.git'		"EasyMotion
@@ -190,9 +192,10 @@ Plugin 'Raimondi/delimitMate.git'		"delimitMate
 Plugin 'luochen1990/rainbow'			"Rainbow Parentheses
 Plugin 'vim-scripts/matchit.zip.git'		"MatchIt
 Plugin 'tpope/vim-repeat.git'			"RepeatVim
-Plugin 'honza/vim-snippets'			"Snippets
 Plugin 'sirver/ultisnips'			"Ultisnips
 Plugin 'kien/ctrlp.vim.git'			"CtrlP
+Plugin 'Plastic-1/tomorrow-theme.git'		"Colorscheme tomorrow-night
+Plugin 'Plastic-1/Templates-snippets.git'	"Custom templates/snippets
 Plugin 'Plastic-1/Stdheader'			"Stdheader
 
 call vundle#end()
@@ -248,19 +251,13 @@ omap / <Plug>(easymotion-tn)
 "--------------------
 set laststatus=2				"Always show airline
 let g:airline_powerline_fonts = 1		"Enable patched fonts
-let g:airline_theme= 'tomorrow'
+let g:airline_theme = 'tomorrow'
 set noshowmode
 "--------------------
 
 "8" Template :
 "--------------------
-let g:templates_no_autocmd = 1			"Disable auto-insert for all extensions
-autocmd BufNewFile *.h :Template *.h
-autocmd BufNewFile *.c :Template *.c
-autocmd BufNewFile *.hpp :Template *.hpp
-autocmd BufNewFile *.cpp :Template *.cpp
-autocmd BufNewFile *.sh :Template *.sh
-autocmd BufNewFile *.{c,cpp,h,hpp} :Stdheader	"Insert 42 header < Must be after template autocmd
+let g:templates_directory = '~/.vim/bundle/Templates-snippets/templates'
 "--------------------
 
 "9" Rainbow Parentheses :
@@ -272,6 +269,6 @@ nnoremap <leader><leader>( :RainbowToggle<CR>
 "10" UltiSnips
 "--------------------
 let g:UltiSnipsExpandTrigger="<C-e>"
-let g:UltiSnipsJumpForwardTrigger="<C-e>"
-let g:UltiSnipsJumpBackwardTrigger="<C-S-e>"
+let g:UltiSnipsJumpForwardTrigger="<C-S-e>"
+let g:UltiSnipsJumpBackwardTrigger="<C-w>"
 "--------------------
