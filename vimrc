@@ -89,8 +89,8 @@ nnoremap <C-H> <C-W><C-H>
 " Check norm
 map <F4> :!norminette **/*.{c,h} <CR>
 " Switch tab
-nnoremap <C-[> :tabprevious <CR>
-nnoremap <C-]> :tabnext <CR>
+nnoremap { :tabprevious <CR>
+nnoremap } :tabnext <CR>
 "--------------------
 
 "7" Misc :
@@ -231,7 +231,7 @@ nnoremap U :GundoToggle<CR>
 
 "5" YouCompleteMe :
 "--------------------
-let g:ycm_global_ycm_extra_conf = "~/.vim/bundle/YouCompleteMe/.ycm_extra_conf.py"
+let g:ycm_global_ycm_extra_conf = "~/.vim/bundle/Templates-snippets/ycm_conf/ycm_c++_conf.py"
 let g:ycm_confirm_extra_conf = 1		"Disable confimation message
 let g:ycm_register_as_syntastic_checker = 0	"Don't overide Syntastic plugin
 try
