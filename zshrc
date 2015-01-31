@@ -127,4 +127,25 @@ function _completemarks {
 compctl -K _completemarks jump
 compctl -K _completemarks unmark
 
-###############################
+
+### Shell customization ###
+
+HISTFILE=~/.histfile
+HISTSIZE=1000
+SAVEHIST=1000
+setopt extendedglob
+
+autoload -Uz compinit
+autoload -U colors && colors
+compinit
+
+PROMPT="%{$fg_bold[blue]%}%* %{$fg_bold[yellow]%}%~ %{$reset_color%}> "
+RPROMPT="[%{$fg_no_bold[yellow]%}%?%{$reset_color%}]"
+
+case $TERM in
+    xterm*)
+        precmd () {print -Pn "\e]0;%~\a"}
+        ;;
+esac
+
+###########################
