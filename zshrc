@@ -22,7 +22,7 @@ alias 5.='cd ../../../../..'
 
 alias vimrs='vim -S .mysession.vim'
 alias auteur="echo 'aeddi' > auteur"
-alias gitignore="cp $CONFPATH/gitignore ./.gitignore"
+alias gitignore="cp $CONFPATH/project_template/gitignore ./.gitignore"
 
 
 ### Projects management functions ###
@@ -32,9 +32,9 @@ function newp()
 	auteur
 	gitignore
 	mkdir -p sources
-	cp $CONFPATH/syntastic_c_config sources/.syntastic_c_config
+	cp $CONFPATH/project_template/syntastic_c_config sources/.syntastic_c_config
 	mkdir -p includes
-	cp -r $CONFPATH/libft  $CONFPATH/Makefile .
+	cp -r $CONFPATH/project_template/libft  $CONFPATH/project_template/Makefile .
 }
 
 function gitdup()
