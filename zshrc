@@ -128,3 +128,59 @@ compctl -K _completemarks jump
 compctl -K _completemarks unmark
 
 ###############################
+
+
+### Shell customization ###
+
+HISTFILE=~/.histfile
+HISTSIZE=1000
+SAVEHIST=1000
+setopt extendedglob
+
+#set vi bindkey and replace <ESC> by ';j'
+bindkey -v
+bindkey -M viins ';j' vi-cmd-mode
+
+#Vi config
+# change cursor colour depending on vi mode
+# use cursor as indicator of vi mode
+zle-keymap-select () {
+  if [ $KEYMAP = vicmd ]; then
+    if [[ $TMUX = '' ]]; then
+      echo -ne "\033]12;Red\007"
+    else
+      printf '\033Ptmux;\033\033]12;red\007\033\\'
+    fi
+  else
+    if [[ $TMUX = '' ]]; then
+      echo -ne "\033]12;white\007"
+    else
+      printf '\033Ptmux;\033\033]12;white\007\033\\'
+    fi
+  fi
+}
+zle-line-init () {
+  zle -K viins
+  echo -ne "\033]12;white\007"
+}
+zle -N zle-keymap-select
+zle -N zle-line-init
+
+# The following lines were added by compinstall
+zstyle :compinstall filename '/home/plastic/.zshrc'
+
+autoload -Uz compinit
+autoload -U colors && colors
+compinit
+# End of lines added by compinstall
+
+PROMPT="%{$fg_bold[blue]%}%* %{$fg_bold[yellow]%}%~ %{$reset_color%}> "
+RPROMPT="[%{$fg_no_bold[yellow]%}%?%{$reset_color%}]"
+
+case $TERM in
+    xterm*)
+        precmd () {print -Pn "\e]0;%~\a"}
+        ;;
+esac
+
+###########################
