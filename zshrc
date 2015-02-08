@@ -3,11 +3,19 @@ export CONFPATH=${0:A:h}
 
 ### Alias part ###
 
+if [[ `uname` == "Darwin" ]]; then
+	alias ls='ls -G'
+	alias ll='ls -lAh'
+elif [[ `uname` == "Linux" ]]; then
+	alias egrep='egrep --color=auto'
+	alias fgrep='fgrep --color=auto'
+	alias grep='grep --color=auto'
+	alias ll='ls -Al'
+	alias ls='ls -F --color=auto'
+fi
+
 alias wcc='gcc -Wall -Werror -Wextra'
 alias w++='g++ -Wall -Werror -Wextra'
-
-alias ls='ls -G'
-alias ll='ls -lAGh'
 
 alias rm='rm -i'
 alias cp='cp -i'
@@ -147,5 +155,19 @@ case $TERM in
         precmd () {print -Pn "\e]0;%~\a"}
         ;;
 esac
+
+
+### Zsh plugins ###
+
+source $HOME/.antigen/antigen.zsh
+
+antigen bundle zsh-users/zsh-history-substring-search.git
+antigen bundle zsh-users/zsh-completions
+
+antigen apply
+
+# bind UP and DOWN arrow keys to history plugin
+bindkey '^[[A' history-substring-search-up
+bindkey '^[[B' history-substring-search-down
 
 ###########################

@@ -3,15 +3,24 @@
 SCRIPT_DIR=${0:A:h}
 echo "$SCRIPT_DIR"
 
-VIMRC=~/.vimrc
 ZSHRC=~/.zshrc
+ZSHPG=~/.antigen
+VIMRC=~/.vimrc
 GITCFG=~/.gitconfig
 
-[ -f $VIMRC ] || touch $VIMRC
-echo "source $SCRIPT_DIR/vimrc" >> $VIMRC
+echo "\e[32;1mZsh configuration start\e[00m"
 
 [ -f $ZSHRC ] || touch $ZSHRC
 echo "source $SCRIPT_DIR/zshrc" >> $ZSHRC
+
+git clone https://github.com/zsh-users/antigen.git $ZSHPG
+source $ZSHRC
+
+
+echo "\e[32;1mVim configuration start\e[00m"
+
+[ -f $VIMRC ] || touch $VIMRC
+echo "source $SCRIPT_DIR/vimrc" >> $VIMRC
 
 git clone https://github.com/gmarik/Vundle.vim.git ~/.vim/bundle/Vundle.vim
 vim +PluginInstall +qall
@@ -43,9 +52,3 @@ echo "
 	Monofur
 	FiraMono\n"
 rm -rf fonts
-
-[ -f $GITCFG ] || touch $GITCFG
-echo "[color]
-	interactive = always
-[color \"interactive\"]
-	error = red bold" >> $GITCFG
