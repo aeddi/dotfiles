@@ -10,8 +10,8 @@ elif [[ `uname` == "Linux" ]]; then
 	alias egrep='egrep --color=auto'
 	alias fgrep='fgrep --color=auto'
 	alias grep='grep --color=auto'
-	alias ll='ls -Al'
-	alias ls='ls -F --color=auto'
+	alias ll='ls -AlF'
+	alias ls='ls --color=auto'
 fi
 
 alias wcc='gcc -Wall -Werror -Wextra'
