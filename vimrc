@@ -182,23 +182,24 @@ filetype off
 set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
 
-Plugin 'gmarik/Vundle.vim'					"Vundle
-Plugin 'scrooloose/syntastic.git'			"Syntastic
-Plugin 'sjl/gundo.vim'						"Gundo
-Plugin 'Lokaltog/vim-easymotion.git'		"EasyMotion
-Plugin 'bling/vim-airline.git'				"Airline
+Plugin 'gmarik/Vundle.vim'					"Plugin manager
+Plugin 'scrooloose/syntastic.git'			"Syntax/error checker 
+Plugin 'sjl/gundo.vim'						"Undo tree
+Plugin 'Lokaltog/vim-easymotion.git'		"Faster motion system
+Plugin 'bling/vim-airline.git'				"Better status bar
 Plugin 'tpope/vim-commentary.git'			"Commentary plugin
-Plugin 'aperezdc/vim-template.git'			"Template
-Plugin 'Valloric/YouCompleteMe.git'			"YouCompleteMe
-Plugin 'Raimondi/delimitMate.git'			"delimitMate
-Plugin 'luochen1990/rainbow'				"Rainbow Parentheses
-Plugin 'vim-scripts/matchit.zip.git'		"MatchIt
-Plugin 'tpope/vim-repeat.git'				"RepeatVim
-Plugin 'sirver/ultisnips'					"Ultisnips
-Plugin 'kien/ctrlp.vim.git'					"CtrlP
+Plugin 'aperezdc/vim-template.git'			"Code templates for many langages
+Plugin 'Valloric/YouCompleteMe.git'			"Autocompletion system
+Plugin 'Raimondi/delimitMate.git'			"Auto-close brackets and other paired stuffs
+Plugin 'luochen1990/rainbow'				"Display multi-color parentheses
+Plugin 'vim-scripts/matchit.zip.git'		"Bind more match on % key
+Plugin 'tpope/vim-repeat.git'				"More command can repeat with . key
+Plugin 'sirver/ultisnips'					"Code snippets for many langages
+Plugin 'kien/ctrlp.vim.git'					"File openner
+Plugin 'marijnh/tern_for_vim'				"Javascript autocompleter
 Plugin 'Plastic-1/tomorrow-theme.git'		"Colorscheme tomorrow-night
 Plugin 'Plastic-1/Templates-snippets.git'	"Custom templates/snippets
-Plugin 'Plastic-1/Stdheader'				"Stdheader
+Plugin 'Plastic-1/Stdheader'				"42 standard header
 
 call vundle#end()
 filetype plugin indent on
