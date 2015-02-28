@@ -242,6 +242,8 @@ try
 catch /E539: Illegal character/
 endtry
 let g:ycm_use_ultisnips_completer = 1		"Display available snippets
+let g:ycm_key_list_select_completion = ['<C-n>', '<Down>']
+let g:ycm_key_list_previous_completion = ['<C-m>', '<Up>']
 "--------------------
 
 "6" EasyMotion :
