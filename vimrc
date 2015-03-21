@@ -191,12 +191,13 @@ Plugin 'tpope/vim-commentary.git'			"Commentary plugin
 Plugin 'aperezdc/vim-template.git'			"Code templates for many langages
 Plugin 'Valloric/YouCompleteMe.git'			"Autocompletion system
 Plugin 'Raimondi/delimitMate.git'			"Auto-close brackets and other paired stuffs
+Plugin 'Shougo/unite.vim'					"Better files opening
 Plugin 'luochen1990/rainbow'				"Display multi-color parentheses
 Plugin 'vim-scripts/matchit.zip.git'		"Bind more match on % key
 Plugin 'tpope/vim-repeat.git'				"More command can repeat with . key
 Plugin 'sirver/ultisnips'					"Code snippets for many langages
-Plugin 'kien/ctrlp.vim.git'					"File openner
 Plugin 'marijnh/tern_for_vim'				"Javascript autocompleter
+Plugin 'tpope/vim-fugitive'					"Git integration
 Plugin 'Plastic-1/tomorrow-theme.git'		"Colorscheme tomorrow-night
 Plugin 'Plastic-1/Templates-snippets.git'	"Custom templates/snippets
 Plugin 'Plastic-1/Stdheader'				"42 standard header
