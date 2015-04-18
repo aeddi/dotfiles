@@ -1,4 +1,4 @@
-" =============================================================================
+" ==============================================================================
 " Plastic's Vim config - 01/2015
 " ==============================================================================
 "
@@ -93,6 +93,10 @@ map <F4> :!norminette **/*.{c,h} <CR>
 " Switch tab
 nnoremap { :tabprevious <CR>
 nnoremap } :tabnext <CR>
+" Allow saving file as sudo
+command W :execute ':silent w !sudo tee % > /dev/null' | :edit!
+command Wq :execute ':W' | :q
+command WQ :Wq
 "--------------------
 
 "7" Misc :

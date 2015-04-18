@@ -1,4 +1,5 @@
 export MARKPATH=$HOME/.marks
+export BIT='https://Plastic-1@bitbucket.org/Plastic-1'
 export CONFPATH=${0:A:h}
 
 ### Alias part ###
@@ -16,6 +17,9 @@ fi
 
 alias wcc='gcc -Wall -Werror -Wextra'
 alias w++='g++ -Wall -Werror -Wextra'
+
+alias ccc='clang -Wall -Werror -Wextra'
+alias c++='clang++ -Wall -Werror -Wextra'
 
 alias rm='rm -i'
 alias cp='cp -i'
