@@ -202,6 +202,7 @@ Plugin 'tpope/vim-repeat.git'				"More command can repeat with . key
 Plugin 'sirver/ultisnips'					"Code snippets for many langages
 Plugin 'marijnh/tern_for_vim'				"Javascript autocompleter
 Plugin 'tpope/vim-fugitive'					"Git integration
+Plugin 'ryanss/vim-hackernews'				"Hacker news
 Plugin 'Plastic-1/tomorrow-theme.git'		"Colorscheme tomorrow-night
 Plugin 'Plastic-1/Templates-snippets.git'	"Custom templates/snippets
 Plugin 'Plastic-1/Stdheader'				"42 standard header
