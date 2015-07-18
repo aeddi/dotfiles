@@ -27,28 +27,11 @@ exec --no-startup-id "pactl set-sink-volume 1 100% ; killall -USR1 i3status"
 # Set background
 exec --no-startup-id nitrogen --restore
 
-# Tab by default
-# workspace_layout tabbed
-
 # Disable title (execpted tabbed win)
 new_window 1pixel
 
 # Keep title for floating
 new_float normal
-
-# Disable edge screen border (vertical|horizontal|both)
-#hide_edge_borders both
-
-# This font is widely installed, provides lots of unicode glyphs, right-to-left
-# text rendering and scalability on retina/hidpi displays (thanks to pango).
-#font pango:DejaVu Sans Mono 8
-
-# Before i3 v4.8, we used to recommend this one as the default:
-# font -misc-fixed-medium-r-normal--13-120-75-75-C-70-iso10646-1
-# The font above is very space-efficient, that is, it looks good, sharp and
-# clear in small sizes. However, its unicode glyph coverage is limited, the old
-# X core fonts rendering does not support right-to-left and this being a bitmap
-# font, it doesn’t scale on retina/hidpi displays.
 
 # Use Mouse+$mod to drag floating windows to their wanted position
 floating_modifier $mod
@@ -115,10 +98,17 @@ bindsym $mod+a focus parent
 # focus the child container
 bindsym $mod+Shift+a focus child
 
-bindsym control+mod1+l exec i3lock -c 141414
-
 # jump to urgent windows
 bindsym $mod+x [urgent=latest] focus
+
+# Return to last workspace on second button push 
+workspace_auto_back_and_forth yes
+
+# Cancel last workspace changement
+bindsym $mod+z workspace back_and_forth
+
+# Cancel last windows deplacement
+bindsym $mod+Shift+z move container to workspace back_and_forth; workspace back_and_forth
 
 # switch to workspace
 bindsym $mod+1 workspace 1:Internet
@@ -186,9 +176,6 @@ bindsym XF86AudioMute exec "pactl set-sink-mute 1 toggle ; killall -USR1 i3statu
 bindsym XF86MonBrightnessUp exec xbacklight -inc 10
 bindsym XF86MonBrightnessDown exec xbacklight -dec 10
 
-# Touchpad controls
-bindsym XF86TouchpadToggle exec xbacklight -inc 10 #exec /home/plastic/.i3/toggletouchpad.sh
-
 # Hide i3bar
 bar {
 	strip_workspace_numbers yes
@@ -209,6 +196,8 @@ assign [class="^JDownloader$"] 4:Downloads
 assign [class="^Deluge$"] 4:Downloads
 
 for_window [class="^Cinnamon-settings.py$"] floating enable, border normal
+for_window [window_role="pop-up"] floating enable, border normal
+for_window [window_role="task_dialog"] floating enable, border normal
 
 exec --no-startup-id firefox
 exec --no-startup-id chromium --app=https://range12.slack.com
@@ -216,3 +205,22 @@ exec --no-startup-id thunderbird
 exec --no-startup-id i3-msg 'workspace 3:Development; exec /usr/bin/gnome-terminal --hide-menubar'
 exec --no-startup-id deluge
 exec --no-startup-id JDownloader
+
+# Power / logout menu
+set $Locker i3lock -c 141414 && sleep 1
+
+set $mode_system (l) Lockscreen, (e) Logout, (s) Suspend, (h) Hibernate, (r) Reboot, (S) Shutdown
+mode "$mode_system" {
+	bindsym l exec --no-startup-id $Locker, mode "default"
+	bindsym e exec --no-startup-id i3-msg exit, mode "default"
+	bindsym s exec --no-startup-id $Locker && systemctl suspend, mode "default"
+	bindsym h exec --no-startup-id $Locker && systemctl hibernate, mode "default"
+	bindsym r exec --no-startup-id systemctl reboot, mode "default"
+	bindsym Shift+s exec --no-startup-id systemctl poweroff -i, mode "default"  
+
+# back to normal: Enter or Escape
+	bindsym Return mode "default"
+	bindsym Escape mode "default"
+}
+
+bindsym $mod+Pause mode "$mode_system"
