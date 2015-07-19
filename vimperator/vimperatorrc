@@ -1,0 +1,11 @@
+set editor="gnome-terminal -x vim"
+set defsearch=google
+
+colorscheme tomorrow-night
+
+imap ;j <Esc>
+nmap ;j <Esc>
+vmap ;j <Esc>
+cmap ;j <Esc>
+
+inoremap <C-a> <C-Home><C-S-End>
