@@ -1,0 +1,8 @@
+set editor="callvim"
+
+colorscheme tomorrow-night
+
+imap ;j <Esc>
+nmap ;j <Esc>
+vmap ;j <Esc>
+cmap ;j <Esc>

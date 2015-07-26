@@ -1,4 +1,4 @@
-set editor="gnome-terminal -x vim"
+set editor=callvim
 set defsearch=google
 
 colorscheme tomorrow-night
@@ -9,3 +9,8 @@ vmap ;j <Esc>
 cmap ;j <Esc>
 
 inoremap <C-a> <C-Home><C-S-End>
+
+" Previous tab
+nnoremap { <C-p>
+" Next tab
+nnoremap } <C-n>
