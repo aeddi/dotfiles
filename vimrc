@@ -7,14 +7,14 @@
 "		2. Colors
 "		3. Indentation
 "		4. Search
-"		6. Key mapping
-"		7. Misc
-"		8. Yankless paste
+"		5. Key mapping
+"		6. Misc
+"		7. Yankless paste
 "
 "	B. PERSISTENCE
 "		1. Backups
 "		2. Swap files
-"		2. Restore session
+"		3. Restore session
 "		4. Save buffers
 "		5. Undo history
 "
@@ -29,6 +29,7 @@
 "		8. Template
 "		9. Rainbow Parentheses
 "		10. UltiSnips
+"		11. CtrlP
 "
 " ==============================================================================
 
@@ -74,7 +75,7 @@ set incsearch					" Highlight typed word during typing
 set hlsearch					" Highlight typed word
 "--------------------
 
-"6" Key mapping :
+"5" Key mapping :
 "--------------------
 " Enable/Disable paste mode
 map <F6> :set paste <CR>
@@ -86,10 +87,8 @@ vmap ;j <Esc>
 " Move between splits
 nnoremap <C-J> <C-W><C-J>
 nnoremap <C-K> <C-W><C-K>
-nnoremap <C-L> <C-W><C-L>
+"nnoremap <C-L> <C-W><C-L>
 nnoremap <C-H> <C-W><C-H>
-" Check norm
-map <F4> :!norminette **/*.{c,h} <CR>
 " Switch tab
 nnoremap { :tabprevious <CR>
 nnoremap } :tabnext <CR>
@@ -97,9 +96,11 @@ nnoremap } :tabnext <CR>
 command W :execute ':silent w !sudo tee % > /dev/null' | :edit!
 command Wq :execute ':W' | :q
 command WQ :Wq
+" Abreviation for tabnew
+ca tn tabnew
 "--------------------
 
-"7" Misc :
+"6" Misc :
 "-------------------- 
 set nocompatible				" Disable vi compatibility
 set autoread					" Refresh current file when modified by another editor
@@ -112,7 +113,7 @@ set cursorline					" Display horizontal line on the cursor position
 set nowrap						" Don't wrap text on multiple lines
 "--------------------
 
-"8" Yankless paste :
+"7" Yankless paste :
 "--------------------
 function! RestoreRegister()
     let @" = s:restore_reg
@@ -155,7 +156,9 @@ set directory+=.
 
 "3" Restore session :
 "--------------------
-set viminfo+=n~/.vim/viminfo
+if !has('nvim')
+	set viminfo+=n~/.vim/viminfo
+endif
 "--------------------
 
 "4" Save buffers :
@@ -186,26 +189,34 @@ filetype off
 set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
 
-Plugin 'gmarik/Vundle.vim'					"Plugin manager
-Plugin 'scrooloose/syntastic.git'			"Syntax/error checker 
-Plugin 'sjl/gundo.vim'						"Undo tree
-Plugin 'Lokaltog/vim-easymotion.git'		"Faster motion system
-Plugin 'bling/vim-airline.git'				"Better status bar
-Plugin 'tpope/vim-commentary.git'			"Commentary plugin
-Plugin 'aperezdc/vim-template.git'			"Code templates for many langages
-Plugin 'Valloric/YouCompleteMe.git'			"Autocompletion system
-Plugin 'Raimondi/delimitMate.git'			"Auto-close brackets and other paired stuffs
-Plugin 'Shougo/unite.vim'					"Better files opening
-Plugin 'luochen1990/rainbow'				"Display multi-color parentheses
-Plugin 'vim-scripts/matchit.zip.git'		"Bind more match on % key
-Plugin 'tpope/vim-repeat.git'				"More command can repeat with . key
-Plugin 'sirver/ultisnips'					"Code snippets for many langages
-Plugin 'marijnh/tern_for_vim'				"Javascript autocompleter
-Plugin 'tpope/vim-fugitive'					"Git integration
-Plugin 'ryanss/vim-hackernews'				"Hacker news
-Plugin 'Plastic-1/tomorrow-theme.git'		"Colorscheme tomorrow-night
-Plugin 'Plastic-1/Templates-snippets.git'	"Custom templates/snippets
-Plugin 'Plastic-1/Stdheader'				"42 standard header
+Plugin 'gmarik/Vundle.vim'				" Plugin manager
+
+Plugin 'scrooloose/syntastic'			" Syntax/error checker 
+Plugin 'Valloric/YouCompleteMe'			" Autocompletion system
+Plugin 'sirver/ultisnips'				" Code snippets for many langages
+Plugin 'aperezdc/vim-template'			" Code templates for many langages
+Plugin 'aeddi/Templates-snippets'		" Custom templates/snippets
+
+Plugin 'tpope/vim-commentary'			" Commentary plugin
+Plugin 'Raimondi/delimitMate'			" Auto-close brackets and other paired stuffs
+Plugin 'Lokaltog/vim-easymotion'		" Faster motion system
+Plugin 'luochen1990/rainbow'			" Display multi-color parentheses
+Plugin 'vim-scripts/matchit.zip'		" Bind more match on % key
+Plugin 'tpope/vim-repeat'				" More command can repeat with . key
+Plugin 'aeddi/Stdheader'				" 42 standard header
+Plugin 'maksimr/vim-jsbeautify'			" JS / CSS / HTML beautifier
+Plugin 'mhinz/vim-signify'				" Mark lines edited since last commit
+
+Plugin 'sjl/gundo.vim'					" Undo tree
+Plugin 'ctrlpvim/ctrlp.vim'				" Content finder
+Plugin 'ivalkeen/vim-ctrlp-tjump'		" Tags plugin for CtrlP
+Plugin 'tpope/vim-fugitive'				" Git integration
+Plugin 'chrisbra/Recover.vim'			" Diff swap files
+Plugin 'webdevel/tabulous'				" Enhance tabs
+
+Plugin 'aeddi/tomorrow-theme'			" Colorscheme tomorrow-night
+Plugin 'vim-airline/vim-airline'		" Better status bar
+Plugin 'vim-airline/vim-airline-themes'	" Airline themes
 
 call vundle#end()
 filetype plugin indent on
@@ -213,7 +224,7 @@ filetype plugin indent on
 
 "2" Tomorrow-night :
 "--------------------
-silent! colorscheme Tomorrow-Night			"Enable theme with silent! to avoid error on first launch
+silent! colorscheme Tomorrow-Night		"Enable theme with silent! to avoid error on first launch
 "--------------------
 
 "3" Syntastic :
@@ -231,6 +242,8 @@ let g:syntastic_always_populate_loc_list = 1
 let g:syntastic_auto_loc_list = 1
 let g:syntastic_check_on_open = 1
 let g:syntastic_check_on_wq = 0
+
+let g:syntastic_mode_map = { 'mode': 'passive', 'active_filetypes': [],'passive_filetypes': [] }
 "--------------------
 
 "4" Gundo :
@@ -248,8 +261,9 @@ try
 catch /E539: Illegal character/
 endtry
 let g:ycm_use_ultisnips_completer = 1		"Display available snippets
-let g:ycm_key_list_select_completion = ['<C-n>', '<Down>']
-let g:ycm_key_list_previous_completion = ['<C-m>', '<Up>']
+let g:ycm_key_list_select_completion = ['<C-j>', '<Down>']
+let g:ycm_key_list_previous_completion = ['<C-k>', '<Up>']
+let g:ycm_autoclose_preview_window_after_insertion = 1
 "--------------------
 
 "6" EasyMotion :
@@ -279,7 +293,26 @@ nnoremap <leader><leader>( :RainbowToggle<CR>
 
 "10" UltiSnips
 "--------------------
-let g:UltiSnipsExpandTrigger="<C-e>"
+let g:UltiSnipsExpandTrigger="<C-l>"
 let g:UltiSnipsJumpForwardTrigger="<C-S-e>"
 let g:UltiSnipsJumpBackwardTrigger="<C-w>"
+"--------------------
+
+"11" CtrlP
+"--------------------
+nnoremap <c-o> :CtrlPMRU<cr>
+nnoremap <c-t> :CtrlPTag<cr>
+let g:ctrlp_regexp = 1
+let g:ctrlp_open_multiple_files = 't'
+let g:ctrlp_open_multiple_files = '2tj'
+let g:ctrlp_prompt_mappings = {
+\ 'AcceptSelection("h")': ['<c-s>', '<c-x>'],
+\ 'ToggleType(1)':        ['<c-l>', '<c-f>'],
+\ 'ToggleType(-1)':       ['<c-h>', '<c-b>'],
+\ }
+
+nnoremap <c-]> :CtrlPtjump<cr>
+vnoremap <c-]> :CtrlPtjumpVisual<cr>
+nnoremap <c-[> :pop<cr>
+let g:ctrlp_tjump_only_silent = 1
 "--------------------
