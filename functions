@@ -1,0 +1,111 @@
+# Create folder and jump to it
+function md()
+{
+	if [[ $# -eq 1 ]]; then
+		mkdir -p $1 && cd $1
+	else
+		echo "Error: usage: md dir"
+	fi
+}
+
+# Find files in path
+function f()
+{
+	if [[ $# -eq 2 ]]; then
+		find "$1" -iname "$2" 2> /dev/null
+	else
+		echo "Error: usage: f dir pattern"
+	fi
+}
+
+# Launch ssh session with tmux control
+function tssh()
+{
+	ssh $@ -t "bash -lc 'SESSION=\$(tmux ls); if [[ ! \$SESSION ]]; then tmux -CC; else tmux -CC attach; fi'"
+}
+
+# Merge classic git add / commit / push commands
+function gitf()
+{
+	if [ "$#" -ne 1 ]; then
+		echo "Usage: gitf \"Commit message\"";
+	else
+		git add -A
+		git commit -m $1
+		git push
+	fi
+}
+
+
+### Display local and/or public ip ###
+
+function myip()
+{
+	if [[ $# -eq 0 ]]; then
+		get_public_ip
+		get_local_ip
+	elif [[ $1 == 'local' ]]; then
+		get_local_ip
+	 elif [[ $1 == 'public' ]]; then
+		get_public_ip
+	else
+		echo "Error: usage: myip [local|public]"
+	fi
+}
+
+function get_local_ip()
+{
+	first=1
+	interfaces=$(ifconfig | awk -F: '/^[a-z]+[0-9]/{printf "%s ", $1} END {print ""}')
+
+	for interface in ${(z)interfaces}; do
+		info=$(ifconfig $interface)
+		inet=$(awk -F' ' '/^[[:space:]]+inet /{print $2}' <<< "$info")
+		if [[ -n $inet && $inet != '127.0.0.1' ]]; then
+			if [[ $first == 1 ]]; then
+				printf "Local IP:\n"
+				first=0
+			fi
+			printf "\t- $interface: $inet\n"
+		fi
+	done
+
+	if [[ $first == 1 ]]; then
+		printf "Local IP: none\n"
+	fi
+}
+
+function get_public_ip()
+{
+	publicip=$(curl -sS ipecho.net/plain 2> /dev/null)
+	publicip=$([ ! $publicip ] && echo 'none' || echo "$publicip")
+	printf "Public IP: $publicip\n"
+}
+
+
+### Bookmarks navigation functions ###
+
+export MARKPATH=$HOME/.marks
+
+function jump { 
+    cd -P "$MARKPATH/$1" 2>/dev/null || echo "No such mark: $1"
+}
+
+function mark { 
+    mkdir -p "$MARKPATH"; ln -s "$(pwd)" "$MARKPATH/$1"
+}
+
+function unmark { 
+    rm -i "$MARKPATH/$1"
+}
+
+function marks {
+    \ls -l "$MARKPATH" | tail -n +2 | sed 's/  / /g' | cut -d' ' -f9- | awk -F ' -> ' '{printf "%-10s -> %s\n", $1, $2}'
+}
+
+function _completemarks {
+  reply=($(ls $MARKPATH))
+}
+
+compctl -K _completemarks jump
+compctl -K _completemarks unmark
