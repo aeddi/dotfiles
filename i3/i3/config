@@ -193,8 +193,8 @@ exec --no-startup-id Spotify
 exec --no-startup-id /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1
 # Start redshift screen dimemer
 exec --no-startup-id redshift -l 48.89:2.27
-# Set keyboard layout as UK extended WinKeys
-exec --no-startup-id setxkbmap -layout gb extd
+# Set keyboard layout as US international
+exec --no-startup-id setxkbmap -layout us -variant intl
 # Set auto hide mouse pointer
 exec --no-startup-id unclutter
 # Start compton
