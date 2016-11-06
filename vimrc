@@ -1,5 +1,5 @@
 " ==============================================================================
-" Plastic's Vim config - 01/2015
+" aeddi's Vim config - 11/2016
 " ==============================================================================
 "
 "	A. BASIC CONFIG
@@ -87,7 +87,7 @@ vmap ;j <Esc>
 " Move between splits
 nnoremap <C-J> <C-W><C-J>
 nnoremap <C-K> <C-W><C-K>
-"nnoremap <C-L> <C-W><C-L>
+nnoremap <C-L> <C-W><C-L>
 nnoremap <C-H> <C-W><C-H>
 " Switch tab
 nnoremap { :tabprevious <CR>
@@ -303,8 +303,8 @@ let g:UltiSnipsJumpBackwardTrigger="<C-w>"
 nnoremap <c-o> :CtrlPMRU<cr>
 nnoremap <c-t> :CtrlPTag<cr>
 let g:ctrlp_regexp = 1
-let g:ctrlp_open_multiple_files = 't'
-let g:ctrlp_open_multiple_files = '2tj'
+let g:ctrlp_show_hidden = 1
+let g:ctrlp_open_multiple_files = 'tj'
 let g:ctrlp_prompt_mappings = {
 \ 'AcceptSelection("h")': ['<c-s>', '<c-x>'],
 \ 'ToggleType(1)':        ['<c-l>', '<c-f>'],
@@ -315,4 +315,14 @@ nnoremap <c-]> :CtrlPtjump<cr>
 vnoremap <c-]> :CtrlPtjumpVisual<cr>
 nnoremap <c-[> :pop<cr>
 let g:ctrlp_tjump_only_silent = 1
+"--------------------
+
+
+
+" Include local file
+"--------------------
+let $LOCALFILE=expand("~/.vimrc_local")
+if filereadable($LOCALFILE)
+	source $LOCALFILE
+endif
 "--------------------

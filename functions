@@ -21,7 +21,13 @@ function f()
 # Launch ssh session with tmux control
 function tssh()
 {
-	ssh $@ -t "bash -lc 'SESSION=\$(tmux ls); if [[ ! \$SESSION ]]; then tmux -CC; else tmux -CC attach; fi'"
+	local SESSION_NAME='aeddi_tssh'
+	ssh $@ -t "bash -lc 'SESSION=\$(tmux ls -F \"#{session_name}\");				\
+				if [[ ! \$(grep $SESSION_NAME <<< \$SESSION) ]]; then 				\
+					tmux -CC new-session -s $SESSION_NAME -n \"tmux (\$HOSTNAME)\";	\
+				else																\
+					tmux -CC attach -t $SESSION_NAME;								\
+				fi'"
 }
 
 # Merge classic git add / commit / push commands
@@ -33,6 +39,20 @@ function gitf()
 		git add -A
 		git commit -m $1
 		git push
+	fi
+}
+
+# Set terminal title
+function rename_term()
+{
+	if [[ $# -eq 1 ]]; then
+		if [[ ! $TMUX ]] ; then
+			print -Pn  "\e]1;$1\a"
+		else
+			tmux rename-window $1
+		fi
+	else
+		echo "Error: usage: rename_term title"
 	fi
 }
 
@@ -81,7 +101,6 @@ function get_public_ip()
 	publicip=$([ ! $publicip ] && echo 'none' || echo "$publicip")
 	printf "Public IP: $publicip\n"
 }
-
 
 ### Bookmarks navigation functions ###
 
