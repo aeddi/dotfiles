@@ -69,6 +69,6 @@ function include()
 
 include $HOME/.aliases
 include $HOME/.functions
-include $HOME/.local_zshrc
+include $HOME/.zshrc_local
 
 unfunction include

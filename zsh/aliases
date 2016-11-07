@@ -1,28 +1,28 @@
 # Colorize ls output
 if [[ `uname` == "Darwin" ]]; then
-	alias ls='ls -G'
-	alias ll='ls -lAh'
+	alias ls="ls -G"
+	alias ll="ls -lAh"
 elif [[ `uname` == "Linux" ]]; then
-	alias egrep='egrep --color=auto'
-	alias fgrep='fgrep --color=auto'
-	alias grep='grep --color=auto'
-	alias ll='ls -AlFh'
-	alias ls='ls --color=auto'
+	alias egrep="egrep --color=auto"
+	alias fgrep="fgrep --color=auto"
+	alias grep="grep --color=auto"
+	alias ll="ls -AlFh"
+	alias ls="ls --color=auto"
 fi
 
 # Compiler flags alias
-alias wcc='gcc -Wall -Werror -Wextra'
-alias w++='g++ -Wall -Werror -Wextra'
+alias wcc="gcc -Wall -Werror -Wextra"
+alias w++="g++ -Wall -Werror -Wextra"
 
-alias ccc='clang -Wall -Werror -Wextra'
-alias c++='clang++ -Wall -Werror -Wextra'
+alias ccc="clang -Wall -Werror -Wextra"
+alias c++="clang++ -Wall -Werror -Wextra"
 
 # Confirm before erasing files
-alias rm='rm -i'
-alias cp='cp -i'
-alias mv='mv -i'
-alias ln='ln -i'
+alias rm="rm -i"
+alias cp="cp -i"
+alias mv="mv -i"
+alias ln="ln -i"
 
 # Misc.
-alias vimrs='vim -S .mysession.vim'
-alias tvod='livestreamer --player-passthrough=hls'
+alias vimrs="vim -S .mysession.vim"
+alias tvod="livestreamer --twitch-oauth-token $TWITCH_OAUTH_TOKEN --player-passthrough=hls"
