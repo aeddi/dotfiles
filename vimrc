@@ -78,8 +78,7 @@ set hlsearch					" Highlight typed word
 "5" Key mapping :
 "--------------------
 " Enable/Disable paste mode
-map <F6> :set paste <CR>
-map <S-F6> :set nopaste <CR>
+set pastetoggle=<F6>
 " Replace escape key
 imap ;j <Esc>
 nmap ;j <Esc>
@@ -311,9 +310,10 @@ let g:ctrlp_prompt_mappings = {
 \ 'ToggleType(-1)':       ['<c-h>', '<c-b>'],
 \ }
 
-nnoremap <c-]> :CtrlPtjump<cr>
-vnoremap <c-]> :CtrlPtjumpVisual<cr>
-nnoremap <c-[> :pop<cr>
+nnoremap <bar> :CtrlPtjump<cr>
+vnoremap <bar> :CtrlPtjumpVisual<cr>
+nnoremap " :pop<cr>
+vnoremap " :pop<cr>
 let g:ctrlp_tjump_only_silent = 1
 "--------------------
 

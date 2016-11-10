@@ -235,6 +235,11 @@ fonts_config()
 }
 
 
+# Useful path vars
+BACKUP_DIR=$HOME/.config_backup
+DOTFILES_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+LOGFILE=$DOTFILES_DIR/install_logs
+
 # Text formating vars
 TITLE='\e[1;33m'
 OPS='\e[1;39m'
@@ -245,9 +250,7 @@ RESET='\e[0m'
 DELIM='--------------------------------------------------------------------------------'
 DELIM2='  ---------  '
 
-# Useful path vars
-BACKUP_DIR=$HOME/.config_backup
-DOTFILES_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+((printf "$(date)\n${DELIM}\n\n" >> $LOGFILE
 
 # Select config parts and launch install
 selection_menu
@@ -278,4 +281,7 @@ printf -- "${WARNING}Installation aborted:${RESET} "
 printf -- "${OPS}${#ABORTED[@]}/${#SELECTED[@]} $([[ ${ABORTED[@]} ]] && echo "[$(sed 's/ /, /g' <<< ${ABORTED[*]})]" )${RESET}\n"
 
 printf -- "${SUCCESS}Installation succeeded:${RESET} "
-printf -- "${OPS}${#SUCCEEDED[@]}/${#SELECTED[@]} $([[ ${SUCCEEDED[@]} ]] && echo "[$(sed 's/ /, /g' <<< ${SUCCEEDED[*]})]" )${RESET}\n"
+printf -- "${OPS}${#SUCCEEDED[@]}/${#SELECTED[@]} $([[ ${SUCCEEDED[@]} ]] && echo "[$(sed 's/ /, /g' <<< ${SUCCEEDED[*]})]" )${RESET}\n\n"
+) 2>&1) | tee >(sed $'s,\x1b\\[[0-9;]*[a-zA-Z],,g' >> $LOGFILE)
+
+printf -- "${OPS}Install logs are available in:${RESET} $LOGFILE\n"
