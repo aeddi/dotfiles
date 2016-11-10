@@ -70,34 +70,37 @@ create_symlink()
 {
 	SOURCE=$DOTFILES_DIR/$1
 	TARGET=$2
+	SOURCE_REL=$(sed "s:$HOME:~:g" <<< $SOURCE)
+	TARGET_REL=$(sed "s:$HOME:~:g" <<< $TARGET)
 	
 	if [ "$SOURCE" -ef "$TARGET" ]; then
-		printf -- "${OPS}Link [$SOURCE -> $TARGET] already set up: ${SUCCESS}success${RESET}\n"
+		printf -- "${OPS}Link [$SOURCE_REL -> $TARGET_REL] already set up: ${SUCCESS}success${RESET}\n"
 		return 0
 	fi
 
 	if [ -f "$TARGET" ]; then
-		printf -- "${WARNING}Warning: $TARGET already exist!${RESET}\n"
+		printf -- "${WARNING}Warning: $TARGET_REL already exist!${RESET}\n"
 		printf -- "${OPS}Backup it, Overwrite it or Abort? [B|o|a]${RESET} "
 		read INPUT
 		if [[ $INPUT == 'a' || $INPUT == 'A' ]]; then
 			return 2
 		elif [[ $INPUT == 'o' || $INPUT == 'O' ]]; then
 			(rm -rf $TARGET												\
-			&& printf -- "Erase $TARGET: ${SUCCESS}success${RESET}\n")	\
-			|| { printf -- "Erase $TARGET: ${ERROR}error${RESET}\n" >&2; return 1; }
+			&& printf -- "Erase $TARGET_REL: ${SUCCESS}success${RESET}\n")	\
+			|| { printf -- "Erase $TARGET_REL: ${ERROR}error${RESET}\n" >&2; return 1; }
 		else
 			(mkdir -p $BACKUP_DIR && mv $TARGET $BACKUP_DIR				\
-			&& printf -- "Backup $TARGET: ${SUCCESS}success${RESET}\n")	\
-			|| { printf -- "Backup $TARGET: ${ERROR}error${RESET}\n" >&2; return 1; }
+			&& printf -- "Backup $TARGET_REL: ${SUCCESS}success${RESET}\n")	\
+			|| { printf -- "Backup $TARGET_REL: ${ERROR}error${RESET}\n" >&2; return 1; }
 		fi
 	fi
 
 	(ln -s $SOURCE $TARGET																\
-	&& printf -- "Symlink creation [$SOURCE -> $TARGET]: ${SUCCESS}success${RESET}\n")	\
-	|| { printf -- "Symlink creation [$SOURCE -> $TARGET]: ${ERROR}error${RESET}\n" >&2; return 1; }
+	&& printf -- "Symlink creation [$SOURCE_REL -> $TARGET_REL]: ${SUCCESS}success${RESET}\n")	\
+	|| { printf -- "Symlink creation [$SOURCE_REL -> $TARGET_REL]: ${ERROR}error${RESET}\n" >&2; return 1; }
 	return 0
 }
+
 
 launch()
 {
@@ -166,8 +169,10 @@ zsh_config()
 
 git_config()
 {
-	printf -- "${WARNING}Abort: git config installation not implemented yet!${RESET}\n"
-	return 2
+	#Install git
+	create_symlink git/gitconfig $HOME/.gitconfig
+	RET=$?; [ $RET -ne 0 ] && return $RET
+	create_symlink git/gitignore $HOME/.gitignore
 }
 
 
@@ -180,8 +185,7 @@ i3_config()
 
 tern_config()
 {
-	printf -- "${WARNING}Abort: tern config installation not implemented yet!${RESET}\n"
-	return 2
+	create_symlink tern-project $HOME/.tern-project
 }
 
 
@@ -249,8 +253,9 @@ ERROR='\e[1;31m'
 RESET='\e[0m'
 DELIM='--------------------------------------------------------------------------------'
 DELIM2='  ---------  '
+DELIM3='=========================================='
 
-((printf "$(date)\n${DELIM}\n\n" >> $LOGFILE
+((printf "${DELIM3}\n$(date)\n${DELIM3}\n\n" >> $LOGFILE
 
 # Select config parts and launch install
 selection_menu
@@ -284,4 +289,4 @@ printf -- "${SUCCESS}Installation succeeded:${RESET} "
 printf -- "${OPS}${#SUCCEEDED[@]}/${#SELECTED[@]} $([[ ${SUCCEEDED[@]} ]] && echo "[$(sed 's/ /, /g' <<< ${SUCCEEDED[*]})]" )${RESET}\n\n"
 ) 2>&1) | tee >(sed $'s,\x1b\\[[0-9;]*[a-zA-Z],,g' >> $LOGFILE)
 
-printf -- "${OPS}Install logs are available in:${RESET} $LOGFILE\n"
+printf -- "${OPS}Installation logs are available in:${RESET} $LOGFILE\n"
