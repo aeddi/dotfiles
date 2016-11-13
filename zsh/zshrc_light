@@ -9,8 +9,9 @@ autoload -U colors && colors
 
 # Ensure permissions are correct for ZSH completion
 autoload -U compaudit && compaudit | xargs chmod g-w
-if [[ `uname` == "Darwin" ]]; then
-	chown -RL root:staff /usr/local/share/zsh
+if [[ `uname` == "Darwin" && "$(compaudit)" ]]; then
+	printf "Setting right permissions for compinit - "
+	sudo chown -RL root:staff /usr/local/share/zsh
 fi
 
 # Enable ZSH completion

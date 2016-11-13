@@ -122,6 +122,8 @@ install_packages()
 {
 	PACKAGES=("${@}")
 
+	printf -- "${OPS}Installing depencies...${RESET}\n"
+
 	# Check if brew is installed
 	if [[ `uname` == 'Darwin' ]] && ! which brew &> /dev/null; then
 		printf -- "${WARNING}You may need to install brew on your Mac to install dependencies.${RESET}\n"
@@ -129,14 +131,13 @@ install_packages()
 		read INPUT
 		if [[ $INPUT != 'n' && $INPUT != 'N' ]]; then
 			/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+		else
+			return 1
 		fi
 	fi
 
 	if which brew &> /dev/null; then
-		if [[ "${PACKAGES[@]}" =~ "ycm" ]]; then
-			PACKAGES=(${PACKAGES[@]/ycm} 'cmake' 'go' 'rust' 'node' 'mono')
-			xcode-select --install
-		fi
+		[[ "${PACKAGES[@]}" =~ "ycm" ]] && PACKAGES=(${PACKAGES[@]/ycm} 'cmake' 'go' 'rust' 'node' 'mono')
 		[[ $UPDATED ]] || (brew update && UPDATED=1) || return 1
 		brew install $PACKAGES || return 1
 	elif which pacman &> /dev/null; then
@@ -156,7 +157,6 @@ install_packages()
 		printf -- "${WARNING}Package manager not detected. You may need to install this packages manually:${RESET}\n${PACKAGES[*]}\n"
 		return 1
 	fi
-	echo CP3 ${PACKAGES[@]}
 
 	return 0
 }
@@ -167,15 +167,20 @@ vim_config()
 	DEP=('vim')
 	[[ "${SELECTED[@]}" =~ "vim-light" ]] || DEP+=('git')
 	[[ "${SELECTED[@]}" =~ "vim-full" ]] && DEP+=('ycm')
-	install_packages "${DEP[@]}"																\
-	|| { printf -- "${OPS}Continue installation without depencies or Abort? [C|a]${RESET} " &&	\
-		read INPUT; [[ $INPUT == 'a' || $INPUT == 'A' ]] && return 2; }
+	install_packages "${DEP[@]}"															\
+	|| { printf -- "${OPS}Continue installation without depencies or Abort? [C|a]${RESET} "	\
+		&& read INPUT; [[ $INPUT == 'a' || $INPUT == 'A' ]] && return 2; }
 
 	if [[ "${SELECTED[@]}" =~ "vim-light" ]]; then
 		create_symlink vim/vimrc_light $HOME/.vimrc
 	else
 		[[ "${SELECTED[@]}" =~ "vim-full" ]] && { create_symlink vim/vimrc $HOME/.vimrc || return; }
 		[[ "${SELECTED[@]}" =~ "vim-medium" ]] && { create_symlink vim/vimrc_medium $HOME/.vimrc || return; }
+
+		printf "${OPS}Installing vundle:${RESET} " 
+		(git clone https://github.com/VundleVim/Vundle.vim.git $HOME/.vim/bundle/Vundle.vim &> /dev/null	\
+		&& printf -- "${SUCCESS}success${RESET}\n")															\
+		|| { printf -- "${ERROR}error${RESET}\n" >&2; return 1; }
 
 		printf "${OPS}Installing plugin with vundle:${RESET} " 
 		(vim +PluginInstall +qall &> /dev/null		\
@@ -188,6 +193,13 @@ vim_config()
 			|| return 1
 		fi
 	fi
+
+	if [[ ! -f $HOME/.vimrc_local ]]; then
+		printf "${OPS}Adding .vimrc_local config file:${RESET} " 
+		(echo '" Put your local vim settings here' > $HOME/.vimrc_local	\
+		&& printf -- "${SUCCESS}success${RESET}\n")						\
+		|| { printf -- "${ERROR}error${RESET}\n" >&2; return 1; }
+	fi
 }
 
 
@@ -195,9 +207,9 @@ zsh_config()
 {
 	DEP=('zsh')
 	[[ "${SELECTED[@]}" =~ "zsh-full" ]] && DEP+=('git')
-	install_packages "${DEP[@]}"																\
-	|| { printf -- "${OPS}Continue installation without depencies or Abort? [C|a]${RESET} " &&	\
-		read INPUT; [[ $INPUT == 'a' || $INPUT == 'A' ]] && return 2; }
+	install_packages "${DEP[@]}"															\
+	|| { printf -- "${OPS}Continue installation without depencies or Abort? [C|a]${RESET} "	\
+		&& read INPUT; [[ $INPUT == 'a' || $INPUT == 'A' ]] && return 2; }
 
 	[[ "${SELECTED[@]}" =~ "zsh-full" ]] && { create_symlink zsh/zshrc $HOME/.zshrc || return; }
 	[[ "${SELECTED[@]}" =~ "zsh-light" ]] && { reate_symlink zsh/zshrc_light $HOME/.zshrc || return; }
@@ -206,14 +218,19 @@ zsh_config()
 
 	if [[ "${SELECTED[@]}" =~ "zsh-full" ]]; then
 		printf "${OPS}Installing antigen to $HOME/.antigen:${RESET} " 
-		(cd $HOME																		\
-		&& git clone https://github.com/zsh-users/antigent.git .antigen &> /dev/null	\
-		&& printf -- "${SUCCESS}success${RESET}\n")										\
+		(cd $HOME																	\
+		&& git clone https://github.com/zsh-users/antigen.git .antigen &> /dev/null	\
+		&& printf -- "${SUCCESS}success${RESET}\n")									\
 		|| { printf -- "${ERROR}error${RESET}\n" >&2; return 1; }
 		printf "${OPS}Installing antigen plugins...${RESET}\n" 
-		(cd $HOME																		\
-		&& source $HOME/.zshrc)															\
-		|| return 1
+		zsh -c "source $HOME/.zshrc" || return 1
+	fi
+
+	if [[ ! -f $HOME/.zshrc_local ]]; then
+		printf "${OPS}Adding .zshrc_local config file:${RESET} " 
+		(echo '# Put your local zsh settings here' > $HOME/.zshrc_local	\
+		&& printf -- "${SUCCESS}success${RESET}\n")						\
+		|| { printf -- "${ERROR}error${RESET}\n" >&2; return 1; }
 	fi
 }
 
@@ -225,6 +242,13 @@ git_config()
 
 	create_symlink git/gitconfig $HOME/.gitconfig || return
 	create_symlink git/gitignore $HOME/.gitignore
+
+	if [[ ! -f $HOME/.gitconfig_local ]]; then
+		printf "${OPS}Adding .gitconfig_local config file:${RESET} " 
+		(echo '# Put your local git settings here' > $HOME/.gitconfig_local	\
+		&& printf -- "${SUCCESS}success${RESET}\n")							\
+		|| { printf -- "${ERROR}error${RESET}\n" >&2; return 1; }
+	fi
 }
 
 
@@ -249,7 +273,9 @@ iterm2_config()
 		printf -- "${OPS}Do you want to try an automatic install? [Y|n]${RESET} "
 		read INPUT
 		if [[ $INPUT != 'n' && $INPUT != 'N' ]]; then
-			if install_packages 'Caskroom/cask/iterm2'; then return $?; fi
+			install_packages 'Caskroom/cask/iterm2'													\
+			|| { printf -- "${OPS}Continue installation without depencies or Abort? [C|a]${RESET} "	\
+			&& read INPUT; [[ $INPUT == 'a' || $INPUT == 'A' ]] && return 2; }
 		else
 			return 2
 		fi
