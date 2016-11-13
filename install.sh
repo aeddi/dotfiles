@@ -85,19 +85,19 @@ create_symlink()
 		if [[ $INPUT == 'a' || $INPUT == 'A' ]]; then
 			return 2
 		elif [[ $INPUT == 'o' || $INPUT == 'O' ]]; then
-			(rm -rf $TARGET												\
-			&& printf -- "Erase $TARGET_REL: ${SUCCESS}success${RESET}\n")	\
-			|| { printf -- "Erase $TARGET_REL: ${ERROR}error${RESET}\n" >&2; return 1; }
+			(rm -rf $TARGET															\
+			&& printf -- "${OPS}Erase $TARGET_REL: ${SUCCESS}success${RESET}\n")	\
+			|| { printf -- "${OPS}Erase $TARGET_REL: ${ERROR}error${RESET}\n" >&2; return 1; }
 		else
-			(mkdir -p $BACKUP_DIR && mv $TARGET $BACKUP_DIR				\
-			&& printf -- "Backup $TARGET_REL: ${SUCCESS}success${RESET}\n")	\
-			|| { printf -- "Backup $TARGET_REL: ${ERROR}error${RESET}\n" >&2; return 1; }
+			(mkdir -p $BACKUP_DIR && mv $TARGET $BACKUP_DIR							\
+			&& printf -- "${OPS}Backup $TARGET_REL: ${SUCCESS}success${RESET}\n")	\
+			|| { printf -- "${OPS}Backup $TARGET_REL: ${ERROR}error${RESET}\n" >&2; return 1; }
 		fi
 	fi
 
-	(ln -s $SOURCE $TARGET																\
-	&& printf -- "Symlink creation [$SOURCE_REL -> $TARGET_REL]: ${SUCCESS}success${RESET}\n")	\
-	|| { printf -- "Symlink creation [$SOURCE_REL -> $TARGET_REL]: ${ERROR}error${RESET}\n" >&2; return 1; }
+	(ln -s $SOURCE $TARGET																				\
+	&& printf -- "${OPS}Symlink creation [$SOURCE_REL -> $TARGET_REL]: ${SUCCESS}success${RESET}\n")	\
+	|| { printf -- "${OPS}Symlink creation [$SOURCE_REL -> $TARGET_REL]: ${ERROR}error${RESET}\n" >&2; return 1; }
 	return 0
 }
 
@@ -123,42 +123,46 @@ install_packages()
 	PACKAGES=("${@}")
 
 	printf -- "${OPS}Installing depencies...${RESET}\n"
+	printf -- "${DELIM4}\n"
+	{ {
+		# Check if brew is installed
+		if [[ `uname` == 'Darwin' ]] && ! which brew &> /dev/null; then
+			printf -- "${WARNING}You may need to install brew on your Mac to install dependencies.${RESET}\n"
+			printf -- "${OPS}Install it now ? [Y|n]${RESET} "
+			read INPUT
+			if [[ $INPUT != 'n' && $INPUT != 'N' ]]; then
+				/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+				cd $HOME
+			else
+				return 1
+			fi
+		fi
 
-	# Check if brew is installed
-	if [[ `uname` == 'Darwin' ]] && ! which brew &> /dev/null; then
-		printf -- "${WARNING}You may need to install brew on your Mac to install dependencies.${RESET}\n"
-		printf -- "${OPS}Install it now ? [Y|n]${RESET} "
-		read INPUT
-		if [[ $INPUT != 'n' && $INPUT != 'N' ]]; then
-			/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+		if which brew &> /dev/null; then
+			[[ "${PACKAGES[@]}" =~ "ycm" ]] && PACKAGES=(${PACKAGES[@]/ycm} 'cmake' 'go' 'rust' 'node' 'mono')
+			[[ $UPDATED ]] || (brew update && UPDATED=1) || return 1
+			brew install ${PACKAGES[*]} || return 1
+		elif which pacman &> /dev/null; then
+			[[ "${PACKAGES[@]}" =~ "ycm" ]] && PACKAGES=(${PACKAGES[@]/ycm} 'cmake' 'go' 'rust' 'node' 'mono')
+			[[ $UPDATED ]] || (sudo pacman -Syu --noconfirm && UPDATED=1) || return 1
+			sudo pacman -S --noconfirm ${PACKAGES[*]} || return 1
+		elif which apt-get &> /dev/null; then
+			[[ "${PACKAGES[@]}" =~ "ycm" ]] && PACKAGES=(${PACKAGES[@]/ycm} 'cmake' 'go' 'rust' 'node' 'mono')
+			[[ $UPDATED ]] || (sudo apt-get update -y && UPDATED=1) || return 1
+			sudo apt-get install -y ${PACKAGES[*]} || return 1
+		elif which yum &> /dev/null; then
+			[[ "${PACKAGES[@]}" =~ "ycm" ]] && PACKAGES=(${PACKAGES[@]/ycm} 'cmake' 'go' 'rust' 'node' 'mono')
+			[[ $UPDATED ]] || (sudo yum update -y && UPDATED=1) || return 1
+			sudo yum install -y ${PACKAGES[*]} || return 1
 		else
+			[[ "${PACKAGES[@]}" =~ "ycm" ]] && PACKAGES=(${PACKAGES[@]/ycm} 'cmake' 'go' 'rust' 'node' 'mono')
+			printf -- "${WARNING}Package manager not detected. You may need to install this packages manually:${RESET}\n${PACKAGES[*]}\n"
 			return 1
 		fi
-	fi
 
-	if which brew &> /dev/null; then
-		[[ "${PACKAGES[@]}" =~ "ycm" ]] && PACKAGES=(${PACKAGES[@]/ycm} 'cmake' 'go' 'rust' 'node' 'mono')
-		[[ $UPDATED ]] || (brew update && UPDATED=1) || return 1
-		brew install $PACKAGES || return 1
-	elif which pacman &> /dev/null; then
-		[[ "${PACKAGES[@]}" =~ "ycm" ]] && PACKAGES=(${PACKAGES[@]/ycm} 'cmake' 'go' 'rust' 'node' 'mono')
-		[[ $UPDATED ]] || (sudo pacman -Syu --noconfirm && UPDATED=1) || return 1
-		sudo pacman -S --noconfirm $PACKAGES || return 1
-	elif which apt-get &> /dev/null; then
-		[[ "${PACKAGES[@]}" =~ "ycm" ]] && PACKAGES=(${PACKAGES[@]/ycm} 'cmake' 'go' 'rust' 'node' 'mono')
-		[[ $UPDATED ]] || (sudo apt-get update -y && UPDATED=1) || return 1
-		sudo apt-get install -y $PACKAGES || return 1
-	elif which yum &> /dev/null; then
-		[[ "${PACKAGES[@]}" =~ "ycm" ]] && PACKAGES=(${PACKAGES[@]/ycm} 'cmake' 'go' 'rust' 'node' 'mono')
-		[[ $UPDATED ]] || (sudo yum update -y && UPDATED=1) || return 1
-		sudo yum install -y $PACKAGES || return 1
-	else
-		[[ "${PACKAGES[@]}" =~ "ycm" ]] && PACKAGES=(${PACKAGES[@]/ycm} 'cmake' 'go' 'rust' 'node' 'mono')
-		printf -- "${WARNING}Package manager not detected. You may need to install this packages manually:${RESET}\n${PACKAGES[*]}\n"
-		return 1
-	fi
-
-	return 0
+		return 0;
+	} 2>&1; } | (fold -sw 74 | sed 's/^/   | /'; printf -- "${DELIM4}\n\n");	\
+	return ${PIPESTATUS[0]}
 }
 
 
@@ -177,20 +181,26 @@ vim_config()
 		[[ "${SELECTED[@]}" =~ "vim-full" ]] && { create_symlink vim/vimrc $HOME/.vimrc || return; }
 		[[ "${SELECTED[@]}" =~ "vim-medium" ]] && { create_symlink vim/vimrc_medium $HOME/.vimrc || return; }
 
-		printf "${OPS}Installing vundle:${RESET} " 
-		(git clone https://github.com/VundleVim/Vundle.vim.git $HOME/.vim/bundle/Vundle.vim &> /dev/null	\
-		&& printf -- "${SUCCESS}success${RESET}\n")															\
-		|| { printf -- "${ERROR}error${RESET}\n" >&2; return 1; }
+		if [[ ! -d $HOME/.vim/bundle/Vundle.vim ]]; then
+			printf "${OPS}Installing vundle:${RESET} " 
+			(git clone https://github.com/VundleVim/Vundle.vim.git $HOME/.vim/bundle/Vundle.vim &> /dev/null	\
+			&& printf -- "${SUCCESS}success${RESET}\n")															\
+			|| { printf -- "${ERROR}error${RESET}\n" >&2; return 1; }
+		fi
 
-		printf "${OPS}Installing plugin with vundle:${RESET} " 
+		printf "${OPS}Installing plugins with vundle:${RESET} " 
 		(vim +PluginInstall +qall &> /dev/null		\
 		&& printf -- "${SUCCESS}success${RESET}\n")	\
 		|| { printf -- "${ERROR}error${RESET}\n" >&2; return 1; }
 
 		if [[ "${SELECTED[@]}" =~ "vim-full" ]]; then
 			printf "${OPS}Installing YouCompleteMe server...${RESET}\n"
-			$HOME/.vim/bundle/YouCompleteMe/install.py --all	\
-			|| return 1
+			printf -- "${DELIM4}\n"
+			{ {
+				$HOME/.vim/bundle/YouCompleteMe/install.py --all	\
+				|| return 1;
+			} 2>&1; } | (fold -sw 74 | sed 's/^/   | /'; printf -- "${DELIM4}\n\n");	\
+			TMP=${PIPESTATUS[0]}; [[ $TMP -ne 0 ]] && return $TMP
 		fi
 	fi
 
@@ -222,8 +232,13 @@ zsh_config()
 		&& git clone https://github.com/zsh-users/antigen.git .antigen &> /dev/null	\
 		&& printf -- "${SUCCESS}success${RESET}\n")									\
 		|| { printf -- "${ERROR}error${RESET}\n" >&2; return 1; }
+
 		printf "${OPS}Installing antigen plugins...${RESET}\n" 
-		zsh -c "source $HOME/.zshrc" || return 1
+		printf -- "${DELIM4}\n"
+		{ {
+			zsh -c "source $HOME/.zshrc" || return 1;
+		} 2>&1; } | (fold -sw 74 | sed 's/^/   | /'; printf -- "${DELIM4}\n\n");	\
+		TMP=${PIPESTATUS[0]}; [[ $TMP -ne 0 ]] && return $TMP
 	fi
 
 	if [[ ! -f $HOME/.zshrc_local ]]; then
@@ -335,6 +350,7 @@ RESET='\e[0m'
 DELIM='--------------------------------------------------------------------------------'
 DELIM2='  ---------  '
 DELIM3='=========================================='
+DELIM4='   +--------------------------------------'
 
 ((printf "${DELIM3}\n$(date)\n${DELIM3}\n\n" >> $LOGFILE
 
