@@ -123,21 +123,27 @@ install_packages()
 	PACKAGES=("${@}")
 
 	printf -- "${OPS}Installing depencies...${RESET}\n"
+
+	# Check if brew is installed
+	if [[ `uname` == 'Darwin' ]] && ! which brew &> /dev/null; then
+		printf -- "${WARNING}You may need to install brew on your Mac to install dependencies.${RESET}\n"
+		printf -- "${OPS}Install it now ? [Y|n]${RESET} "
+		read INPUT
+		if [[ $INPUT != 'n' && $INPUT != 'N' ]]; then
+			printf "${OPS}Installing brew...${RESET}\n" 
+			printf -- "${DELIM4}\n"
+			{ {
+				/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)";
+			} 2>&1; } | (format_subscript; printf -- "${DELIM4}\n\n");	\
+			TMP=${PIPESTATUS[0]}; [[ $TMP -ne 0 ]] && return $TMP
+			cd $HOME
+		else
+			return 1
+		fi
+	fi
+
 	printf -- "${DELIM4}\n"
 	{ {
-		# Check if brew is installed
-		if [[ `uname` == 'Darwin' ]] && ! which brew &> /dev/null; then
-			printf -- "${WARNING}You may need to install brew on your Mac to install dependencies.${RESET}\n"
-			printf -- "${OPS}Install it now ? [Y|n]${RESET} "
-			read INPUT
-			if [[ $INPUT != 'n' && $INPUT != 'N' ]]; then
-				/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
-				cd $HOME
-			else
-				return 1
-			fi
-		fi
-
 		if which brew &> /dev/null; then
 			[[ "${PACKAGES[@]}" =~ "ycm" ]] && PACKAGES=(${PACKAGES[@]/ycm} 'cmake' 'go' 'rust' 'node' 'mono')
 			[[ $UPDATED ]] || (brew update && UPDATED=1) || return 1
@@ -161,10 +167,23 @@ install_packages()
 		fi
 
 		return 0;
-	} 2>&1; } | (fold -sw 74 | sed 's/^/   | /'; printf -- "${DELIM4}\n\n");	\
+	} 2>&1; } | (format_subscript; printf -- "${DELIM4}\n\n");	\
 	return ${PIPESTATUS[0]}
 }
 
+format_subscript()
+{
+	awk -v WIDTH=74 '
+	{
+		while (length>WIDTH) {
+			print '   | '
+			print substr($0,1,WIDTH);
+			$0=substr($0,WIDTH+1);
+		}
+		print;
+		fflush();
+	}'
+}
 
 vim_config()
 {
@@ -199,7 +218,7 @@ vim_config()
 			{ {
 				$HOME/.vim/bundle/YouCompleteMe/install.py --all	\
 				|| return 1;
-			} 2>&1; } | (fold -sw 74 | sed 's/^/   | /'; printf -- "${DELIM4}\n\n");	\
+			} 2>&1; } | (format_subscript; printf -- "${DELIM4}\n\n");	\
 			TMP=${PIPESTATUS[0]}; [[ $TMP -ne 0 ]] && return $TMP
 		fi
 	fi
@@ -237,7 +256,7 @@ zsh_config()
 		printf -- "${DELIM4}\n"
 		{ {
 			zsh -c "source $HOME/.zshrc" || return 1;
-		} 2>&1; } | (fold -sw 74 | sed 's/^/   | /'; printf -- "${DELIM4}\n\n");	\
+		} 2>&1; } | (format_subscript; printf -- "${DELIM4}\n\n");	\
 		TMP=${PIPESTATUS[0]}; [[ $TMP -ne 0 ]] && return $TMP
 	fi
 
