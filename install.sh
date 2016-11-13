@@ -176,11 +176,10 @@ format_subscript()
 	awk -v WIDTH=74 '
 	{
 		while (length>WIDTH) {
-			print '   | '
-			print substr($0,1,WIDTH);
+			print "   | " substr($0,1,WIDTH);
 			$0=substr($0,WIDTH+1);
 		}
-		print;
+		print "   | " $0;
 		fflush();
 	}'
 }
