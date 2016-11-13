@@ -18,6 +18,18 @@
 "		4. Save buffers
 "		5. Undo history
 "
+"	C. PLUGINS
+"		1. Vundle
+"		2. Tomorrow-night
+"		3. Syntastic
+"		4. Gundo
+"		5. EasyMotion
+"		6. Airline
+"		7. Template
+"		8. Rainbow Parentheses
+"		9. UltiSnips
+"		10. CtrlP
+"
 " ==============================================================================
 
 
@@ -29,12 +41,15 @@
 "--------------------
 set title						" Display filename in title bar
 set ttyfast						" More reactive displaying
-set number						" Show line number
 set mousehide					" Hide mouse cursor when typing
 set showcmd						" Show incomplete command
 set wildmenu					" Display command auto-completion with tab
 set splitbelow					" New horizontal split appears below
 set splitright					" New vertical split appears on right
+set number						" Enable aboslute numbers
+set relativenumber				" And relative numbers (hybrid mode)
+au InsertEnter * :set nornu		" Disable relative on insert
+au InsertLeave * :set rnu		" Enable relative out of insert
 "--------------------
 
 "2" Colors :
@@ -162,6 +177,130 @@ if exists("+undofile")
 	set undodir=~/.vim/undo//
 	set undofile
 endif
+"--------------------
+
+
+" =========================
+" C. PLUGINS
+" =========================
+
+"1" Vundle :
+"--------------------
+filetype off
+set rtp+=~/.vim/bundle/Vundle.vim
+call vundle#begin()
+
+Plugin 'gmarik/Vundle.vim'				" Plugin manager
+
+Plugin 'scrooloose/syntastic'			" Syntax/error checker 
+Plugin 'aperezdc/vim-template'			" Code templates for many langages
+Plugin 'aeddi/Templates-snippets'		" Custom templates/snippets
+
+Plugin 'tpope/vim-commentary'			" Commentary plugin
+Plugin 'Raimondi/delimitMate'			" Auto-close brackets and other paired stuffs
+Plugin 'Lokaltog/vim-easymotion'		" Faster motion system
+Plugin 'luochen1990/rainbow'			" Display multi-color parentheses
+Plugin 'vim-scripts/matchit.zip'		" Bind more match on % key
+Plugin 'tpope/vim-repeat'				" More command can repeat with . key
+Plugin 'aeddi/Stdheader'				" 42 standard header
+Plugin 'maksimr/vim-jsbeautify'			" JS / CSS / HTML beautifier
+Plugin 'mhinz/vim-signify'				" Mark lines edited since last commit
+Plugin 'takac/vim-hardtime'				" Like hardmode but more customizable
+
+Plugin 'sjl/gundo.vim'					" Undo tree
+Plugin 'ctrlpvim/ctrlp.vim'				" Content finder
+Plugin 'ivalkeen/vim-ctrlp-tjump'		" Tags plugin for CtrlP
+Plugin 'tpope/vim-fugitive'				" Git integration
+Plugin 'chrisbra/Recover.vim'			" Diff swap files
+Plugin 'webdevel/tabulous'				" Enhance tabs
+
+Plugin 'aeddi/tomorrow-theme'			" Colorscheme tomorrow-night
+Plugin 'vim-airline/vim-airline'		" Better status bar
+Plugin 'vim-airline/vim-airline-themes'	" Airline themes
+
+call vundle#end()
+filetype plugin indent on
+"--------------------
+
+"2" Tomorrow-night :
+"--------------------
+silent! colorscheme Tomorrow-Night		"Enable theme with silent! to avoid error on first launch
+"--------------------
+
+"3" Syntastic :
+"--------------------
+let g:syntastic_c_compiler_options = '-Werror -Wextra -Wall -pedantic'
+let g:syntastic_c_compiler = 'gcc'
+let g:syntastic_cpp_compiler_options = '-Werror -Wextra -Wall -pedantic'
+let g:syntastic_cpp_compiler = 'g++'
+
+set statusline+=%#warningmsg#
+set statusline+=%{SyntasticStatuslineFlag()}
+set statusline+=%*
+
+let g:syntastic_always_populate_loc_list = 1
+let g:syntastic_auto_loc_list = 1
+let g:syntastic_check_on_open = 1
+let g:syntastic_check_on_wq = 0
+
+let g:syntastic_mode_map = { 'mode': 'passive', 'active_filetypes': [],'passive_filetypes': [] }
+"--------------------
+
+"4" Gundo :
+"--------------------
+nnoremap U :GundoToggle<CR>
+"--------------------
+
+"5" EasyMotion :
+"--------------------
+map  / <Plug>(easymotion-sn)
+omap / <Plug>(easymotion-tn)
+"--------------------
+
+"6" Airline :
+"--------------------
+set laststatus=2							"Always show airline
+let g:airline_powerline_fonts = 1			"Enable patched fonts
+let g:airline_theme = 'tomorrow'
+set noshowmode
+"--------------------
+
+"7" Template :
+"--------------------
+let g:templates_directory = '~/.vim/bundle/Templates-snippets/templates'
+"--------------------
+
+"8" Rainbow Parentheses :
+"--------------------
+let g:rainbow_active = 0
+nnoremap <leader><leader>( :RainbowToggle<CR>
+"--------------------
+
+"9" UltiSnips
+"--------------------
+let g:UltiSnipsExpandTrigger="<C-l>"
+let g:UltiSnipsJumpForwardTrigger="<C-S-e>"
+let g:UltiSnipsJumpBackwardTrigger="<C-w>"
+"--------------------
+
+"10" CtrlP
+"--------------------
+nnoremap <c-o> :CtrlPMRU<cr>
+nnoremap <c-t> :CtrlPTag<cr>
+let g:ctrlp_regexp = 1
+let g:ctrlp_show_hidden = 1
+let g:ctrlp_open_multiple_files = 'tj'
+let g:ctrlp_prompt_mappings = {
+\ 'AcceptSelection("h")': ['<c-s>', '<c-x>'],
+\ 'ToggleType(1)':        ['<c-l>', '<c-f>'],
+\ 'ToggleType(-1)':       ['<c-h>', '<c-b>'],
+\ }
+
+nnoremap <bar> :CtrlPtjump<cr>
+vnoremap <bar> :CtrlPtjumpVisual<cr>
+nnoremap " :pop<cr>
+vnoremap " :pop<cr>
+let g:ctrlp_tjump_only_silent = 1
 "--------------------
 
 

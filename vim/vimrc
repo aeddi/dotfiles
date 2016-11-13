@@ -42,12 +42,15 @@
 "--------------------
 set title						" Display filename in title bar
 set ttyfast						" More reactive displaying
-set number						" Show line number
 set mousehide					" Hide mouse cursor when typing
 set showcmd						" Show incomplete command
 set wildmenu					" Display command auto-completion with tab
 set splitbelow					" New horizontal split appears below
 set splitright					" New vertical split appears on right
+set number						" Enable aboslute numbers
+set relativenumber				" And relative numbers (hybrid mode)
+au InsertEnter * :set nornu		" Disable relative on insert
+au InsertLeave * :set rnu		" Enable relative out of insert
 "--------------------
 
 "2" Colors :
@@ -205,6 +208,7 @@ Plugin 'tpope/vim-repeat'				" More command can repeat with . key
 Plugin 'aeddi/Stdheader'				" 42 standard header
 Plugin 'maksimr/vim-jsbeautify'			" JS / CSS / HTML beautifier
 Plugin 'mhinz/vim-signify'				" Mark lines edited since last commit
+Plugin 'takac/vim-hardtime'				" Like hardmode but more customizable
 
 Plugin 'sjl/gundo.vim'					" Undo tree
 Plugin 'ctrlpvim/ctrlp.vim'				" Content finder

@@ -26,15 +26,15 @@ selection_menu()
 		printf -- "\n${DELIM2}\n\n"
 		printf -- "${TITLE}Which version of the vim configuration do you want to install?${RESET}\n\n"
 
-		OPTIONS=( 'Full install' 'Light (no completion)' 'Lightest (no plugin)' )
+		OPTIONS=( 'Full install' 'Medium (no completion)' 'Light (no plugin)' )
 		PS3=$'\n\e[1;39mYour choice: \e[0m'
 
 		select OPT in "${OPTIONS[@]}"; do
 			read SEL <<< "$REPLY"
 			case $SEL in
 				1) SELECTED=("${SELECTED[@]/vim/vim-full}"); break ;;
-				2) SELECTED=("${SELECTED[@]/vim/vim-light}"); break ;;
-				3) SELECTED=("${SELECTED[@]/vim/vim-lightest}"); break ;;
+				2) SELECTED=("${SELECTED[@]/vim/vim-medium}"); break ;;
+				3) SELECTED=("${SELECTED[@]/vim/vim-light}"); break ;;
 				*) printf "${ERROR}Invalid choice:${RESET} $SEL. Try again.\n" >&2;;
 			esac
 		done
@@ -78,7 +78,7 @@ create_symlink()
 		return 0
 	fi
 
-	if [ -f "$TARGET" ]; then
+	if [ -e "$TARGET" ] || [ -L "$TARGET" ]; then
 		printf -- "${WARNING}Warning: $TARGET_REL already exist!${RESET}\n"
 		printf -- "${OPS}Backup it, Overwrite it or Abort? [B|o|a]${RESET} "
 		read INPUT
@@ -120,7 +120,7 @@ launch()
 
 install_packages()
 {
-	UPDATED=0
+	PACKAGES=("${@}")
 
 	# Check if brew is installed
 	if [[ `uname` == 'Darwin' ]] && ! which brew &> /dev/null; then
@@ -132,22 +132,31 @@ install_packages()
 		fi
 	fi
 
-	if which brew; then
-		[[ $UPDATED ]] || (brew update && UPDATE=1) || return 1
+	if which brew &> /dev/null; then
+		if [[ "${PACKAGES[@]}" =~ "ycm" ]]; then
+			PACKAGES=(${PACKAGES[@]/ycm} 'cmake' 'go' 'rust' 'node' 'mono')
+			xcode-select --install
+		fi
+		[[ $UPDATED ]] || (brew update && UPDATED=1) || return 1
 		brew install $PACKAGES || return 1
-	elif which pacman; then
-		[[ $UPDATED ]] || (sudo pacman -Syu --noconfirm && UPDATE=1) || return 1
+	elif which pacman &> /dev/null; then
+		[[ "${PACKAGES[@]}" =~ "ycm" ]] && PACKAGES=(${PACKAGES[@]/ycm} 'cmake' 'go' 'rust' 'node' 'mono')
+		[[ $UPDATED ]] || (sudo pacman -Syu --noconfirm && UPDATED=1) || return 1
 		sudo pacman -S --noconfirm $PACKAGES || return 1
-	elif which apt-get; then
-		[[ $UPDATED ]] || (sudo apt-get update -y && UPDATE=1) || return 1
+	elif which apt-get &> /dev/null; then
+		[[ "${PACKAGES[@]}" =~ "ycm" ]] && PACKAGES=(${PACKAGES[@]/ycm} 'cmake' 'go' 'rust' 'node' 'mono')
+		[[ $UPDATED ]] || (sudo apt-get update -y && UPDATED=1) || return 1
 		sudo apt-get install -y $PACKAGES || return 1
-	elif which yum; then
-		[[ $UPDATED ]] || (sudo yum update -y && UPDATE=1) || return 1
+	elif which yum &> /dev/null; then
+		[[ "${PACKAGES[@]}" =~ "ycm" ]] && PACKAGES=(${PACKAGES[@]/ycm} 'cmake' 'go' 'rust' 'node' 'mono')
+		[[ $UPDATED ]] || (sudo yum update -y && UPDATED=1) || return 1
 		sudo yum install -y $PACKAGES || return 1
 	else
-		printf -- "${WARNING}Package manager not detected. You may need to install this packages manually:${RESET}\n$PACKAGES\n"
+		[[ "${PACKAGES[@]}" =~ "ycm" ]] && PACKAGES=(${PACKAGES[@]/ycm} 'cmake' 'go' 'rust' 'node' 'mono')
+		printf -- "${WARNING}Package manager not detected. You may need to install this packages manually:${RESET}\n${PACKAGES[*]}\n"
 		return 1
 	fi
+	echo CP3 ${PACKAGES[@]}
 
 	return 0
 }
@@ -155,23 +164,66 @@ install_packages()
 
 vim_config()
 {
-	printf -- "${WARNING}Abort: vim config installation not implemented yet!${RESET}\n"
-	return 2
+	DEP=('vim')
+	[[ "${SELECTED[@]}" =~ "vim-light" ]] || DEP+=('git')
+	[[ "${SELECTED[@]}" =~ "vim-full" ]] && DEP+=('ycm')
+	install_packages "${DEP[@]}"																\
+	|| { printf -- "${OPS}Continue installation without depencies or Abort? [C|a]${RESET} " &&	\
+		read INPUT; [[ $INPUT == 'a' || $INPUT == 'A' ]] && return 2; }
+
+	if [[ "${SELECTED[@]}" =~ "vim-light" ]]; then
+		create_symlink vim/vimrc_light $HOME/.vimrc
+	else
+		[[ "${SELECTED[@]}" =~ "vim-full" ]] && { create_symlink vim/vimrc $HOME/.vimrc || return; }
+		[[ "${SELECTED[@]}" =~ "vim-medium" ]] && { create_symlink vim/vimrc_medium $HOME/.vimrc || return; }
+
+		printf "${OPS}Installing plugin with vundle:${RESET} " 
+		(vim +PluginInstall +qall &> /dev/null		\
+		&& printf -- "${SUCCESS}success${RESET}\n")	\
+		|| { printf -- "${ERROR}error${RESET}\n" >&2; return 1; }
+
+		if [[ "${SELECTED[@]}" =~ "vim-full" ]]; then
+			printf "${OPS}Installing YouCompleteMe server...${RESET}\n"
+			$HOME/.vim/bundle/YouCompleteMe/install.py --all	\
+			|| return 1
+		fi
+	fi
 }
 
 
 zsh_config()
 {
-	printf -- "${WARNING}Abort: zsh config installation not implemented yet!${RESET}\n"
-	return 2
+	DEP=('zsh')
+	[[ "${SELECTED[@]}" =~ "zsh-full" ]] && DEP+=('git')
+	install_packages "${DEP[@]}"																\
+	|| { printf -- "${OPS}Continue installation without depencies or Abort? [C|a]${RESET} " &&	\
+		read INPUT; [[ $INPUT == 'a' || $INPUT == 'A' ]] && return 2; }
+
+	[[ "${SELECTED[@]}" =~ "zsh-full" ]] && { create_symlink zsh/zshrc $HOME/.zshrc || return; }
+	[[ "${SELECTED[@]}" =~ "zsh-light" ]] && { reate_symlink zsh/zshrc_light $HOME/.zshrc || return; }
+	create_symlink zsh/aliases $HOME/.aliases || return
+	create_symlink zsh/functions $HOME/.functions
+
+	if [[ "${SELECTED[@]}" =~ "zsh-full" ]]; then
+		printf "${OPS}Installing antigen to $HOME/.antigen:${RESET} " 
+		(cd $HOME																		\
+		&& git clone https://github.com/zsh-users/antigent.git .antigen &> /dev/null	\
+		&& printf -- "${SUCCESS}success${RESET}\n")										\
+		|| { printf -- "${ERROR}error${RESET}\n" >&2; return 1; }
+		printf "${OPS}Installing antigen plugins...${RESET}\n" 
+		(cd $HOME																		\
+		&& source $HOME/.zshrc)															\
+		|| return 1
+	fi
 }
 
 
 git_config()
 {
-	#Install git
-	create_symlink git/gitconfig $HOME/.gitconfig
-	RET=$?; [ $RET -ne 0 ] && return $RET
+	DEP=('git')
+	echo "${DEP[@]}"
+
+	create_symlink git/gitconfig $HOME/.gitconfig || return
 	create_symlink git/gitignore $HOME/.gitignore
 }
 
@@ -243,6 +295,9 @@ fonts_config()
 BACKUP_DIR=$HOME/.config_backup
 DOTFILES_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 LOGFILE=$DOTFILES_DIR/install_logs
+
+# Update boolean
+UPDATED=0
 
 # Text formating vars
 TITLE='\e[1;33m'
