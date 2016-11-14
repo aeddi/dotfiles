@@ -122,8 +122,6 @@ install_packages()
 {
 	PACKAGES=("${@}")
 
-	printf -- "${OPS}Installing depencies...${RESET}\n"
-
 	# Check if brew is installed
 	if [[ `uname` == 'Darwin' ]] && ! which brew &> /dev/null; then
 		printf -- "${WARNING}You may need to install brew on your Mac to install dependencies.${RESET}\n"
@@ -132,9 +130,8 @@ install_packages()
 		if [[ $INPUT != 'n' && $INPUT != 'N' ]]; then
 			printf "${OPS}Installing brew...${RESET}\n" 
 			printf -- "${DELIM4}\n"
-			{ {
-				/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)";
-			} 2>&1; } | (format_subscript; printf -- "${DELIM4}\n\n");	\
+			/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)" 2>&1	\
+			| (format_subscript; printf -- "${DELIM4}\n\n");														\
 			TMP=${PIPESTATUS[0]}; [[ $TMP -ne 0 ]] && return $TMP
 			cd $HOME
 		else
@@ -142,12 +139,13 @@ install_packages()
 		fi
 	fi
 
+	printf -- "${OPS}Installing depencies...${RESET}\n"
 	printf -- "${DELIM4}\n"
 	{ {
 		if which brew &> /dev/null; then
 			[[ "${PACKAGES[@]}" =~ "ycm" ]] && PACKAGES=(${PACKAGES[@]/ycm} 'cmake' 'go' 'rust' 'node' 'mono')
 			[[ $UPDATED ]] || (brew update && UPDATED=1) || return 1
-			brew install ${PACKAGES[*]} || return 1
+			brew install ${PACKAGES[*]} 2>&1 || return 1
 		elif which pacman &> /dev/null; then
 			[[ "${PACKAGES[@]}" =~ "ycm" ]] && PACKAGES=(${PACKAGES[@]/ycm} 'cmake' 'go' 'rust' 'node' 'mono')
 			[[ $UPDATED ]] || (sudo pacman -Syu --noconfirm && UPDATED=1) || return 1
@@ -173,8 +171,9 @@ install_packages()
 
 format_subscript()
 {
-	awk -v WIDTH=74 '
+	awk -v WIDTH=75 '
 	{
+		sub(/	/, "   ");
 		while (length>WIDTH) {
 			print "   | " substr($0,1,WIDTH);
 			$0=substr($0,WIDTH+1);
@@ -357,6 +356,9 @@ LOGFILE=$DOTFILES_DIR/install_logs
 
 # Update boolean
 UPDATED=0
+
+# Format sudo prompt for subscript
+export SUDO_PROMPT="   | %u's password: "
 
 # Text formating vars
 TITLE='\e[1;33m'
