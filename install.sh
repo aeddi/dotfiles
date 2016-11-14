@@ -202,6 +202,7 @@ vim_config()
 			printf "${OPS}Vundle already installed: ${SUCCESS}success${RESET}\n" 
 		else
 			printf "${OPS}Installing vundle:${RESET} " 
+			cd $HOME
 			(git clone https://github.com/VundleVim/Vundle.vim.git $HOME/.vim/bundle/Vundle.vim &> /dev/null	\
 			&& printf -- "${SUCCESS}success${RESET}\n")															\
 			|| { printf -- "${ERROR}error${RESET}\n" >&2; return 1; }
@@ -210,6 +211,7 @@ vim_config()
 		vim +PluginInstall +qall &> /dev/null &
 		printf "${OPS}Installing plugins with vundle:${RESET} [|] " 
 		SPIN='|/-\'
+		sleep 0.5
 		while [[ 42 ]]; do
 			LOOP="$(ps aux | grep '[v]im +PluginInstall +qall')"
 
