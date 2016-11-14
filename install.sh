@@ -173,7 +173,7 @@ format_subscript()
 {
 	awk -v WIDTH=75 '
 	{
-		sub(/	/, "   ");
+		gsub(/\t/, "   ");
 		while (length>WIDTH) {
 			print "   | " substr($0,1,WIDTH);
 			$0=substr($0,WIDTH+1);
