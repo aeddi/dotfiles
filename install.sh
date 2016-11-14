@@ -133,7 +133,6 @@ install_packages()
 			/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)" 2>&1	\
 			| (format_subscript; printf -- "${DELIM4}\n\n");														\
 			TMP=${PIPESTATUS[0]}; [[ $TMP -ne 0 ]] && return $TMP
-			cd $HOME
 		else
 			return 1
 		fi
@@ -142,6 +141,7 @@ install_packages()
 	printf -- "${OPS}Installing depencies...${RESET}\n"
 	printf -- "${DELIM4}\n"
 	{ {
+		cd $HOME
 		if which brew &> /dev/null; then
 			[[ "${PACKAGES[@]}" =~ "ycm" ]] && PACKAGES=(${PACKAGES[@]/ycm} 'cmake' 'go' 'rust' 'node' 'mono')
 			[[ $UPDATED ]] || (brew update && UPDATED=1) || return 1

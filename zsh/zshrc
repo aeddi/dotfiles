@@ -47,7 +47,6 @@ source $HOME/.antigen/antigen.zsh
 
 antigen bundle zsh-users/zsh-history-substring-search.git
 antigen bundle zsh-users/zsh-completions
-antigen bundle unixorn/autoupdate-antigen.zshplugin
 antigen-bundle Tarrasch/zsh-bd
 
 antigen apply
