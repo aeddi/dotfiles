@@ -237,10 +237,8 @@ vim_config()
 		if [[ "${SELECTED[@]}" =~ "vim-full" ]]; then
 			printf "${OPS}Installing YouCompleteMe server...${RESET}\n"
 			printf -- "${DELIM4}\n"
-			{ {
-				$HOME/.vim/bundle/YouCompleteMe/install.py --all	\
-				|| return 1;
-			} 2>&1; } | (format_subscript; printf -- "${DELIM4}\n\n");	\
+			$HOME/.vim/bundle/YouCompleteMe/install.py --all 2>&1	\
+			| (format_subscript; printf -- "${DELIM4}\n\n");		\
 			TMP=${PIPESTATUS[0]}; [[ $TMP -ne 0 ]] && return $TMP
 		fi
 	fi
@@ -287,9 +285,8 @@ zsh_config()
 
 		printf "${OPS}Installing antigen plugins...${RESET}\n" 
 		printf -- "${DELIM4}\n"
-		{ {
-			zsh -c "source $HOME/.zshrc" || return 1;
-		} 2>&1; } | (format_subscript; printf -- "${DELIM4}\n\n");	\
+		zsh -c "source $HOME/.zshrc" 2>&1					\
+		| (format_subscript; printf -- "${DELIM4}\n\n");	\
 		TMP=${PIPESTATUS[0]}; [[ $TMP -ne 0 ]] && return $TMP
 	fi
 }
