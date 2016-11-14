@@ -265,6 +265,13 @@ zsh_config()
 	create_symlink zsh/aliases $HOME/.aliases || return
 	create_symlink zsh/functions $HOME/.functions
 
+	if [[ ! -f $HOME/.zshrc_local ]]; then
+		printf "${OPS}Adding .zshrc_local config file:${RESET} " 
+		(echo '# Put your local zsh settings here' > $HOME/.zshrc_local	\
+		&& printf -- "${SUCCESS}success${RESET}\n")						\
+		|| { printf -- "${ERROR}error${RESET}\n" >&2; return 1; }
+	fi
+
 	if [[ "${SELECTED[@]}" =~ "zsh-full" ]]; then
 		printf "${OPS}Installing antigen to $HOME/.antigen:${RESET} " 
 		(cd $HOME																	\
@@ -278,13 +285,6 @@ zsh_config()
 			zsh -c "source $HOME/.zshrc" || return 1;
 		} 2>&1; } | (format_subscript; printf -- "${DELIM4}\n\n");	\
 		TMP=${PIPESTATUS[0]}; [[ $TMP -ne 0 ]] && return $TMP
-	fi
-
-	if [[ ! -f $HOME/.zshrc_local ]]; then
-		printf "${OPS}Adding .zshrc_local config file:${RESET} " 
-		(echo '# Put your local zsh settings here' > $HOME/.zshrc_local	\
-		&& printf -- "${SUCCESS}success${RESET}\n")						\
-		|| { printf -- "${ERROR}error${RESET}\n" >&2; return 1; }
 	fi
 }
 
