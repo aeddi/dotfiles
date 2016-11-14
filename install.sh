@@ -144,19 +144,19 @@ install_packages()
 		cd $HOME
 		if which brew &> /dev/null; then
 			[[ "${PACKAGES[@]}" =~ "ycm" ]] && PACKAGES=(${PACKAGES[@]/ycm} 'cmake' 'go' 'rust' 'node' 'mono')
-			[[ $UPDATED ]] || (brew update && UPDATED=1) || return 1
+			[[ ! $UPDATED ]] || (brew update && UPDATED=1) || return 1
 			brew install ${PACKAGES[*]} 2>&1 || return 1
 		elif which pacman &> /dev/null; then
 			[[ "${PACKAGES[@]}" =~ "ycm" ]] && PACKAGES=(${PACKAGES[@]/ycm} 'base-devel' 'cmake' 'python2' 'python3' 'go' 'rust' 'cargo' 'nodejs' 'npm' 'mono')
-			[[ $UPDATED ]] || (sudo pacman -Syu --noconfirm && UPDATED=1) || return 1
+			[[ ! $UPDATED ]] || (sudo pacman -Syu --noconfirm && UPDATED=1) || return 1
 			sudo pacman -S --noconfirm ${PACKAGES[*]} || return 1
 		elif which apt-get &> /dev/null; then
 			[[ "${PACKAGES[@]}" =~ "ycm" ]] && PACKAGES=(${PACKAGES[@]/ycm} 'cmake' 'go' 'rust' 'node' 'mono')
-			[[ $UPDATED ]] || (sudo apt-get update -y && UPDATED=1) || return 1
+			[[ ! $UPDATED ]] || (sudo apt-get update -y && UPDATED=1) || return 1
 			sudo apt-get install -y ${PACKAGES[*]} || return 1
 		elif which yum &> /dev/null; then
 			[[ "${PACKAGES[@]}" =~ "ycm" ]] && PACKAGES=(${PACKAGES[@]/ycm} 'cmake' 'go' 'rust' 'node' 'mono')
-			[[ $UPDATED ]] || (sudo yum update -y && UPDATED=1) || return 1
+			[[ ! $UPDATED ]] || (sudo yum update -y && UPDATED=1) || return 1
 			sudo yum install -y ${PACKAGES[*]} || return 1
 		else
 			[[ "${PACKAGES[@]}" =~ "ycm" ]] && PACKAGES=(${PACKAGES[@]/ycm} 'cmake' 'go' 'rust' 'node' 'mono')
@@ -198,7 +198,9 @@ vim_config()
 		[[ "${SELECTED[@]}" =~ "vim-full" ]] && { create_symlink vim/vimrc $HOME/.vimrc || return; }
 		[[ "${SELECTED[@]}" =~ "vim-medium" ]] && { create_symlink vim/vimrc_medium $HOME/.vimrc || return; }
 
-		if [[ ! -d $HOME/.vim/bundle/Vundle.vim ]]; then
+		if [[ -d $HOME/.vim/bundle/Vundle.vim ]]; then
+			printf "${OPS}Vundle already installed: ${SUCCESS}success${RESET}\n" 
+		else
 			printf "${OPS}Installing vundle:${RESET} " 
 			(git clone https://github.com/VundleVim/Vundle.vim.git $HOME/.vim/bundle/Vundle.vim &> /dev/null	\
 			&& printf -- "${SUCCESS}success${RESET}\n")															\
@@ -273,11 +275,15 @@ zsh_config()
 	fi
 
 	if [[ "${SELECTED[@]}" =~ "zsh-full" ]]; then
-		printf "${OPS}Installing antigen to $HOME/.antigen:${RESET} " 
-		(cd $HOME																	\
-		&& git clone https://github.com/zsh-users/antigen.git .antigen &> /dev/null	\
-		&& printf -- "${SUCCESS}success${RESET}\n")									\
-		|| { printf -- "${ERROR}error${RESET}\n" >&2; return 1; }
+		if [[ -d $HOME/.antigen ]]; then
+			printf "${OPS}Antigen already installed: ${SUCCESS}success${RESET}\n" 
+		else
+			printf "${OPS}Installing antigen to $HOME/.antigen:${RESET} " 
+			(cd $HOME																	\
+			&& git clone https://github.com/zsh-users/antigen.git .antigen &> /dev/null	\
+			&& printf -- "${SUCCESS}success${RESET}\n")									\
+			|| { printf -- "${ERROR}error${RESET}\n" >&2; return 1; }
+		fi
 
 		printf "${OPS}Installing antigen plugins...${RESET}\n" 
 		printf -- "${DELIM4}\n"
