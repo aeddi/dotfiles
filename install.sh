@@ -147,7 +147,7 @@ install_packages()
 			[[ $UPDATED ]] || (brew update && UPDATED=1) || return 1
 			brew install ${PACKAGES[*]} 2>&1 || return 1
 		elif which pacman &> /dev/null; then
-			[[ "${PACKAGES[@]}" =~ "ycm" ]] && PACKAGES=(${PACKAGES[@]/ycm} 'cmake' 'go' 'rust' 'node' 'mono')
+			[[ "${PACKAGES[@]}" =~ "ycm" ]] && PACKAGES=(${PACKAGES[@]/ycm} 'base-devel' 'cmake' 'python2' 'python3' 'go' 'rust' 'cargo' 'nodejs' 'npm' 'mono')
 			[[ $UPDATED ]] || (sudo pacman -Syu --noconfirm && UPDATED=1) || return 1
 			sudo pacman -S --noconfirm ${PACKAGES[*]} || return 1
 		elif which apt-get &> /dev/null; then
@@ -209,7 +209,7 @@ vim_config()
 		printf "${OPS}Installing plugins with vundle:${RESET} [|] " 
 		SPIN='|/-\'
 		while [[ 42 ]]; do
-			LOOP="$(ps aux | grep 'vim +PluginInstall +qall')"
+			LOOP="$(ps aux | grep '[v]im +PluginInstall +qall')"
 
 			TMP=${SPIN#?}
 			printf "\b\b\b\b[%c] " "$SPIN"

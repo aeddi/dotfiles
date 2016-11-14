@@ -8,7 +8,8 @@ setopt extendedglob
 autoload -U colors && colors
 
 # Ensure permissions are correct for ZSH completion
-autoload -U compaudit && compaudit | xargs chmod g-w
+autoload -U compaudit
+[[ "$(compaudit)" ]] && compaudit | xargs chmod g-w
 if [[ `uname` == "Darwin" && "$(compaudit)" ]]; then
 	printf "Setting right permissions for compinit - "
 	sudo chown -RL root:staff /usr/local/share/zsh
@@ -47,7 +48,7 @@ source $HOME/.antigen/antigen.zsh
 
 antigen bundle zsh-users/zsh-history-substring-search.git
 antigen bundle zsh-users/zsh-completions
-antigen-bundle Tarrasch/zsh-bd
+antigen bundle Tarrasch/zsh-bd
 
 antigen apply
 
