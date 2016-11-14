@@ -205,10 +205,32 @@ vim_config()
 			|| { printf -- "${ERROR}error${RESET}\n" >&2; return 1; }
 		fi
 
-		printf "${OPS}Installing plugins with vundle:${RESET} " 
-		(vim +PluginInstall +qall &> /dev/null		\
-		&& printf -- "${SUCCESS}success${RESET}\n")	\
-		|| { printf -- "${ERROR}error${RESET}\n" >&2; return 1; }
+		vim +PluginInstall +qall &> /dev/null &
+		printf "${OPS}Installing plugins with vundle:${RESET} [|] " 
+		SPIN='|/-\'
+		while [[ 42 ]]; do
+			LOOP="$(ps aux | grep 'vim +PluginInstall +qall')"
+
+			TMP=${SPIN#?}
+			printf "\b\b\b\b[%c] " "$SPIN"
+			SPIN=$TMP${SPIN%"$TMP"}
+
+			CUR_PLUGIN=$(ps aux | grep "git clone .* $HOME/.vim/bundle/[[:alnum:]]" | awk -v OFS='\n' '{$1=$1}1' | grep "^$HOME/\.vim/bundle/[[:alnum:]]\+$")
+			[[ "$CUR_PLUGIN" ]] && CUR_PLUGIN="$(basename $CUR_PLUGIN) "
+			if [[ ! "$LOOP" || "$CUR_PLUGIN" && "$CUR_PLUGIN" != "$LAST_PLUGIN" ]]; then
+				SIZE=$(( ${#LAST_PLUGIN} + 4 ))
+				SPACE=`printf '%*s' "$SIZE"`
+				ERASE=`printf "$SPACE" | tr ' ' '\b'`
+				if [[ ! "$LOOP" ]]; then
+					printf -- "${ERASE}${SPACE}${ERASE}${SUCCESS}success${RESET}\n"
+					break
+				fi
+				printf -- "${ERASE}${SPACE}${ERASE}${CUR_PLUGIN}[%c] " "$SPIN"
+				LAST_PLUGIN=$CUR_PLUGIN
+			fi
+
+			sleep 0.2
+		done
 
 		if [[ "${SELECTED[@]}" =~ "vim-full" ]]; then
 			printf "${OPS}Installing YouCompleteMe server...${RESET}\n"
