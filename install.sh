@@ -138,35 +138,35 @@ install_packages()
 		fi
 	fi
 
+	ERR=0
 	printf -- "${OPS}Installing depencies...${RESET}\n"
 	printf -- "${DELIM4}\n"
 	{ {
 		cd $HOME
 		if which brew &> /dev/null; then
 			[[ "${PACKAGES[@]}" =~ "ycm" ]] && PACKAGES=(${PACKAGES[@]/ycm} 'cmake' 'go' 'rust' 'node' 'mono')
-			[[ ! $UPDATED ]] || (brew update && UPDATED=1) || return 1
-			brew install ${PACKAGES[*]} 2>&1 || return 1
+			[[ ! $UPDATED ]] || (brew update && UPDATED=1) || ERR=1
+			brew install ${PACKAGES[*]} 2>&1 || ERR=1
 		elif which pacman &> /dev/null; then
 			[[ "${PACKAGES[@]}" =~ "ycm" ]] && PACKAGES=(${PACKAGES[@]/ycm} 'base-devel' 'cmake' 'python2' 'python3' 'go' 'rust' 'cargo' 'nodejs' 'npm' 'mono')
-			[[ ! $UPDATED ]] || (sudo pacman -Syu --noconfirm && UPDATED=1) || return 1
-			sudo pacman -S --noconfirm ${PACKAGES[*]} || return 1
+			[[ ! $UPDATED ]] || (sudo pacman -Syu --noconfirm && UPDATED=1) || ERR=1
+			sudo pacman -S --noconfirm ${PACKAGES[*]} || ERR=1
 		elif which apt-get &> /dev/null; then
 			[[ "${PACKAGES[@]}" =~ "ycm" ]] && PACKAGES=(${PACKAGES[@]/ycm} 'cmake' 'go' 'rust' 'node' 'mono')
-			[[ ! $UPDATED ]] || (sudo apt-get update -y && UPDATED=1) || return 1
-			sudo apt-get install -y ${PACKAGES[*]} || return 1
+			[[ ! $UPDATED ]] || (sudo apt-get update -y && UPDATED=1) || ERR=1
+			sudo apt-get install -y ${PACKAGES[*]} || ERR=1
 		elif which yum &> /dev/null; then
 			[[ "${PACKAGES[@]}" =~ "ycm" ]] && PACKAGES=(${PACKAGES[@]/ycm} 'cmake' 'go' 'rust' 'node' 'mono')
-			[[ ! $UPDATED ]] || (sudo yum update -y && UPDATED=1) || return 1
-			sudo yum install -y ${PACKAGES[*]} || return 1
+			[[ ! $UPDATED ]] || (sudo yum update -y && UPDATED=1) || ERR=1
+			sudo yum install -y ${PACKAGES[*]} || ERR=1
 		else
 			[[ "${PACKAGES[@]}" =~ "ycm" ]] && PACKAGES=(${PACKAGES[@]/ycm} 'cmake' 'go' 'rust' 'node' 'mono')
 			printf -- "${WARNING}Package manager not detected. You may need to install this packages manually:${RESET}\n${PACKAGES[*]}\n"
-			return 1
+			ERR=1
 		fi
+	} 2>&1; } | (format_subscript; printf -- "${DELIM4}\n\n")
 
-		return 0;
-	} 2>&1; } | (format_subscript; printf -- "${DELIM4}\n\n");	\
-	return ${PIPESTATUS[0]}
+	return $ERR
 }
 
 format_subscript()
@@ -249,6 +249,8 @@ vim_config()
 		&& printf -- "${SUCCESS}success${RESET}\n")						\
 		|| { printf -- "${ERROR}error${RESET}\n" >&2; return 1; }
 	fi
+
+	return 0
 }
 
 
@@ -289,6 +291,8 @@ zsh_config()
 		| (format_subscript; printf -- "${DELIM4}\n\n");	\
 		TMP=${PIPESTATUS[0]}; [[ $TMP -ne 0 ]] && return $TMP
 	fi
+
+	return 0
 }
 
 
@@ -306,6 +310,7 @@ git_config()
 		&& printf -- "${SUCCESS}success${RESET}\n")							\
 		|| { printf -- "${ERROR}error${RESET}\n" >&2; return 1; }
 	fi
+	return 0
 }
 
 
@@ -318,7 +323,8 @@ i3_config()
 
 tern_config()
 {
-	create_symlink tern-project $HOME/.tern-project
+	create_symlink tern-project $HOME/.tern-project || return
+	return 0
 }
 
 
