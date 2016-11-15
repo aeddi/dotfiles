@@ -55,7 +55,9 @@ au InsertLeave * :set rnu		" Enable relative out of insert
 
 "2" Colors :
 "--------------------
-set t_Co=256					" Enable 256 colors mode
+if &term == "screen"
+	set t_Co=256				" Enable 256 colors mode
+endif
 syntax on						" Syntax coloration
 "--------------------
 

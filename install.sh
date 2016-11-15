@@ -156,9 +156,14 @@ install_packages()
 			[[ $UPDATED -eq 0 ]] || (sudo apt-get update -y && UPDATED=1) || ERR=1
 			sudo apt-get install -y ${PACKAGES[*]} || ERR=1
 		elif which yum &> /dev/null; then
-			[[ "${PACKAGES[@]}" =~ "ycm" ]] && PACKAGES=(${PACKAGES[@]/ycm} 'gcc' 'cpp' 'automake' 'cmake' 'python-devel' 'go' 'rust' 'cargo' 'node' 'npm' 'mono')
+			[[ "${PACKAGES[@]}" =~ "ycm" ]] && PACKAGES=(${PACKAGES[@]/ycm} 'gcc' 'gcc-c++' 'automake' 'cmake' 'python-devel' 'go' 'rust' 'cargo' 'node' 'npm' 'mono-complete')
 			if [[ $UPDATED -eq 0 ]]; then
 				[[ -n "$(grep -i 'centos\|red[[:space:]]hat' /etc/redhat-release)" ]] && sudo yum install -y epel-release
+				if [[ -z "$(yum repolist | grep 'download.mono-project.com')" ]]; then
+					sudo yum install -y yum-utils
+					sudo rpm --import "http://keyserver.ubuntu.com/pks/lookup?op=get&search=0x3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF"
+					sudo yum-config-manager --add-repo http://download.mono-project.com/repo/centos/
+				fi
 				(sudo yum update -y && UPDATED=1) || ERR=1
 			fi
 			sudo yum install -y ${PACKAGES[*]} || ERR=1
