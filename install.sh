@@ -152,12 +152,15 @@ install_packages()
 			[[ $UPDATED -eq 0 ]] || (sudo pacman -Syu --noconfirm && UPDATED=1) || ERR=1
 			sudo pacman -S --noconfirm ${PACKAGES[*]} || ERR=1
 		elif which apt-get &> /dev/null; then
-			[[ "${PACKAGES[@]}" =~ "ycm" ]] && PACKAGES=(${PACKAGES[@]/ycm} 'cmake' 'go' 'rust' 'node' 'mono')
+			if [[ "${PACKAGES[@]}" =~ "ycm" ]]; then
+				PACKAGES=(${PACKAGES[@]/ycm} 'build-essential' 'automake' 'cmake' 'python-dev' 'python3-dev' 'golang' 'node' 'npm' 'mono-complete')
+				curl -sf -L https://static.rust-lang.org/rustup.sh | sh || ERR=1
+			fi
 			[[ $UPDATED -eq 0 ]] || (sudo apt-get update -y && UPDATED=1) || ERR=1
 			sudo apt-get install -y ${PACKAGES[*]} || ERR=1
 		elif which yum &> /dev/null; then
-			[[ "${PACKAGES[@]}" =~ "ycm" ]] && PACKAGES=(${PACKAGES[@]/ycm} 'gcc' 'gcc-c++' 'automake' 'cmake' 'python-devel' 'go' 'rust' 'cargo' 'node' 'npm' 'mono-complete')
-			if [[ $UPDATED -eq 0 ]]; then
+			if [[ "${PACKAGES[@]}" =~ "ycm" ]]; then
+			 	PACKAGES=(${PACKAGES[@]/ycm} 'gcc' 'gcc-c++' 'automake' 'cmake' 'python-devel' 'go' 'rust' 'cargo' 'node' 'npm' 'mono-complete')
 				[[ -n "$(grep -i 'centos\|red[[:space:]]hat' /etc/redhat-release)" ]] && sudo yum install -y epel-release
 				if [[ -z "$(yum repolist | grep 'download.mono-project.com')" ]]; then
 					sudo yum install -y yum-utils
@@ -166,6 +169,7 @@ install_packages()
 				fi
 				(sudo yum update -y && UPDATED=1) || ERR=1
 			fi
+			[[ $UPDATED -eq 0 ]] && (sudo yum update -y && UPDATED=1) || ERR=1
 			sudo yum install -y ${PACKAGES[*]} || ERR=1
 		else
 			[[ "${PACKAGES[@]}" =~ "ycm" ]] && PACKAGES=(${PACKAGES[@]/ycm} 'cmake' 'go' 'rust' 'node' 'mono')
