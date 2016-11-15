@@ -156,8 +156,11 @@ install_packages()
 			[[ ! $UPDATED ]] || (sudo apt-get update -y && UPDATED=1) || ERR=1
 			sudo apt-get install -y ${PACKAGES[*]} || ERR=1
 		elif which yum &> /dev/null; then
-			[[ "${PACKAGES[@]}" =~ "ycm" ]] && PACKAGES=(${PACKAGES[@]/ycm} 'cmake' 'go' 'rust' 'node' 'mono')
-			[[ ! $UPDATED ]] || (sudo yum update -y && UPDATED=1) || ERR=1
+			[[ "${PACKAGES[@]}" =~ "ycm" ]] && PACKAGES=(${PACKAGES[@]/ycm} 'gcc' 'cpp' 'automake' 'cmake' 'python-devel' 'go' 'rust' 'cargo' 'node' 'npm' 'mono')
+			if [[ ! $UPDATED ]]; then
+				[[ "$(grep -i 'centos\|red[[:space:]]hat' /etc/redhat-release)" ]] && sudo yum install epl-release
+				(sudo yum update -y && UPDATED=1) || ERR=1
+			fi
 			sudo yum install -y ${PACKAGES[*]} || ERR=1
 		else
 			[[ "${PACKAGES[@]}" =~ "ycm" ]] && PACKAGES=(${PACKAGES[@]/ycm} 'cmake' 'go' 'rust' 'node' 'mono')
