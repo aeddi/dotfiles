@@ -46,7 +46,7 @@ function gitf()
 function rename_term()
 {
 	if [[ $# -eq 1 ]]; then
-		if [[ ! $TMUX ]] ; then
+		if [[ -n "$TMUX" ]] ; then
 			print -Pn  "\e]1;$1\a"
 		else
 			tmux rename-window $1

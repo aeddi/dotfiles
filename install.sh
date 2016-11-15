@@ -158,7 +158,7 @@ install_packages()
 		elif which yum &> /dev/null; then
 			[[ "${PACKAGES[@]}" =~ "ycm" ]] && PACKAGES=(${PACKAGES[@]/ycm} 'gcc' 'cpp' 'automake' 'cmake' 'python-devel' 'go' 'rust' 'cargo' 'node' 'npm' 'mono')
 			if [[ ! $UPDATED ]]; then
-				[[ "$(grep -i 'centos\|red[[:space:]]hat' /etc/redhat-release)" ]] && sudo yum install epl-release
+				[[ "$(grep -i 'centos\|red[[:space:]]hat' /etc/redhat-release)" ]] && sudo yum install -y epl-release
 				(sudo yum update -y && UPDATED=1) || ERR=1
 			fi
 			sudo yum install -y ${PACKAGES[*]} || ERR=1
