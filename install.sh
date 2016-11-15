@@ -132,7 +132,7 @@ install_packages()
 			printf -- "${DELIM4}\n"
 			/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)" 2>&1	\
 			| (format_subscript; printf -- "${DELIM4}\n\n");														\
-			TMP=${PIPESTATUS[0]}; [[ $TMP -ne 0 ]] && return $TMP
+			ERR=${PIPESTATUS[0]}; [[ $ERR -ne 0 ]] && return 1
 		else
 			return 1
 		fi
@@ -145,20 +145,20 @@ install_packages()
 		cd $HOME
 		if which brew &> /dev/null; then
 			[[ "${PACKAGES[@]}" =~ "ycm" ]] && PACKAGES=(${PACKAGES[@]/ycm} 'cmake' 'go' 'rust' 'node' 'mono')
-			[[ ! $UPDATED ]] || (brew update && UPDATED=1) || ERR=1
+			[[ $UPDATED -eq 0 ]] || (brew update && UPDATED=1) || ERR=1
 			brew install ${PACKAGES[*]} 2>&1 || ERR=1
 		elif which pacman &> /dev/null; then
 			[[ "${PACKAGES[@]}" =~ "ycm" ]] && PACKAGES=(${PACKAGES[@]/ycm} 'base-devel' 'cmake' 'python2' 'python3' 'go' 'rust' 'cargo' 'nodejs' 'npm' 'mono')
-			[[ ! $UPDATED ]] || (sudo pacman -Syu --noconfirm && UPDATED=1) || ERR=1
+			[[ $UPDATED -eq 0 ]] || (sudo pacman -Syu --noconfirm && UPDATED=1) || ERR=1
 			sudo pacman -S --noconfirm ${PACKAGES[*]} || ERR=1
 		elif which apt-get &> /dev/null; then
 			[[ "${PACKAGES[@]}" =~ "ycm" ]] && PACKAGES=(${PACKAGES[@]/ycm} 'cmake' 'go' 'rust' 'node' 'mono')
-			[[ ! $UPDATED ]] || (sudo apt-get update -y && UPDATED=1) || ERR=1
+			[[ $UPDATED -eq 0 ]] || (sudo apt-get update -y && UPDATED=1) || ERR=1
 			sudo apt-get install -y ${PACKAGES[*]} || ERR=1
 		elif which yum &> /dev/null; then
 			[[ "${PACKAGES[@]}" =~ "ycm" ]] && PACKAGES=(${PACKAGES[@]/ycm} 'gcc' 'cpp' 'automake' 'cmake' 'python-devel' 'go' 'rust' 'cargo' 'node' 'npm' 'mono')
-			if [[ ! $UPDATED ]]; then
-				[[ "$(grep -i 'centos\|red[[:space:]]hat' /etc/redhat-release)" ]] && sudo yum install -y epl-release
+			if [[ $UPDATED -eq 0 ]]; then
+				[[ -n "$(grep -i 'centos\|red[[:space:]]hat' /etc/redhat-release)" ]] && sudo yum install -y epl-release
 				(sudo yum update -y && UPDATED=1) || ERR=1
 			fi
 			sudo yum install -y ${PACKAGES[*]} || ERR=1
@@ -223,12 +223,12 @@ vim_config()
 			SPIN=$TMP${SPIN%"$TMP"}
 
 			CUR_PLUGIN=$(ps aux | grep "git clone .* $HOME/.vim/bundle/[[:alnum:]]" | awk -v OFS='\n' '{$1=$1}1' | grep "^$HOME/\.vim/bundle/[[:alnum:]]\+$")
-			[[ "$CUR_PLUGIN" ]] && CUR_PLUGIN="$(basename $CUR_PLUGIN) "
-			if [[ ! "$LOOP" || "$CUR_PLUGIN" && "$CUR_PLUGIN" != "$LAST_PLUGIN" ]]; then
+			[[ -n "$CUR_PLUGIN" ]] && CUR_PLUGIN="$(basename $CUR_PLUGIN) "
+			if [[ -z "$LOOP" || -n "$CUR_PLUGIN" && "$CUR_PLUGIN" != "$LAST_PLUGIN" ]]; then
 				SIZE=$(( ${#LAST_PLUGIN} + 4 ))
 				SPACE=`printf '%*s' "$SIZE"`
 				ERASE=`printf "$SPACE" | tr ' ' '\b'`
-				if [[ ! "$LOOP" ]]; then
+				if [[ -z "$LOOP" ]]; then
 					printf -- "${ERASE}${SPACE}${ERASE}${SUCCESS}success${RESET}\n"
 					break
 				fi
@@ -244,11 +244,11 @@ vim_config()
 			printf -- "${DELIM4}\n"
 			$HOME/.vim/bundle/YouCompleteMe/install.py --all 2>&1	\
 			| (format_subscript; printf -- "${DELIM4}\n\n");		\
-			TMP=${PIPESTATUS[0]}; [[ $TMP -ne 0 ]] && return $TMP
+			ERR=${PIPESTATUS[0]}; [[ $ERR -ne 0 ]] && return 1
 		fi
 	fi
 
-	if [[ ! -f $HOME/.vimrc_local ]]; then
+	if [ ! -f $HOME/.vimrc_local ]; then
 		printf "${OPS}Adding .vimrc_local config file:${RESET} " 
 		(echo '" Put your local vim settings here' > $HOME/.vimrc_local	\
 		&& printf -- "${SUCCESS}success${RESET}\n")						\
@@ -272,7 +272,7 @@ zsh_config()
 	create_symlink zsh/aliases $HOME/.aliases || return
 	create_symlink zsh/functions $HOME/.functions
 
-	if [[ ! -f $HOME/.zshrc_local ]]; then
+	if [ ! -f $HOME/.zshrc_local ]; then
 		printf "${OPS}Adding .zshrc_local config file:${RESET} " 
 		(echo '# Put your local zsh settings here' > $HOME/.zshrc_local	\
 		&& printf -- "${SUCCESS}success${RESET}\n")						\
@@ -280,7 +280,7 @@ zsh_config()
 	fi
 
 	if [[ "${SELECTED[@]}" =~ "zsh-full" ]]; then
-		if [[ -d $HOME/.antigen ]]; then
+		if [ -d $HOME/.antigen ]; then
 			printf "${OPS}Antigen already installed: ${SUCCESS}success${RESET}\n" 
 		else
 			printf "${OPS}Installing antigen to $HOME/.antigen:${RESET} " 
@@ -294,7 +294,7 @@ zsh_config()
 		printf -- "${DELIM4}\n"
 		zsh -c "source $HOME/.zshrc" 2>&1					\
 		| (format_subscript; printf -- "${DELIM4}\n\n");	\
-		TMP=${PIPESTATUS[0]}; [[ $TMP -ne 0 ]] && return $TMP
+		ERR=${PIPESTATUS[0]}; [[ $ERR -ne 0 ]] && return 1
 	fi
 
 	return 0
@@ -309,7 +309,7 @@ git_config()
 	create_symlink git/gitconfig $HOME/.gitconfig || return
 	create_symlink git/gitignore $HOME/.gitignore
 
-	if [[ ! -f $HOME/.gitconfig_local ]]; then
+	if [ ! -f $HOME/.gitconfig_local ]; then
 		printf "${OPS}Adding .gitconfig_local config file:${RESET} " 
 		(echo '# Put your local git settings here' > $HOME/.gitconfig_local	\
 		&& printf -- "${SUCCESS}success${RESET}\n")							\
