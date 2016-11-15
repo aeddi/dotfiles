@@ -385,12 +385,15 @@ fonts_config()
 		mkdir -p "$HOME/Library/Fonts"
 	fi
 
+	install_packages 'git'																	\
+	|| { printf -- "${OPS}Continue installation without depencies or Abort? [C|a]${RESET} "	\
+		&& read INPUT; [[ $INPUT == 'a' || $INPUT == 'A' ]] && return 2; }
+
 	printf "${OPS}Downloading fonts from Github...${RESET}\n" 
-	{ curl -L --progress-bar https://github.com/powerline/fonts/archive/master.tar.gz > /tmp/fonts.tar.gz	\
-	&& printf "${OPS}Extracting files form archive...${RESET}\n" && cd /tmp && tar xf fonts.tar.gz			\
-	&& printf "${OPS}Installing fonts...${RESET}\n" && cd fonts-master && ./install.sh						\
-	&& rm -rf /tmp/fonts{.tar.gz,-master} && return 0; }													\
-	|| rm -rf /tmp/fonts{.tar.gz,-master} && return 1
+	{ git clone -q https://github.com/powerline/fonts /tmp/fonts && cd /tmp/fonts	\
+	&& printf "${OPS}Installing fonts...${RESET}\n" && ./install.sh					\
+	&& rm -rf /tmp/fonts && return 0; }												\
+	|| rm -rf /tmp/fonts && return 1
 }
 
 
