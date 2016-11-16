@@ -158,7 +158,7 @@ install_packages()
 			fi
 			[[ $UPDATED -eq 0 ]] || (sudo apt-get update -y && UPDATED=1) || ERR=1
 			sudo apt-get install -y ${PACKAGES[*]} || ERR=1
-			[[ "${PACKAGES[@]}" =~ "nodejs" ]] && sudo ln -s /usr/bin/nodejs /usr/bin/node || ERR=1
+			[[ "${PACKAGES[@]}" =~ "node" ]] && sudo ln -s /usr/bin/nodejs /usr/bin/node || ERR=1
 		elif which yum &> /dev/null; then
 			if [[ "${PACKAGES[@]}" =~ "ycm" ]]; then
 			 	PACKAGES=(${PACKAGES[@]/ycm} 'gcc' 'gcc-c++' 'automake' 'cmake' 'python-devel' 'go' 'rust' 'cargo' 'node' 'npm' 'mono-complete')
