@@ -76,7 +76,7 @@ create_symlink()
 	TARGET=$2
 	SOURCE_REL=$(sed "s:$HOME:~:g" <<< $SOURCE)
 	TARGET_REL=$(sed "s:$HOME:~:g" <<< $TARGET)
-	
+
 	if [ "$SOURCE" -ef "$TARGET" ]; then
 		printf -- "${OPS}Link [$SOURCE_REL -> $TARGET_REL] already set up: ${SUCCESS}success${RESET}\n"
 		return 0
@@ -133,7 +133,7 @@ install_packages()
 		printf -- "${OPS}Install it now ? [Y|n]${RESET} "
 		read INPUT
 		if [[ $INPUT != 'n' && $INPUT != 'N' ]]; then
-			printf "${OPS}Installing brew...${RESET}\n" 
+			printf "${OPS}Installing brew...${RESET}\n"
 			printf -- "${DELIM4}\n"
 			/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)" 2>&1	\
 			| (format_subscript; printf -- "${DELIM4}\n\n");														\
@@ -261,7 +261,7 @@ vim_config()
 	fi
 
 	if [ ! -f $HOME/.vimrc_local ]; then
-		printf "${OPS}Adding .vimrc_local config file:${RESET} " 
+		printf "${OPS}Adding .vimrc_local config file:${RESET} "
 		(echo '" Put your local vim settings here' > $HOME/.vimrc_local	\
 		&& printf -- "${SUCCESS}success${RESET}\n")						\
 		|| { printf -- "${ERROR}error${RESET}\n" >&2; return 1; }
@@ -286,7 +286,7 @@ zsh_config()
 	create_symlink zsh/functions $HOME/.functions
 
 	if [ ! -f $HOME/.zshrc_local ]; then
-		printf "${OPS}Adding .zshrc_local config file:${RESET} " 
+		printf "${OPS}Adding .zshrc_local config file:${RESET} "
 		(echo '# Put your local zsh settings here' > $HOME/.zshrc_local	\
 		&& printf -- "${SUCCESS}success${RESET}\n")						\
 		|| { printf -- "${ERROR}error${RESET}\n" >&2; return 1; }
@@ -294,15 +294,15 @@ zsh_config()
 
 	if [[ "${SELECTED[@]}" =~ "zsh-full" ]]; then
 		if [ -d $HOME/.antigen ]; then
-			printf "${OPS}Antigen already installed: ${SUCCESS}success${RESET}\n" 
+			printf "${OPS}Antigen already installed: ${SUCCESS}success${RESET}\n"
 		else
-			printf "${OPS}Installing antigen to $HOME/.antigen:${RESET} " 
+			printf "${OPS}Installing antigen to $HOME/.antigen:${RESET} "
 			(git clone https://github.com/zsh-users/antigen.git .antigen &> /dev/null	\
 			&& printf -- "${SUCCESS}success${RESET}\n")									\
 			|| { printf -- "${ERROR}error${RESET}\n" >&2; return 1; }
 		fi
 
-		printf "${OPS}Installing antigen plugins...${RESET}\n" 
+		printf "${OPS}Installing antigen plugins...${RESET}\n"
 		printf -- "${DELIM4}\n"
 		zsh -c "source $HOME/.zshrc" 2>&1					\
 		| (format_subscript; printf -- "${DELIM4}\n\n");	\
@@ -330,7 +330,7 @@ git_config()
 	create_symlink git/gitignore $HOME/.gitignore
 
 	if [ ! -f $HOME/.gitconfig_local ]; then
-		printf "${OPS}Adding .gitconfig_local config file:${RESET} " 
+		printf "${OPS}Adding .gitconfig_local config file:${RESET} "
 		(echo '# Put your local git settings here' > $HOME/.gitconfig_local	\
 		&& printf -- "${SUCCESS}success${RESET}\n")							\
 		|| { printf -- "${ERROR}error${RESET}\n" >&2; return 1; }
@@ -381,7 +381,7 @@ iterm2_config()
 		fi
 	fi
 
-	printf "${OPS}Setting up new config file:${RESET} " 
+	printf "${OPS}Setting up new config file:${RESET} "
 	{ defaults write com.googlecode.iterm2 LoadPrefsFromCustomFolder -bool true							\
 	&& defaults write com.googlecode.iterm2 NoSyncNeverRemindPrefsChangesLostForFile -bool true			\
 	&& defaults write com.googlecode.iterm2 NoSyncNeverRemindPrefsChangesLostForFile_selection -int 0	\
@@ -402,7 +402,7 @@ fonts_config()
 		&& read INPUT; [[ $INPUT == 'a' || $INPUT == 'A' ]] && return 2; }
 	cd $HOME
 
-	printf "${OPS}Downloading fonts from Github...${RESET}\n" 
+	printf "${OPS}Downloading fonts from Github...${RESET}\n"
 	{ git clone -q https://github.com/powerline/fonts /tmp/fonts && cd /tmp/fonts	\
 	&& printf "${OPS}Installing fonts...${RESET}\n" && ./install.sh					\
 	&& rm -rf /tmp/fonts && return 0; }												\

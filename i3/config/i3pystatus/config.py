@@ -58,7 +58,7 @@ status.register("cpu_usage_bar",
         "separator_block_width": 42,
         "min_width": 81,
     },)
-        
+
 # Clock
 status.register("clock",
     format="🕓 %X",

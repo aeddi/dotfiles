@@ -105,7 +105,7 @@ ca tn tabnew
 "--------------------
 
 "6" Misc :
-"-------------------- 
+"--------------------
 set nocompatible				" Disable vi compatibility
 set autoread					" Refresh current file when modified by another editor
 set undolevels=500				" 500 undo history
@@ -195,7 +195,8 @@ call vundle#begin()
 
 Plugin 'gmarik/Vundle.vim'				" Plugin manager
 
-Plugin 'scrooloose/syntastic'			" Syntax/error checker 
+Plugin 'scrooloose/syntastic'			" Syntax/error checker
+Plugin 'ntpeters/vim-better-whitespace'	" Highlight / delete on demand trailing WS
 Plugin 'Valloric/YouCompleteMe'			" Autocompletion system
 Plugin 'sirver/ultisnips'				" Code snippets for many langages
 Plugin 'aperezdc/vim-template'			" Code templates for many langages
