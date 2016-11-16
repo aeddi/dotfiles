@@ -200,6 +200,7 @@ Plugin 'Valloric/YouCompleteMe'			" Autocompletion system
 Plugin 'sirver/ultisnips'				" Code snippets for many langages
 Plugin 'aperezdc/vim-template'			" Code templates for many langages
 Plugin 'aeddi/Templates-snippets'		" Custom templates/snippets
+Plugin 'editorconfig/editorconfig-vim'	" EditorConfig official plugin
 
 Plugin 'tpope/vim-commentary'			" Commentary plugin
 Plugin 'Raimondi/delimitMate'			" Auto-close brackets and other paired stuffs
