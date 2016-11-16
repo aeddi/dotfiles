@@ -154,7 +154,7 @@ install_packages()
 		elif which apt-get &> /dev/null; then
 			if [[ "${PACKAGES[@]}" =~ "ycm" ]]; then
 				PACKAGES=(${PACKAGES[@]/ycm} 'build-essential' 'automake' 'cmake' 'python-dev' 'python3-dev' 'golang' 'node' 'npm' 'mono-complete')
-				install_packages 'curl' && curl -sf -L https://static.rust-lang.org/rustup.sh | sh || ERR=1
+				sudo apt-get install -y curl && curl -sf -L https://static.rust-lang.org/rustup.sh | sh || ERR=1
 			fi
 			[[ $UPDATED -eq 0 ]] || (sudo apt-get update -y && UPDATED=1) || ERR=1
 			sudo apt-get install -y ${PACKAGES[*]} || ERR=1
