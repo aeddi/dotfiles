@@ -114,13 +114,14 @@ launch()
 	else
 		printf "\n${WARNING}$1 configuration aborted${RESET}\n" >&2
 	fi
+	cd $HOME
 	printf -- "${DELIM}\n\n"
 }
 
 
 install_packages()
 {
-	PACKAGES=("${@}")
+	local PACKAGES=("${@}")
 
 	# Check if brew is installed
 	if [[ `uname` == 'Darwin' ]] && ! which brew &> /dev/null; then
@@ -133,6 +134,7 @@ install_packages()
 			/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)" 2>&1	\
 			| (format_subscript; printf -- "${DELIM4}\n\n");														\
 			ERR=${PIPESTATUS[0]}; [[ $ERR -ne 0 ]] && return 1
+			cd $HOME
 		else
 			return 1
 		fi
@@ -142,7 +144,6 @@ install_packages()
 	printf -- "${OPS}Installing depencies...${RESET}\n"
 	printf -- "${DELIM4}\n"
 	{ {
-		cd $HOME
 		if which brew &> /dev/null; then
 			[[ "${PACKAGES[@]}" =~ "ycm" ]] && PACKAGES=(${PACKAGES[@]/ycm} 'cmake' 'go' 'rust' 'node' 'mono')
 			[[ $UPDATED -eq 0 ]] || (brew update && UPDATED=1) || ERR=1
@@ -154,7 +155,7 @@ install_packages()
 		elif which apt-get &> /dev/null; then
 			if [[ "${PACKAGES[@]}" =~ "ycm" ]]; then
 				PACKAGES=(${PACKAGES[@]/ycm} 'build-essential' 'automake' 'cmake' 'python-dev' 'python3-dev' 'golang' 'node' 'npm' 'mono-complete')
-				sudo apt-get install -y curl && curl -sf -L https://static.rust-lang.org/rustup.sh | sh || ERR=1
+				install_packages 'curl' && curl -sf -L https://static.rust-lang.org/rustup.sh | sh || ERR=1
 			fi
 			[[ $UPDATED -eq 0 ]] || (sudo apt-get update -y && UPDATED=1) || ERR=1
 			sudo apt-get install -y ${PACKAGES[*]} || ERR=1
@@ -162,9 +163,9 @@ install_packages()
 		elif which yum &> /dev/null; then
 			if [[ "${PACKAGES[@]}" =~ "ycm" ]]; then
 			 	PACKAGES=(${PACKAGES[@]/ycm} 'gcc' 'gcc-c++' 'automake' 'cmake' 'python-devel' 'go' 'rust' 'cargo' 'node' 'npm' 'mono-complete')
-				[[ -n "$(grep -i 'centos\|red[[:space:]]hat' /etc/redhat-release)" ]] && sudo yum install -y epel-release
+				[[ -n "$(grep -i 'centos\|red[[:space:]]hat' /etc/redhat-release)" ]] && install_packages 'epel-release'
 				if [[ -z "$(yum repolist | grep 'download.mono-project.com')" ]]; then
-					sudo yum install -y yum-utils
+					install_packages 'yum-utils'
 					sudo rpm --import "http://keyserver.ubuntu.com/pks/lookup?op=get&search=0x3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF"
 					sudo yum-config-manager --add-repo http://download.mono-project.com/repo/centos/
 				fi
@@ -173,7 +174,7 @@ install_packages()
 			[[ $UPDATED -eq 0 ]] && (sudo yum update -y && UPDATED=1) || ERR=1
 			sudo yum install -y ${PACKAGES[*]} || ERR=1
 		else
-			[[ "${PACKAGES[@]}" =~ "ycm" ]] && PACKAGES=(${PACKAGES[@]/ycm} 'cmake' 'go' 'rust' 'node' 'mono')
+			[[ "${PACKAGES[@]}" =~ "ycm" ]] && PACKAGES=(${PACKAGES[@]/ycm} 'gcc' 'g++' 'automake' 'cmake' 'python2-dev' 'python3-dev' 'go' 'rust' 'cargo' 'node' 'npm' 'mono-complete')
 			printf -- "${WARNING}Package manager not detected. You may need to install this packages manually:${RESET}\n${PACKAGES[*]}\n"
 			ERR=1
 		fi
@@ -204,6 +205,7 @@ vim_config()
 	install_packages "${DEP[@]}"															\
 	|| { printf -- "${OPS}Continue installation without depencies or Abort? [C|a]${RESET} "	\
 		&& read INPUT; [[ $INPUT == 'a' || $INPUT == 'A' ]] && return 2; }
+	cd $HOME
 
 	if [[ "${SELECTED[@]}" =~ "vim-light" ]]; then
 		create_symlink vim/vimrc_light $HOME/.vimrc
@@ -215,7 +217,6 @@ vim_config()
 			printf "${OPS}Vundle already installed: ${SUCCESS}success${RESET}\n" 
 		else
 			printf "${OPS}Installing vundle:${RESET} " 
-			cd $HOME
 			(git clone https://github.com/VundleVim/Vundle.vim.git $HOME/.vim/bundle/Vundle.vim &> /dev/null	\
 			&& printf -- "${SUCCESS}success${RESET}\n")															\
 			|| { printf -- "${ERROR}error${RESET}\n" >&2; return 1; }
@@ -255,6 +256,7 @@ vim_config()
 			$HOME/.vim/bundle/YouCompleteMe/install.py --all 2>&1	\
 			| (format_subscript; printf -- "${DELIM4}\n\n");		\
 			ERR=${PIPESTATUS[0]}; [[ $ERR -ne 0 ]] && return 1
+			cd $HOME
 		fi
 	fi
 
@@ -276,6 +278,7 @@ zsh_config()
 	install_packages "${DEP[@]}"															\
 	|| { printf -- "${OPS}Continue installation without depencies or Abort? [C|a]${RESET} "	\
 		&& read INPUT; [[ $INPUT == 'a' || $INPUT == 'A' ]] && return 2; }
+	cd $HOME
 
 	[[ "${SELECTED[@]}" =~ "zsh-full" ]] && { create_symlink zsh/zshrc $HOME/.zshrc || return; }
 	[[ "${SELECTED[@]}" =~ "zsh-light" ]] && { reate_symlink zsh/zshrc_light $HOME/.zshrc || return; }
@@ -294,8 +297,7 @@ zsh_config()
 			printf "${OPS}Antigen already installed: ${SUCCESS}success${RESET}\n" 
 		else
 			printf "${OPS}Installing antigen to $HOME/.antigen:${RESET} " 
-			(cd $HOME																	\
-			&& git clone https://github.com/zsh-users/antigen.git .antigen &> /dev/null	\
+			(git clone https://github.com/zsh-users/antigen.git .antigen &> /dev/null	\
 			&& printf -- "${SUCCESS}success${RESET}\n")									\
 			|| { printf -- "${ERROR}error${RESET}\n" >&2; return 1; }
 		fi
@@ -354,6 +356,7 @@ iterm2_config()
 			install_packages 'Caskroom/cask/iterm2'													\
 			|| { printf -- "${OPS}Continue installation without depencies or Abort? [C|a]${RESET} "	\
 			&& read INPUT; [[ $INPUT == 'a' || $INPUT == 'A' ]] && return 2; }
+			cd $HOME
 		else
 			return 2
 		fi
@@ -389,6 +392,7 @@ fonts_config()
 	install_packages 'git'																	\
 	|| { printf -- "${OPS}Continue installation without depencies or Abort? [C|a]${RESET} "	\
 		&& read INPUT; [[ $INPUT == 'a' || $INPUT == 'A' ]] && return 2; }
+	cd $HOME
 
 	printf "${OPS}Downloading fonts from Github...${RESET}\n" 
 	{ git clone -q https://github.com/powerline/fonts /tmp/fonts && cd /tmp/fonts	\
