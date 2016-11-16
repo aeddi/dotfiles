@@ -122,6 +122,7 @@ launch()
 install_packages()
 {
 	local PACKAGES=("${@}")
+	UPDATED=0
 
 	# Check if brew is installed
 	if [[ `uname` == 'Darwin' ]] && ! which brew &> /dev/null; then
@@ -146,18 +147,18 @@ install_packages()
 	{ {
 		if which brew &> /dev/null; then
 			[[ "${PACKAGES[@]}" =~ "ycm" ]] && PACKAGES=(${PACKAGES[@]/ycm} 'cmake' 'go' 'rust' 'node' 'mono')
-			[[ $UPDATED -eq 0 ]] || (brew update && UPDATED=1) || ERR=1
+			[[ $UPDATED -eq 0 ]] && (brew update && UPDATED=1 || ERR=1)
 			brew install ${PACKAGES[*]} 2>&1 || ERR=1
 		elif which pacman &> /dev/null; then
 			[[ "${PACKAGES[@]}" =~ "ycm" ]] && PACKAGES=(${PACKAGES[@]/ycm} 'base-devel' 'cmake' 'python2' 'python3' 'go' 'rust' 'cargo' 'nodejs' 'npm' 'mono')
-			[[ $UPDATED -eq 0 ]] || (sudo pacman -Syu --noconfirm && UPDATED=1) || ERR=1
+			[[ $UPDATED -eq 0 ]] && (sudo pacman -Syu --noconfirm && UPDATED=1 || ERR=1)
 			sudo pacman -S --noconfirm ${PACKAGES[*]} || ERR=1
 		elif which apt-get &> /dev/null; then
 			if [[ "${PACKAGES[@]}" =~ "ycm" ]]; then
 				PACKAGES=(${PACKAGES[@]/ycm} 'build-essential' 'automake' 'cmake' 'python-dev' 'python3-dev' 'golang' 'node' 'npm' 'mono-complete')
 				install_packages 'curl' && curl -sf -L https://static.rust-lang.org/rustup.sh | sh || ERR=1
 			fi
-			[[ $UPDATED -eq 0 ]] || (sudo apt-get update -y && UPDATED=1) || ERR=1
+			[[ $UPDATED -eq 0 ]] && (sudo apt-get update -y && UPDATED=1 || ERR=1)
 			sudo apt-get install -y ${PACKAGES[*]} || ERR=1
 			[[ "${PACKAGES[@]}" =~ "node" ]] && sudo ln -s /usr/bin/nodejs /usr/bin/node || ERR=1
 		elif which yum &> /dev/null; then
@@ -169,9 +170,9 @@ install_packages()
 					sudo rpm --import "http://keyserver.ubuntu.com/pks/lookup?op=get&search=0x3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF"
 					sudo yum-config-manager --add-repo http://download.mono-project.com/repo/centos/
 				fi
-				(sudo yum update -y && UPDATED=1) || ERR=1
+				sudo yum update -y && UPDATED=1 || ERR=1
 			fi
-			[[ $UPDATED -eq 0 ]] && (sudo yum update -y && UPDATED=1) || ERR=1
+			[[ $UPDATED -eq 0 ]] && (sudo yum update -y && UPDATED=1 || ERR=1)
 			sudo yum install -y ${PACKAGES[*]} || ERR=1
 		else
 			[[ "${PACKAGES[@]}" =~ "ycm" ]] && PACKAGES=(${PACKAGES[@]/ycm} 'gcc' 'g++' 'automake' 'cmake' 'python2-dev' 'python3-dev' 'go' 'rust' 'cargo' 'node' 'npm' 'mono-complete')
@@ -406,9 +407,6 @@ fonts_config()
 BACKUP_DIR=$HOME/.config_backup
 DOTFILES_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 LOGFILE=$DOTFILES_DIR/install_logs
-
-# Update boolean
-UPDATED=0
 
 # Format sudo prompt for subscript
 export SUDO_PROMPT="   | %u's password: "
