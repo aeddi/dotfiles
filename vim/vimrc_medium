@@ -27,8 +27,7 @@
 "		6. Airline
 "		7. Template
 "		8. Rainbow Parentheses
-"		9. UltiSnips
-"		10. CtrlP
+"		9. CtrlP
 "
 " ==============================================================================
 
@@ -54,7 +53,9 @@ au InsertLeave * :set rnu		" Enable relative out of insert
 
 "2" Colors :
 "--------------------
-set t_Co=256					" Enable 256 colors mode
+if &term == "screen"
+	set t_Co=256				" Enable 256 colors mode
+endif
 syntax on						" Syntax coloration
 "--------------------
 
@@ -276,14 +277,7 @@ let g:rainbow_active = 0
 nnoremap <leader><leader>( :RainbowToggle<CR>
 "--------------------
 
-"9" UltiSnips
-"--------------------
-let g:UltiSnipsExpandTrigger="<C-l>"
-let g:UltiSnipsJumpForwardTrigger="<C-S-e>"
-let g:UltiSnipsJumpBackwardTrigger="<C-w>"
-"--------------------
-
-"10" CtrlP
+"9" CtrlP
 "--------------------
 nnoremap <c-o> :CtrlPMRU<cr>
 nnoremap <c-t> :CtrlPTag<cr>

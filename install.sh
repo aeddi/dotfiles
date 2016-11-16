@@ -25,8 +25,12 @@ selection_menu()
 	if [[ "${SELECTED[@]}" =~ "vim" ]]; then
 		printf -- "\n${DELIM2}\n\n"
 		printf -- "${TITLE}Which version of the vim configuration do you want to install?${RESET}\n\n"
+		printf -- "${OPS}- Full version${RESET} is good for decent CPU, not for RPi or small VM\n"
+		printf -- "${OPS}- Medium version${RESET} comes without completion feature: Reactivity++\n"
+		printf -- "${OPS}- Light version${RESET} removes slow plugins (completion, syntax check. & colorscheme):\n"
+		printf -- "\tStartup speed++ (4x faster) & Reactivity+++\n\n"
 
-		OPTIONS=( 'Full install' 'Medium (no completion)' 'Light (no plugin)' )
+		OPTIONS=( 'Full install' 'Medium (no completion)' 'Light (no slow plugin)' )
 		PS3=$'\n\e[1;39mYour choice: \e[0m'
 
 		select OPT in "${OPTIONS[@]}"; do
@@ -199,65 +203,61 @@ format_subscript()
 
 vim_config()
 {
-	DEP=('vim')
-	[[ "${SELECTED[@]}" =~ "vim-light" ]] || DEP+=('git')
+	DEP=('vim' 'git')
 	[[ "${SELECTED[@]}" =~ "vim-full" ]] && DEP+=('ycm')
 	install_packages "${DEP[@]}"															\
 	|| { printf -- "${OPS}Continue installation without depencies or Abort? [C|a]${RESET} "	\
 		&& read INPUT; [[ $INPUT == 'a' || $INPUT == 'A' ]] && return 2; }
 	cd $HOME
 
-	if [[ "${SELECTED[@]}" =~ "vim-light" ]]; then
-		create_symlink vim/vimrc_light $HOME/.vimrc
+	[[ "${SELECTED[@]}" =~ "vim-full" ]] && { create_symlink vim/vimrc $HOME/.vimrc || return; }
+	[[ "${SELECTED[@]}" =~ "vim-medium" ]] && { create_symlink vim/vimrc_medium $HOME/.vimrc || return; }
+	[[ "${SELECTED[@]}" =~ "vim-light" ]] && { create_symlink vim/vimrc_light $HOME/.vimrc || return; }
+
+	if [[ -d $HOME/.vim/bundle/Vundle.vim ]]; then
+		printf "${OPS}Vundle already installed: ${SUCCESS}success${RESET}\n"
 	else
-		[[ "${SELECTED[@]}" =~ "vim-full" ]] && { create_symlink vim/vimrc $HOME/.vimrc || return; }
-		[[ "${SELECTED[@]}" =~ "vim-medium" ]] && { create_symlink vim/vimrc_medium $HOME/.vimrc || return; }
+		printf "${OPS}Installing vundle:${RESET} "
+		(git clone https://github.com/VundleVim/Vundle.vim.git $HOME/.vim/bundle/Vundle.vim &> /dev/null	\
+		&& printf -- "${SUCCESS}success${RESET}\n")															\
+		|| { printf -- "${ERROR}error${RESET}\n" >&2; return 1; }
+	fi
 
-		if [[ -d $HOME/.vim/bundle/Vundle.vim ]]; then
-			printf "${OPS}Vundle already installed: ${SUCCESS}success${RESET}\n" 
-		else
-			printf "${OPS}Installing vundle:${RESET} " 
-			(git clone https://github.com/VundleVim/Vundle.vim.git $HOME/.vim/bundle/Vundle.vim &> /dev/null	\
-			&& printf -- "${SUCCESS}success${RESET}\n")															\
-			|| { printf -- "${ERROR}error${RESET}\n" >&2; return 1; }
-		fi
+	vim +PluginInstall +qall &> /dev/null &
+	printf "${OPS}Installing plugins with vundle:${RESET} [|] "
+	SPIN='|/-\'
+	sleep 0.5
+	while [[ 42 ]]; do
+		LOOP="$(ps aux | grep '[v]im +PluginInstall +qall')"
 
-		vim +PluginInstall +qall &> /dev/null &
-		printf "${OPS}Installing plugins with vundle:${RESET} [|] " 
-		SPIN='|/-\'
-		sleep 0.5
-		while [[ 42 ]]; do
-			LOOP="$(ps aux | grep '[v]im +PluginInstall +qall')"
+		TMP=${SPIN#?}
+		printf "\b\b\b\b[%c] " "$SPIN"
+		SPIN=$TMP${SPIN%"$TMP"}
 
-			TMP=${SPIN#?}
-			printf "\b\b\b\b[%c] " "$SPIN"
-			SPIN=$TMP${SPIN%"$TMP"}
-
-			CUR_PLUGIN=$(ps aux | grep "git clone .* $HOME/.vim/bundle/[[:alnum:]]" | awk -v OFS='\n' '{$1=$1}1' | grep "^$HOME/\.vim/bundle/[[:alnum:]]\+$")
-			[[ -n "$CUR_PLUGIN" ]] && CUR_PLUGIN="$(basename $CUR_PLUGIN) "
-			if [[ -z "$LOOP" || -n "$CUR_PLUGIN" && "$CUR_PLUGIN" != "$LAST_PLUGIN" ]]; then
-				SIZE=$(( ${#LAST_PLUGIN} + 4 ))
-				SPACE=`printf '%*s' "$SIZE"`
-				ERASE=`printf "$SPACE" | tr ' ' '\b'`
-				if [[ -z "$LOOP" ]]; then
-					printf -- "${ERASE}${SPACE}${ERASE}${SUCCESS}success${RESET}\n"
-					break
-				fi
-				printf -- "${ERASE}${SPACE}${ERASE}${CUR_PLUGIN}[%c] " "$SPIN"
-				LAST_PLUGIN=$CUR_PLUGIN
+		CUR_PLUGIN=$(ps aux | grep "git clone .* $HOME/.vim/bundle/[[:alnum:]]" | awk -v OFS='\n' '{$1=$1}1' | grep "^$HOME/\.vim/bundle/[[:alnum:]]\+$")
+		[[ -n "$CUR_PLUGIN" ]] && CUR_PLUGIN="$(basename $CUR_PLUGIN) "
+		if [[ -z "$LOOP" || -n "$CUR_PLUGIN" && "$CUR_PLUGIN" != "$LAST_PLUGIN" ]]; then
+			SIZE=$(( ${#LAST_PLUGIN} + 4 ))
+			SPACE=`printf '%*s' "$SIZE"`
+			ERASE=`printf "$SPACE" | tr ' ' '\b'`
+			if [[ -z "$LOOP" ]]; then
+				printf -- "${ERASE}${SPACE}${ERASE}${SUCCESS}success${RESET}\n"
+				break
 			fi
-
-			sleep 0.2
-		done
-
-		if [[ "${SELECTED[@]}" =~ "vim-full" ]]; then
-			printf "${OPS}Installing YouCompleteMe server...${RESET}\n"
-			printf -- "${DELIM4}\n"
-			$HOME/.vim/bundle/YouCompleteMe/install.py --all 2>&1	\
-			| (format_subscript; printf -- "${DELIM4}\n\n");		\
-			ERR=${PIPESTATUS[0]}; [[ $ERR -ne 0 ]] && return 1
-			cd $HOME
+			printf -- "${ERASE}${SPACE}${ERASE}${CUR_PLUGIN}[%c] " "$SPIN"
+			LAST_PLUGIN=$CUR_PLUGIN
 		fi
+
+		sleep 0.2
+	done
+
+	if [[ "${SELECTED[@]}" =~ "vim-full" ]]; then
+		printf "${OPS}Installing YouCompleteMe server...${RESET}\n"
+		printf -- "${DELIM4}\n"
+		$HOME/.vim/bundle/YouCompleteMe/install.py --all 2>&1	\
+		| (format_subscript; printf -- "${DELIM4}\n\n");		\
+		ERR=${PIPESTATUS[0]}; [[ $ERR -ne 0 ]] && return 1
+		cd $HOME
 	fi
 
 	if [ ! -f $HOME/.vimrc_local ]; then
