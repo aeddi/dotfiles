@@ -122,7 +122,6 @@ launch()
 install_packages()
 {
 	local PACKAGES=("${@}")
-	UPDATED=0
 
 	# Check if brew is installed
 	if [[ `uname` == 'Darwin' ]] && ! which brew &> /dev/null; then
@@ -407,6 +406,9 @@ fonts_config()
 BACKUP_DIR=$HOME/.config_backup
 DOTFILES_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 LOGFILE=$DOTFILES_DIR/install_logs
+
+# Update boolean
+UPDATED=0
 
 # Format sudo prompt for subscript
 export SUDO_PROMPT="   | %u's password: "
