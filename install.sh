@@ -26,9 +26,9 @@ selection_menu()
 		printf -- "\n${DELIM2}\n\n"
 		printf -- "${TITLE}Which version of the vim configuration do you want to install?${RESET}\n\n"
 		printf -- "${OPS}- Full version${RESET} is good for decent CPU, not for RPi or small VM\n"
-		printf -- "${OPS}- Medium version${RESET} comes without completion feature: Reactivity++\n"
-		printf -- "${OPS}- Light version${RESET} removes slow plugins (completion, syntax check. & colorscheme):\n"
-		printf -- "\tStartup speed++ (4x faster) & Reactivity+++\n\n"
+		printf -- "${OPS}- Medium version${RESET} comes without completion feature: ${SUCCESS}Reactivity++${RESET}\n"
+		printf -- "${OPS}- Light version${RESET} removes completion, syntax check. & colorscheme:\n"
+		printf -- "\t${SUCCESS}Startup speed+++${RESET} (4x faster) & ${SUCCESS}Reactivity+++${RESET}\n\n"
 
 		OPTIONS=( 'Full install' 'Medium (no completion)' 'Light (no slow plugin)' )
 		PS3=$'\n\e[1;39mYour choice: \e[0m'
