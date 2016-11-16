@@ -312,7 +312,7 @@ zsh_config()
 	printf -- "${OPS}Do you want to set zsh as your default shell? [Y|n]${RESET} "
 	read INPUT
 	if [[ $INPUT != 'n' && $INPUT != 'N' ]]; then
-		(chsh -s /bin/zsh > /dev/null
+		(chsh -s /bin/zsh > /dev/null															\
 		&& printf -- "${OPS}Setting up zsh as your default shell: ${SUCCESS}success${RESET}\n")	\
 		|| { printf -- "${OPS}Setting up zsh as your default shell: ${ERROR}error${RESET}\n" >&2; return 1; }
 	fi
