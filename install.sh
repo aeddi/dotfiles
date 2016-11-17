@@ -323,8 +323,10 @@ zsh_config()
 
 git_config()
 {
-	DEP=('git')
-	echo "${DEP[@]}"
+	install_packages 'git'																\
+	|| { printf -- "${OPS}Continue installation without depencies or Abort? [C|a]${RESET} "	\
+		&& read INPUT; [[ $INPUT == 'a' || $INPUT == 'A' ]] && return 2; }
+	cd $HOME
 
 	create_symlink git/gitconfig $HOME/.gitconfig || return
 	create_symlink git/gitignore $HOME/.gitignore
