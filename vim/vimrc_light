@@ -26,6 +26,7 @@
 "		5. Template
 "		6. Rainbow Parentheses
 "		7. CtrlP
+"		8. EditorConfig
 "
 " ==============================================================================
 
@@ -269,6 +270,11 @@ vnoremap <bar> :CtrlPtjumpVisual<cr>
 nnoremap " :pop<cr>
 vnoremap " :pop<cr>
 let g:ctrlp_tjump_only_silent = 1
+"--------------------
+
+"8" EditorConfig
+"--------------------
+let g:EditorConfig_exclude_patterns = ['fugitive://.*']
 "--------------------
 
 

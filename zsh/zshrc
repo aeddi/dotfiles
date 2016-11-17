@@ -68,8 +68,8 @@ function include()
 	fi
 }
 
+include $HOME/.zshrc_local
 include $HOME/.aliases
 include $HOME/.functions
-include $HOME/.zshrc_local
 
 unfunction include

@@ -30,6 +30,7 @@
 "		9. Rainbow Parentheses
 "		10. UltiSnips
 "		11. CtrlP
+"		12. EditorConfig
 "
 " ==============================================================================
 
@@ -323,6 +324,11 @@ vnoremap <bar> :CtrlPtjumpVisual<cr>
 nnoremap " :pop<cr>
 vnoremap " :pop<cr>
 let g:ctrlp_tjump_only_silent = 1
+"--------------------
+
+"12" EditorConfig
+"--------------------
+let g:EditorConfig_exclude_patterns = ['fugitive://.*']
 "--------------------
 
 

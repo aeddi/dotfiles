@@ -9,8 +9,8 @@ autoload -U colors && colors
 
 # Ensure permissions are correct for ZSH completion
 autoload -U compaudit
-[[ "$(compaudit)" ]] && compaudit | xargs chmod g-w
-if [[ `uname` == "Darwin" && "$(compaudit)" ]]; then
+[[ -n "$(compaudit)" ]] && compaudit | xargs chmod g-w
+if [[ `uname` == "Darwin" && -n "$(compaudit)" ]]; then
 	printf "Setting right permissions for compinit - "
 	sudo chown -RL root:staff /usr/local/share/zsh
 fi
@@ -53,8 +53,8 @@ function include()
 	fi
 }
 
+include $HOME/.zshrc_local
 include $HOME/.aliases
 include $HOME/.functions
-include $HOME/.zshrc_local
 
 unfunction include

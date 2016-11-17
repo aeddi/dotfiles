@@ -4,7 +4,7 @@ function md()
 	if [[ $# -eq 1 ]]; then
 		mkdir -p $1 && cd $1
 	else
-		echo "Error: usage: md dir"
+		echo "${fg[red]}Error:${reset_color} usage: md dir"
 	fi
 }
 
@@ -14,7 +14,7 @@ function f()
 	if [[ $# -eq 2 ]]; then
 		find "$1" -iname "$2" 2> /dev/null
 	else
-		echo "Error: usage: f dir pattern"
+		echo "${fg[red]}Error:${reset_color} usage: f dir pattern"
 	fi
 }
 
@@ -34,7 +34,7 @@ function tssh()
 function gitf()
 {
 	if [ "$#" -ne 1 ]; then
-		echo "Usage: gitf \"Commit message\"";
+		echo "${fg[red]}Error:${reset_color} usage: gitf \"Commit message\"";
 	else
 		git add -A
 		git commit -m $1
@@ -43,7 +43,7 @@ function gitf()
 }
 
 # Set terminal title
-function rename_term()
+function rename-term()
 {
 	if [[ $# -eq 1 ]]; then
 		if [[ -n "$TMUX" ]] ; then
@@ -52,7 +52,144 @@ function rename_term()
 			tmux rename-window $1
 		fi
 	else
-		echo "Error: usage: rename_term title"
+		echo "${fg[red]}Error:${reset_color} usage: rename_term title"
+	fi
+}
+
+
+### Project management functions ###
+function github-create()
+{
+	local REPO_NAME=$(basename $(pwd) | tr '[A-Z]'  '[a-z]')
+	local RET
+
+	if [ -z "$GITHUB_TOKEN" ]; then
+		echo "${fg[red]}Error:${reset_color} your GITHUB_TOKEN is not set"
+		return 1
+	fi
+
+	if [[ $# -eq 0 ]]; then
+		printf "${fg_bold[yellow]}Enter a repo name or hit enter to use '$REPO_NAME':${reset_color} "
+		read INPUT
+		[ -n "$INPUT" ] && REPO_NAME=$INPUT
+	elif [[ $# -eq 1 ]]; then
+		REPO_NAME=$1
+	else
+		echo '${fg[red]}Error:${reset_color} usage: github-create [repo_name]'
+		return 1
+	fi
+
+	printf "${fg_bold[white]}Creating Github repo...${reset_color} "
+	RET=$(curl -iu "aeddi:$GITHUB_TOKEN" https://api.github.com/user/repos -d '{"name":"'$REPO_NAME'"}' 2>&1)
+	if [ -n "$(grep 'HTTP/1.1 201 Created' <<< $RET)" ]; then
+		echo "${fg_bold[green]}success${reset_color}"
+		return 0
+	else
+		echo "${fg_bold[red]}error${reset_color}"
+		echo "$RET"
+		return 1
+	fi
+}
+
+function bitbucket-create()
+{
+	local REPO_NAME=$(basename $(pwd) | tr '[A-Z]'  '[a-z]')
+	local RET
+
+	if [ -z "$BITBUCKET_TOKEN" ]; then
+		echo "${fg[red]}Error:${reset_color} your BITBUCKET_TOKEN is not set"
+		return 1
+	fi
+
+	if [[ $# -eq 0 ]]; then
+		printf "${fg_bold[yellow]}Enter a repo name or hit enter to use '$REPO_NAME':${reset_color} "
+		read INPUT
+		[ -n "$INPUT" ] && REPO_NAME=$INPUT
+	elif [[ $# -eq 1 ]]; then
+		REPO_NAME=$1
+	else
+		echo "${fg[red]}Error:${reset_color} usage: bitbucket-create [repo_name]"
+		return 1
+	fi
+
+	printf "${fg_bold[yellow]}Do you want to make this repo private?${reset_color} [Y|n] "
+	read INPUT
+	if [[ $INPUT != 'n' && $INPUT != 'N' ]]; then
+		printf "${fg_bold[white]}Creating private Bitbucket repo...${reset_color} "
+		RET=$(curl -X POST -v -H "Content-Type: application/json" -u aeddi42:$BITBUCKET_TOKEN https://api.bitbucket.org/2.0/repositories/aeddi42/$REPO_NAME -d '{"scm": "git", "is_private": "true", "fork_policy": "no_public_forks"}' 2>&1)
+	else
+		printf "${fg_bold[white]}Creating public Bitbucket repo...${reset_color} "
+		RET=$(curl -X POST -v -H "Content-Type: application/json" -u aeddi42:$BITBUCKET_TOKEN https://api.bitbucket.org/2.0/repositories/aeddi42/$REPO_NAME -d '{"scm": "git", "is_private": "false", "fork_policy": "allow_forks"}' 2>&1)
+	fi
+
+	if [ -n "$(grep 'HTTP/1.1 200 OK' <<< $RET)" ]; then
+		echo "${fg_bold[green]}success${reset_color}"
+		return 0
+	else
+		echo "${fg_bold[red]}error${reset_color}"
+		echo "$RET"
+		return 1
+	fi
+}
+
+function init-project()
+{
+	local TEMPLATES_DIR=$(dirname $(readlink ${(%):-%x}))/templates
+	local REPO_NAME=$(basename $(pwd) | tr '[A-Z]'  '[a-z]')
+	local GITHUB=0
+	local BITBUCKET=0
+	local COMMIT_MES=''
+
+	printf "${fg_bold[white]}Init project:${reset_color}\n"
+
+	if [ ! -d .git ]; then
+		printf "   - Init local git repository...\n"
+		git init &> /dev/null
+		COMMIT_MES='Init project'
+	else
+		COMMIT_MES='Add config files and/or add remote repos'
+	fi
+
+	if [ ! -f .gitignore ]; then
+		printf "   - Adding .gitignore...\n"
+		cp $TEMPLATES_DIR/gitignore .gitignore &> /dev/null
+	fi
+	if [ ! -f .editorconfig ]; then
+		printf "   - Adding .editorconfig...\n"
+		cp $TEMPLATES_DIR/editorconfig .editorconfig &> /dev/null
+	fi
+
+	printf "   - Git commit changes...\n"
+	git add -A &> /dev/null
+	git commit -m "$COMMIT_MES" &> /dev/null
+
+	printf "\n${fg_bold[yellow]}Create a remote repo on Github?${reset_color} [Y|n] "
+	read INPUT
+	if [[ $INPUT != 'n' && $INPUT != 'N' ]]; then
+		if github-create $REPO_NAME; then
+			GITHUB=1
+			git remote add github git@github.com:aeddi/$REPO_NAME &> /dev/null
+		fi
+		echo
+	fi
+	printf "${fg_bold[yellow]}Create a remote repo on Bitbucket?${reset_color} [Y|n] "
+	read INPUT
+	if [[ $INPUT != 'n' && $INPUT != 'N' ]]; then
+		if bitbucket-create $REPO_NAME; then
+			BITBUCKET=1
+			git remote add bitbucket git@bitbucket.org:aeddi42/$REPO_NAME &> /dev/null
+		fi
+	fi
+
+	if [[ $GITHUB -eq 1 || $BITBUCKET -eq 1 ]]; then
+		printf "\n${fg_bold[white]}Setup remote repos:${reset_color}\n"
+
+		printf "   - Adding a target alias 'all'...\n"
+		echo '[remote "all"]' >> .git/config
+		grep 'url =' .git/config >> .git/config
+
+		printf "   - Push on remote repos...\n"
+		git push -q -u --all all
 	fi
 }
 
@@ -62,45 +199,46 @@ function rename_term()
 function myip()
 {
 	if [[ $# -eq 0 ]]; then
-		get_public_ip
-		get_local_ip
+		get-public-ip
+		get-local-ip
 	elif [[ $1 == 'local' ]]; then
-		get_local_ip
+		get-local-ip
 	 elif [[ $1 == 'public' ]]; then
-		get_public_ip
+		get-public-ip
 	else
-		echo "Error: usage: myip [local|public]"
+		echo "${fg[red]}Error:${reset_color} usage: myip [local|public]"
 	fi
 }
 
-function get_local_ip()
+function get-local-ip()
 {
-	first=1
-	interfaces=$(ifconfig | awk -F: '/^[a-z]+[0-9]/{printf "%s ", $1} END {print ""}')
+	FIRST=1
+	INTERFACES=$(ifconfig | awk -F: '/^[a-z]+[0-9]/{printf "%s ", $1} END {print ""}')
 
-	for interface in ${(z)interfaces}; do
-		info=$(ifconfig $interface)
-		inet=$(awk -F' ' '/^[[:space:]]+inet /{print $2}' <<< "$info")
-		if [[ -n $inet && $inet != '127.0.0.1' ]]; then
-			if [[ $first == 1 ]]; then
-				printf "Local IP:\n"
-				first=0
+	for INTERFACE in ${(z)INTERFACES}; do
+		INFO=$(ifconfig $INTERFACE)
+		INET=$(awk -F' ' '/^[[:space:]]+inet /{print $2}' <<< "$INFO")
+		if [[ -n $INET && $INET != '127.0.0.1' ]]; then
+			if [[ $FIRST == 1 ]]; then
+				echo "Local IP:"
+				FIRST=0
 			fi
-			printf "\t- $interface: $inet\n"
+			printf "\t- $INTERFACE: $INET\n"
 		fi
 	done
 
-	if [[ $first == 1 ]]; then
-		printf "Local IP: none\n"
+	if [[ $FIRST == 1 ]]; then
+		echo "Local IP: none"
 	fi
 }
 
-function get_public_ip()
+function get-public-ip()
 {
-	publicip=$(curl -sS ipecho.net/plain 2> /dev/null)
-	publicip=$([ ! $publicip ] && echo 'none' || echo "$publicip")
-	printf "Public IP: $publicip\n"
+	PUBLICIP=$(curl -sS ipecho.net/plain 2> /dev/null)
+	PUBLICIP=$([ ! $PUBLICIP ] && echo 'none' || echo "$PUBLICIP")
+	echo "Public IP: $PUBLICIP"
 }
+
 
 ### Bookmarks navigation functions ###
 
