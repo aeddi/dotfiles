@@ -47,9 +47,9 @@ function rename-term()
 {
 	if [[ $# -eq 1 ]]; then
 		if [[ -n "$TMUX" ]] ; then
-			print -Pn  "\e]1;$1\a"
-		else
 			tmux rename-window $1
+		else
+			print -Pn  "\e]1;$1\a"
 		fi
 	else
 		echo "${fg[red]}Error:${reset_color} usage: rename_term title"
