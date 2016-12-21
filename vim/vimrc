@@ -31,6 +31,7 @@
 "		10. UltiSnips
 "		11. CtrlP
 "		12. EditorConfig
+"		13. vim-man
 "
 " ==============================================================================
 
@@ -94,9 +95,12 @@ nnoremap <C-J> <C-W><C-J>
 nnoremap <C-K> <C-W><C-K>
 nnoremap <C-L> <C-W><C-L>
 nnoremap <C-H> <C-W><C-H>
-" Switch tab
+" Switch between tabs
 nnoremap { :tabprevious <CR>
 nnoremap } :tabnext <CR>
+" Switch between buffers
+nnoremap [b :bprevious <CR>
+nnoremap ]b :bnext <CR>
 " Allow saving file as sudo
 command W :execute ':silent w !sudo tee % > /dev/null' | :edit!
 command Wq :execute ':W' | :q
@@ -221,6 +225,7 @@ Plugin 'ivalkeen/vim-ctrlp-tjump'		" Tags plugin for CtrlP
 Plugin 'tpope/vim-fugitive'				" Git integration
 Plugin 'chrisbra/Recover.vim'			" Diff swap files
 Plugin 'webdevel/tabulous'				" Enhance tabs
+Plugin 'vim-utils/vim-man'				" Open man pages in vim
 
 Plugin 'aeddi/tomorrow-theme'			" Colorscheme tomorrow-night
 Plugin 'vim-airline/vim-airline'		" Better status bar
@@ -251,7 +256,16 @@ let g:syntastic_auto_loc_list = 1
 let g:syntastic_check_on_open = 1
 let g:syntastic_check_on_wq = 0
 
-let g:syntastic_mode_map = { 'mode': 'passive', 'active_filetypes': [],'passive_filetypes': [] }
+let g:syntastic_mode_map = { 'mode': 'dynamic', 'active_filetypes': [],'passive_filetypes': [] }
+
+function! SyntasticCheckHook(errors)
+	if !empty(a:errors)
+		let g:syntastic_loc_list_height = min([len(a:errors), 10])
+	endif
+endfunction
+
+nnoremap [e :lprevious <CR>
+nnoremap ]e :lnext <CR>
 "--------------------
 
 "4" Gundo :
@@ -278,6 +292,13 @@ let g:ycm_autoclose_preview_window_after_insertion = 1
 "--------------------
 map  / <Plug>(easymotion-sn)
 omap / <Plug>(easymotion-tn)
+
+map <Leader>l <Plug>(easymotion-lineforward)
+map <Leader>j <Plug>(easymotion-j)
+map <Leader>k <Plug>(easymotion-k)
+map <Leader>h <Plug>(easymotion-linebackward)
+
+let g:EasyMotion_startofline = 0 " keep cursor column when JK motion"
 "--------------------
 
 "7" Airline :
@@ -319,16 +340,21 @@ let g:ctrlp_prompt_mappings = {
 \ 'ToggleType(-1)':       ['<c-h>', '<c-b>'],
 \ }
 
-nnoremap <bar> :CtrlPtjump<cr>
-vnoremap <bar> :CtrlPtjumpVisual<cr>
-nnoremap " :pop<cr>
-vnoremap " :pop<cr>
+nnoremap ]t :CtrlPtjump<cr>
+vnoremap ]t :CtrlPtjumpVisual<cr>
+nnoremap [t :pop<cr>
+vnoremap [t :pop<cr>
 let g:ctrlp_tjump_only_silent = 1
 "--------------------
 
 "12" EditorConfig
 "--------------------
 let g:EditorConfig_exclude_patterns = ['fugitive://.*']
+"--------------------
+
+"13" vim-man
+"--------------------
+nnoremap K :Man <C-R><C-W><CR>
 "--------------------
 
 
