@@ -201,12 +201,18 @@ function myip()
 	if [[ $# -eq 0 ]]; then
 		get-public-ip
 		get-local-ip
+		get-torp-ip
+		get-torb-ip
 	elif [[ $1 == 'local' ]]; then
 		get-local-ip
-	 elif [[ $1 == 'public' ]]; then
+	elif [[ $1 == 'public' ]]; then
 		get-public-ip
+	elif [[ $1 == 'tor' ]]; then
+		get-torp-ip
+	elif [[ $1 == 'torb' ]]; then
+		get-torb-ip
 	else
-		echo "${fg[red]}Error:${reset_color} usage: myip [local|public]"
+		echo "${fg[red]}Error:${reset_color} usage: myip [local|public|tor|torb]"
 	fi
 }
 
@@ -239,6 +245,19 @@ function get-public-ip()
 	echo "Public IP: $PUBLICIP"
 }
 
+funcion get-torp-ip()
+{
+	TORPIP=$(curl --proxy socks5://localhost:9050 -sS ipecho.net/plain 2> /dev/null)
+	TORPIP=$([ ! $TORPIP ] && echo 'none' || echo "$TORPIP")
+	echo "Tor Proxy IP: $TORPIP"
+}
+
+funcion get-torb-ip()
+{
+	TORBIP=$(curl --proxy socks5://localhost:9150 -sS ipecho.net/plain 2> /dev/null)
+	TORBIP=$([ ! $TORBIP ] && echo 'none' || echo "$TORBIP")
+	echo "Tor Browser IP: $TORBIP"
+}
 
 ### Bookmarks navigation functions ###
 
