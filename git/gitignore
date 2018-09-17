@@ -9,6 +9,10 @@ a.out
 ########
 *.gch
 
+# Personnal #
+#############
+.mysession.vim
+
 
 # Temporary files #
 ###################

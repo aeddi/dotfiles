@@ -21,8 +21,8 @@
 "	C. PLUGINS
 "		1. Vundle
 "		2. Tomorrow-night
-"		3. Syntastic
-"		4. Gundo
+"		3. ALE
+"		4. Mundo
 "		5. EasyMotion
 "		6. Airline
 "		7. Template
@@ -31,7 +31,6 @@
 "		10. EditorConfig
 "
 " ==============================================================================
-
 
 " =========================
 " A. BASIC CONFIG
@@ -92,9 +91,12 @@ nnoremap <C-J> <C-W><C-J>
 nnoremap <C-K> <C-W><C-K>
 nnoremap <C-L> <C-W><C-L>
 nnoremap <C-H> <C-W><C-H>
-" Switch tab
+" Switch between tabs
 nnoremap { :tabprevious <CR>
 nnoremap } :tabnext <CR>
+" Switch between buffers
+nnoremap [b :bprevious <CR>
+nnoremap ]b :bnext <CR>
 " Allow saving file as sudo
 command W :execute ':silent w !sudo tee % > /dev/null' | :edit!
 command Wq :execute ':W' | :q
@@ -164,8 +166,9 @@ if !has('nvim')
 endif
 "--------------------
 
-"4" Save buffers :
+"4" Save/Restore buffers :
 "--------------------
+set sessionoptions+=tabpages,globals
 map <F5> :mksession! .mysession.vim<CR>
 "--------------------
 
@@ -194,29 +197,35 @@ call vundle#begin()
 
 Plugin 'gmarik/Vundle.vim'				" Plugin manager
 
-Plugin 'scrooloose/syntastic'			" Syntax/error checker
-Plugin 'ntpeters/vim-better-whitespace'	" Highlight / delete on demand trailing WS
-Plugin 'aperezdc/vim-template'			" Code templates for many langages
-Plugin 'aeddi/Templates-snippets'		" Custom templates/snippets
+Plugin 'w0rp/ale'						" Syntax/error checker
 Plugin 'editorconfig/editorconfig-vim'	" EditorConfig official plugin
 
+Plugin 'aperezdc/vim-template'			" Code templates for many langages
+Plugin 'aeddi/Stdheader'				" 42 standard header
+Plugin 'aeddi/Templates-snippets'		" Custom templates/snippets
+
+Plugin 'maksimr/vim-jsbeautify'			" JS / CSS / HTML beautifier
+Plugin 'fatih/vim-go'					" Golang plugin that use gocode, gofmt, goimports, etc...
+Plugin 'pangloss/vim-javascript'		" Javascript plugin for syntax and indentation
+Plugin 'mxw/vim-jsx'					" JSX plugin for syntax and indentation
+Plugin 'prettier/vim-prettier'			" Pretty format JS, CSS, TS, JSON, etc...
+
 Plugin 'tpope/vim-commentary'			" Commentary plugin
-Plugin 'Raimondi/delimitMate'			" Auto-close brackets and other paired stuffs
 Plugin 'Lokaltog/vim-easymotion'		" Faster motion system
 Plugin 'luochen1990/rainbow'			" Display multi-color parentheses
 Plugin 'vim-scripts/matchit.zip'		" Bind more match on % key
 Plugin 'tpope/vim-repeat'				" More command can repeat with . key
-Plugin 'aeddi/Stdheader'				" 42 standard header
-Plugin 'maksimr/vim-jsbeautify'			" JS / CSS / HTML beautifier
-Plugin 'mhinz/vim-signify'				" Mark lines edited since last commit
 Plugin 'takac/vim-hardtime'				" Like hardmode but more customizable
-
-Plugin 'sjl/gundo.vim'					" Undo tree
+Plugin 'simnalamburt/vim-mundo'			" Undo tree
 Plugin 'ctrlpvim/ctrlp.vim'				" Content finder
 Plugin 'ivalkeen/vim-ctrlp-tjump'		" Tags plugin for CtrlP
 Plugin 'tpope/vim-fugitive'				" Git integration
+Plugin 'mhinz/vim-signify'				" Mark lines edited since last commit
 Plugin 'chrisbra/Recover.vim'			" Diff swap files
-Plugin 'webdevel/tabulous'				" Enhance tabs
+Plugin 'vim-utils/vim-man'				" Open man pages in vim
+
+Plugin 'jiangmiao/auto-pairs'			" Auto-close brackets and other paired stuffs
+Plugin 'gcmt/taboo.vim'					" Enhance tabs
 
 Plugin 'aeddi/tomorrow-theme'			" Colorscheme tomorrow-night
 Plugin 'vim-airline/vim-airline'		" Better status bar
@@ -231,34 +240,34 @@ filetype plugin indent on
 silent! colorscheme Tomorrow-Night		"Enable theme with silent! to avoid error on first launch
 "--------------------
 
-"3" Syntastic :
+"3" ALE :
 "--------------------
-let g:syntastic_c_compiler_options = '-Werror -Wextra -Wall -pedantic'
-let g:syntastic_c_compiler = 'gcc'
-let g:syntastic_cpp_compiler_options = '-Werror -Wextra -Wall -pedantic'
-let g:syntastic_cpp_compiler = 'g++'
+let g:ale_javascript_eslint_use_global = 1
+let g:ale_javascript_eslint_executable = 'eslint_d'
+let g:ale_fixers = {
+\   '*': ['remove_trailing_lines', 'trim_whitespace'],
+\   'javascript': ['prettier-eslint'],
+\}
 
-set statusline+=%#warningmsg#
-set statusline+=%{SyntasticStatuslineFlag()}
-set statusline+=%*
-
-let g:syntastic_always_populate_loc_list = 1
-let g:syntastic_auto_loc_list = 1
-let g:syntastic_check_on_open = 1
-let g:syntastic_check_on_wq = 0
-
-let g:syntastic_mode_map = { 'mode': 'passive', 'active_filetypes': [],'passive_filetypes': [] }
+let g:ale_fix_on_save = 1
 "--------------------
 
-"4" Gundo :
+"4" Mundo :
 "--------------------
-nnoremap U :GundoToggle<CR>
+nnoremap U :MundoToggle<CR>
 "--------------------
 
 "5" EasyMotion :
 "--------------------
 map  / <Plug>(easymotion-sn)
 omap / <Plug>(easymotion-tn)
+
+map <Leader>l <Plug>(easymotion-lineforward)
+map <Leader>j <Plug>(easymotion-j)
+map <Leader>k <Plug>(easymotion-k)
+map <Leader>h <Plug>(easymotion-linebackward)
+
+let g:EasyMotion_startofline = 0 " keep cursor column when JK motion"
 "--------------------
 
 "6" Airline :
@@ -266,6 +275,15 @@ omap / <Plug>(easymotion-tn)
 set laststatus=2							"Always show airline
 let g:airline_powerline_fonts = 1			"Enable patched fonts
 let g:airline_theme = 'tomorrow'
+let g:airline#extensions#tabline#enabled = 1
+let g:airline#extensions#tabline#left_sep = ""
+let g:airline#extensions#tabline#left_alt_sep = ""
+let g:airline#extensions#tabline#show_tab_nr = 0
+let g:airline#extensions#tabline#show_buffers = 0
+let g:airline#extensions#tabline#tab_min_count = 2
+let g:airline#extensions#tabline#show_close_button = 0
+let g:airline#extensions#tabline#show_tab_type = 0
+let g:airline#extensions#tabline#show_splits = 0
 set noshowmode
 "--------------------
 
@@ -282,6 +300,11 @@ nnoremap <leader><leader>( :RainbowToggle<CR>
 
 "9" CtrlP
 "--------------------
+let g:ctrlp_cache_dir = $HOME . '/.cache/ctrlp'
+if executable('ag')
+  let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
+endif
+
 nnoremap <c-o> :CtrlPMRU<cr>
 nnoremap <c-t> :CtrlPTag<cr>
 let g:ctrlp_regexp = 1
@@ -293,10 +316,10 @@ let g:ctrlp_prompt_mappings = {
 \ 'ToggleType(-1)':       ['<c-h>', '<c-b>'],
 \ }
 
-nnoremap <bar> :CtrlPtjump<cr>
-vnoremap <bar> :CtrlPtjumpVisual<cr>
-nnoremap " :pop<cr>
-vnoremap " :pop<cr>
+nnoremap ]t :CtrlPtjump<cr>
+vnoremap ]t :CtrlPtjumpVisual<cr>
+nnoremap [t :pop<cr>
+vnoremap [t :pop<cr>
 let g:ctrlp_tjump_only_silent = 1
 "--------------------
 
@@ -304,6 +327,18 @@ let g:ctrlp_tjump_only_silent = 1
 "--------------------
 let g:EditorConfig_exclude_patterns = ['fugitive://.*']
 "--------------------
+
+"13" vim-man
+"--------------------
+nnoremap K :Man <C-R><C-W><CR
+"--------------------
+
+"14" taboo
+"-------------------
+let g:taboo_tab_format = " #%N %f [%W] "
+let g:taboo_renamed_tab_format = " #%N %l [%W] "
+let g:taboo_modified_tab_flag = "*"
+let g:taboo_tabline = 0
 
 
 

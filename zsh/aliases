@@ -25,4 +25,5 @@ alias ln="ln -i"
 
 # Misc.
 alias vimrs="vim -S .mysession.vim"
+alias nvimrs="nvim -S .mysession.vim"
 alias tvod="livestreamer --twitch-oauth-token $TWITCH_OAUTH_TOKEN --player-passthrough=hls"
