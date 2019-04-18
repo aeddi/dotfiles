@@ -334,7 +334,7 @@ endif
 
 nnoremap <c-o> :CtrlPMRU<cr>
 nnoremap <c-t> :CtrlPTag<cr>
-let g:ctrlp_regexp = 1
+let g:ctrlp_regexp = 0
 let g:ctrlp_show_hidden = 1
 let g:ctrlp_open_multiple_files = 'tj'
 let g:ctrlp_prompt_mappings = {
@@ -367,6 +367,10 @@ let g:taboo_renamed_tab_format = " #%N %l [%W] "
 let g:taboo_modified_tab_flag = "*"
 let g:taboo_tabline = 0
 
+"15" vim-go
+"-------------------
+" Disable vim-go tags management, use CtrlPTag instead
+let g:go_def_mapping_enabled=0
 
 
 " Include local file
