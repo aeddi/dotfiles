@@ -917,13 +917,13 @@ Maximize Active Pane</string>
 	<key>NSWindow Frame SUStatusFrame</key>
 	<string>520 579 400 129 0 0 1440 877 </string>
 	<key>NSWindow Frame SUUpdateAlert</key>
-	<string>2410 691 620 392 1440 -215 2560 1600 </string>
+	<string>410 381 620 392 0 0 1440 900 </string>
 	<key>NSWindow Frame SharedPreferences</key>
 	<string>-1504 1542 937 514 -1836 900 2560 1440 </string>
 	<key>NSWindow Frame iTerm Window 0</key>
-	<string>0 350 650 527 0 0 1440 900 </string>
+	<string>0 0 1440 900 0 0 1440 900 </string>
 	<key>NSWindow Frame iTerm Window 1</key>
-	<string>724 1250 650 527 724 900 2560 1440 </string>
+	<string>3 350 650 527 0 0 1440 900 </string>
 	<key>NeverWarnAboutShortLivedSessions_9064B8FB-177C-44B8-8336-2FF154B34458</key>
 	<true/>
 	<key>NeverWarnAboutShortLivedSessions_9064B8FB-177C-44B8-8336-2FF154B34458_selection</key>
@@ -3322,11 +3322,9 @@ Maximize Active Pane</string>
 	<key>SUHasLaunchedBefore</key>
 	<true/>
 	<key>SULastCheckTime</key>
-	<date>2019-03-19T16:30:23Z</date>
+	<date>2019-04-25T21:00:43Z</date>
 	<key>SUSendProfileInfo</key>
 	<false/>
-	<key>SUSkippedVersion</key>
-	<string>3.2.7</string>
 	<key>SavePasteHistory</key>
 	<false/>
 	<key>ShowBookmarkName</key>
@@ -3339,6 +3337,8 @@ Maximize Active Pane</string>
 	<false/>
 	<key>SplitPaneDimmingAmount</key>
 	<real>0.40000000596046448</real>
+	<key>SuppressRestartAnnouncement</key>
+	<true/>
 	<key>SwitchPaneModifier</key>
 	<integer>9</integer>
 	<key>SwitchTabModifier</key>
@@ -3380,7 +3380,7 @@ Maximize Active Pane</string>
 	<key>findRegex_iTerm</key>
 	<false/>
 	<key>iTerm Version</key>
-	<string>3.2.6</string>
+	<string>3.2.8</string>
 	<key>kCPKSelectionViewPreferredModeKey</key>
 	<integer>0</integer>
 	<key>kCPKSelectionViewShowHSBTextFieldsKey</key>
