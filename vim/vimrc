@@ -8,13 +8,13 @@
 "		3. Indentation
 "		4. Search
 "		5. Key mapping
-"		6. Misc
-"		7. Yankless paste
+"		6. Commands
+"		7. Misc
+"		8. Yankless paste
 "
 "	B. PERSISTENCE
 "		1. Backups
-"		2. Swap files
-"		3. Restore session
+"		2. Swap files 3. Restore session
 "		4. Save buffers
 "		5. Undo history
 "
@@ -36,10 +36,7 @@
 "
 " ==============================================================================
 
-" =========================
-" A. BASIC CONFIG
-" =========================
-
+" ========================= A. BASIC CONFIG =========================
 "1" Interface :
 "--------------------
 set title						" Display filename in title bar
@@ -82,7 +79,7 @@ set incsearch					" Highlight typed word during typing
 set hlsearch					" Highlight typed word
 "--------------------
 
-"5" Key mapping :
+"5" Keybindings :
 "--------------------
 " Enable/Disable paste mode
 set pastetoggle=<F6>
@@ -101,15 +98,20 @@ nnoremap } :tabnext <CR>
 " Switch between buffers
 nnoremap [b :bprevious <CR>
 nnoremap ]b :bnext <CR>
+
+"6" Commands :
+"--------------------
 " Allow saving file as sudo
-command W :execute ':silent w !sudo tee % > /dev/null' | :edit!
-command Wq :execute ':W' | :q
-command WQ :Wq
+command! W :execute ':silent w !sudo tee % > /dev/null' | :edit!
+command! Wq :execute ':W' | :q
+command! WQ :Wq
+" Reload vimrc
+command! Resource :source $MYVIMRC
 " Abreviation for tabnew
 ca tn tabnew
 "--------------------
 
-"6" Misc :
+"7" Misc :
 "--------------------
 set nocompatible				" Disable vi compatibility
 set autoread					" Refresh current file when modified by another editor
@@ -122,7 +124,7 @@ set cursorline					" Display horizontal line on the cursor position
 set nowrap						" Don't wrap text on multiple lines
 "--------------------
 
-"7" Yankless paste :
+"8" Yankless paste :
 "--------------------
 function! RestoreRegister()
     let @" = s:restore_reg
@@ -193,185 +195,309 @@ endif
 " C. PLUGINS
 " =========================
 
-"1" Vundle :
-"--------------------
-filetype off
-set rtp+=~/.vim/bundle/Vundle.vim
-call vundle#begin()
+function! LoadLightPlugins()
+	" Undo tree visualizer
+	Plug 'simnalamburt/vim-mundo', {
+		\'on': 'MundoToggle'
+	\}
+	Plug 'tpope/vim-commentary'				" Comment/uncomment lines
+	Plug 'Lokaltog/vim-easymotion'			" Easier way of navigating within the file
+	Plug 'ctrlpvim/ctrlp.vim'				" Fuzzy content (file, buffer, tags, etc...) finder
+	Plug 'tpope/vim-fugitive'				" Provides git commands
+	Plug 'airblade/vim-gitgutter'			" Mark lines edited since last commit
+	Plug 'takac/vim-hardtime'				" Avoid using anti-pattern in vim
 
-Plugin 'gmarik/Vundle.vim'				" Plugin manager
+	" Colorize matching parentheses
+	Plug 'luochen1990/rainbow', {
+		\'on': 'RainbowToggle'
+	\}
+	Plug 'vim-scripts/matchit.zip'			" Bind more matches on % key press
+	Plug 'tpope/vim-repeat'					" User-defined mappings can be repeated with . key
+	Plug 'ntpeters/vim-better-whitespace'	" Removes trailing whitespaces on save
+	Plug 'jiangmiao/auto-pairs'				" Auto-close brackets and other paired stuffs
 
-Plugin 'w0rp/ale'						" Syntax/error checker
-Plugin 'editorconfig/editorconfig-vim'	" EditorConfig official plugin
+	Plug 'gcmt/taboo.vim'					" Better tabs
+	Plug 'vim-airline/vim-airline'			" Better status bar
 
-Plugin 'Valloric/YouCompleteMe'			" Autocompletion system
-Plugin 'sirver/ultisnips'				" Code snippets for many langages
-Plugin 'aperezdc/vim-template'			" Code templates for many langages
-Plugin 'aeddi/Stdheader'				" 42 standard header
-Plugin 'aeddi/Templates-snippets'		" Custom templates/snippets
+	" JS / JSX / JSON / CSS / HTML beautifier
+	Plug 'maksimr/vim-jsbeautify', {
+		\'do': 'git submodule update --init --recursive'
+	\}
+	" Plug 'pangloss/vim-javascript'		" Javascript plugin for syntax and indentation
+	" Plug 'mxw/vim-jsx'					" JSX plugin for syntax and indentation
+	" Plug 'prettier/vim-prettier'			" Pretty format JS, CSS, TS, JSON, etc...
+	Plug 'editorconfig/editorconfig-vim'	" Consistent coding styles across various editors
+endfunction
 
-Plugin 'maksimr/vim-jsbeautify'			" JS / CSS / HTML beautifier
-Plugin 'fatih/vim-go'					" Golang plugin that use gocode, gofmt, goimports, etc...
-Plugin 'pangloss/vim-javascript'		" Javascript plugin for syntax and indentation
-Plugin 'mxw/vim-jsx'					" JSX plugin for syntax and indentation
-Plugin 'prettier/vim-prettier'			" Pretty format JS, CSS, TS, JSON, etc...
+function! LoadMediumPlugins()
+	Plug 'aeddi/tomorrow-theme'				" Tuned tomorrow-night colorscheme
+	Plug 'vim-airline/vim-airline-themes'	" Airline themes
+endfunction
 
-Plugin 'tpope/vim-commentary'			" Commentary plugin
-Plugin 'Lokaltog/vim-easymotion'		" Faster motion system
-Plugin 'luochen1990/rainbow'			" Display multi-color parentheses
-Plugin 'vim-scripts/matchit.zip'		" Bind more match on % key
-Plugin 'tpope/vim-repeat'				" More command can repeat with . key
-Plugin 'takac/vim-hardtime'				" Like hardmode but more customizable
-Plugin 'simnalamburt/vim-mundo'			" Undo tree
-Plugin 'ctrlpvim/ctrlp.vim'				" Content finder
-Plugin 'ivalkeen/vim-ctrlp-tjump'		" Tags plugin for CtrlP
-Plugin 'tpope/vim-fugitive'				" Git integration
-Plugin 'mhinz/vim-signify'				" Mark lines edited since last commit
-Plugin 'chrisbra/Recover.vim'			" Diff swap files
-Plugin 'vim-utils/vim-man'				" Open man pages in vim
+function! LoadHeavyPlugins()
+	" Completion framework and language server client
+	function! InstallCoc(info)
+		if a:info.status == 'installed' || a:info.force
+			call coc#util#install()
+			call coc#util#install_extension([
+				\'coc-tsserver',
+				\'coc-python',
+				\'coc-json',
+				\'coc-yaml',
+				\'coc-snippets',
+				\'coc-css',
+				\'coc-html',
+				\'coc-svg'
+			\])
+		elseif a:info.status == 'updated'
+			call coc#util#update_extensions(1)
+		endif
+	endfunction
 
-Plugin 'jiangmiao/auto-pairs'			" Auto-close brackets and other paired stuffs
-Plugin 'gcmt/taboo.vim'					" Enhance tabs
+	Plug 'neoclide/coc.nvim', {
+		\'do': function('InstallCoc')
+	\}
+	Plug 'honza/vim-snippets'				" Snippets collection for many languages
+endfunction
 
-Plugin 'aeddi/tomorrow-theme'			" Colorscheme tomorrow-night
-Plugin 'vim-airline/vim-airline'		" Better status bar
-Plugin 'vim-airline/vim-airline-themes'	" Airline themes
+function! ConfigLightPlugins()
+	" Mundo :
+	"--------------------
+	nnoremap U :MundoToggle<CR>
+	"--------------------
 
-call vundle#end()
-filetype plugin indent on
-"--------------------
+	" EasyMotion :
+	"--------------------
+	map  / <Plug>(easymotion-sn)
+	omap / <Plug>(easymotion-tn)
 
-"2" Tomorrow-night :
-"--------------------
-silent! colorscheme Tomorrow-Night		"Enable theme with silent! to avoid error on first launch
-"--------------------
+	map <Leader>l <Plug>(easymotion-lineforward)
+	map <Leader>j <Plug>(easymotion-j)
+	map <Leader>k <Plug>(easymotion-k)
+	map <Leader>h <Plug>(easymotion-linebackward)
 
-"3" ALE :
-"--------------------
-let g:ale_javascript_eslint_use_global = 1
-let g:ale_javascript_eslint_executable = 'eslint_d'
-let g:ale_fixers = {
-\   '*': ['remove_trailing_lines', 'trim_whitespace'],
-\   'javascript': ['prettier-eslint'],
-\}
+	let g:EasyMotion_startofline = 0	"Keep cursor column when JK motion
+	"--------------------
 
-let g:ale_fix_on_save = 1
-"--------------------
+	" CtrlP
+	"--------------------
+	let g:ctrlp_cache_dir = $HOME . '/.cache/ctrlp'
+	if executable('ag')
+	  let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
+	endif
 
-"4" Mundo :
-"--------------------
-nnoremap U :MundoToggle<CR>
-"--------------------
+	nnoremap <c-o> :CtrlPMRU<cr>
+	nnoremap <c-t> :CtrlPTag<cr>
+	let g:ctrlp_regexp = 0
+	let g:ctrlp_show_hidden = 1
+	let g:ctrlp_open_multiple_files = 'tj'
+	let g:ctrlp_prompt_mappings = {
+	\ 'AcceptSelection("h")': ['<c-s>', '<c-x>'],
+	\ 'ToggleType(1)':        ['<c-l>', '<c-f>'],
+	\ 'ToggleType(-1)':       ['<c-h>', '<c-b>'],
+	\ }
+	"--------------------
 
-"5" YouCompleteMe :
-"--------------------
-let g:ycm_global_ycm_extra_conf = "~/.vim/bundle/Templates-snippets/ycm_conf/ycm_c++_conf.py"
-let g:ycm_confirm_extra_conf = 1			"Disable confimation message
-try
-	set shortmess+=c						"Disable "Pattern not found" message
-catch /E539: Illegal character/
-endtry
-let g:ycm_use_ultisnips_completer = 1		"Display available snippets
-let g:ycm_key_list_select_completion = ['<C-j>', '<Down>']
-let g:ycm_key_list_previous_completion = ['<C-k>', '<Up>']
-let g:ycm_autoclose_preview_window_after_insertion = 1
-"--------------------
+	" Gitgutter
+	"-------------------
+	let g:gitgutter_max_signs = 500
+	nmap ]h <Plug>GitGutterNextHunk
+	nmap [h <Plug>GitGutterPrevHunk
+	"-------------------
 
-"6" EasyMotion :
-"--------------------
-map  / <Plug>(easymotion-sn)
-omap / <Plug>(easymotion-tn)
+	" Rainbow Parentheses :
+	"--------------------
+	let g:rainbow_active = 0
+	nnoremap <leader>9 :RainbowToggle<CR>
+	"--------------------
 
-map <Leader>l <Plug>(easymotion-lineforward)
-map <Leader>j <Plug>(easymotion-j)
-map <Leader>k <Plug>(easymotion-k)
-map <Leader>h <Plug>(easymotion-linebackward)
+	" Better-Whitespace :
+	"--------------------
+	let g:strip_whitespace_on_save=1	" Strip on save
+	let g:strip_whitespace_confirm=0	" Strip without confirmation
+	let g:better_whitespace_enabled=0	" Don't highlight trailing whitespace
+	"--------------------
 
-let g:EasyMotion_startofline = 0 " keep cursor column when JK motion"
-"--------------------
+	" Taboo
+	"-------------------
+	let g:taboo_tab_format = " #%N %f [%W] "
+	let g:taboo_renamed_tab_format = " #%N %l [%W] "
+	let g:taboo_modified_tab_flag = "*"
+	let g:taboo_tabline = 0
+	"--------------------
 
-"7" Airline :
-"--------------------
-set laststatus=2							"Always show airline
-let g:airline_powerline_fonts = 1			"Enable patched fonts
-let g:airline_theme = 'tomorrow'
-let g:airline#extensions#tabline#enabled = 1
-let g:airline#extensions#tabline#left_sep = ""
-let g:airline#extensions#tabline#left_alt_sep = ""
-let g:airline#extensions#tabline#show_tab_nr = 0
-let g:airline#extensions#tabline#show_buffers = 0
-let g:airline#extensions#tabline#tab_min_count = 2
-let g:airline#extensions#tabline#show_close_button = 0
-let g:airline#extensions#tabline#show_tab_type = 0
-let g:airline#extensions#tabline#show_splits = 0
-set noshowmode
-"--------------------
+	" Airline :
+	"--------------------
+	set laststatus=2							"Always show airline
+	let g:airline_powerline_fonts = 1			"Enable patched fonts
+	let g:airline#extensions#tabline#enabled = 1
+	let g:airline#extensions#tabline#left_sep = ""
+	let g:airline#extensions#tabline#left_alt_sep = ""
+	let g:airline#extensions#tabline#show_tab_nr = 0
+	let g:airline#extensions#tabline#show_buffers = 0
+	let g:airline#extensions#tabline#tab_min_count = 2
+	let g:airline#extensions#tabline#show_close_button = 0
+	let g:airline#extensions#tabline#show_tab_type = 0
+	let g:airline#extensions#tabline#show_splits = 0
+	set noshowmode
+	"--------------------
 
-"8" Template :
-"--------------------
-let g:templates_directory = '~/.vim/bundle/Templates-snippets/templates'
-"--------------------
+	" JS-Beautify
+	"--------------------
+	function! Beautify()
+		if &filetype == 'javascript'
+			:call JsBeautify()
+		elseif &filetype == 'json'
+			:call JsonBeautify()
+		elseif &filetype == 'jsx'
+			:call JsxBeautify()
+		elseif &filetype == 'html'
+			:call HtmlBeautify()
+		elseif &filetype == 'css'
+			:call CSSBeautify()
+		else
+			:echo "No beautifier for '". &filetype . "' filetype"
+		endif
+	endfunction
 
-"9" Rainbow Parentheses :
-"--------------------
-let g:rainbow_active = 0
-nnoremap <leader><leader>( :RainbowToggle<CR>
-"--------------------
+	command! Beautify :call Beautify()
+	"--------------------
 
-"10" UltiSnips
-"--------------------
-let g:UltiSnipsExpandTrigger="<C-l>"
-let g:UltiSnipsJumpForwardTrigger="<C-S-e>"
-let g:UltiSnipsJumpBackwardTrigger="<C-w>"
-"--------------------
+	" EditorConfig
+	"--------------------
+	let g:EditorConfig_exclude_patterns = ['fugitive://.*']
+	"--------------------
+endfunction
 
-"11" CtrlP
+function! ConfigMediumPlugins()
+	" Tomorrow-night :
+	"--------------------
+	silent! colorscheme Tomorrow-Night		"Enable theme with silent! to avoid error on first launch
+	"--------------------
+
+	" Airline :
+	"--------------------
+	let g:airline_theme = 'tomorrow'
+	"--------------------
+endfunction
+
+function! ConfigHeavyPlugins()
+	" Coc :
+	"--------------------
+	set hidden			"If hidden is not set, TextEdit might fail.
+	set cmdheight=2		"Better display for messages
+	set updatetime=300	"Smaller updatetime for CursorHold & CursorHoldI
+	set shortmess+=c	"Don't give |ins-completion-menu| messages.
+	set signcolumn=yes	"Always show signcolumns
+
+	" Some server have issues with backup files, see #649
+	set nobackup
+	set nowritebackup
+
+	" Keybinds for completion
+	inoremap <silent><expr> <C-j> pumvisible() ? "\<C-n>" : "\<C-j>"	"Scroll downward
+	inoremap <expr> <C-k> pumvisible() ? "\<C-p>" : "\<C-k>"			"Scroll upward
+	inoremap <expr> <C-l> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"		"Confirm completion
+	inoremap <silent><expr> <c-space> coc#refresh()						"Trigger completion
+
+	" Use `[c` and `]c` for navigate diagnostics
+	nmap <silent> [c <Plug>(coc-diagnostic-prev)
+	nmap <silent> ]c <Plug>(coc-diagnostic-next)
+
+	" Remap keys for gotos
+	nmap <silent> gd <Plug>(coc-definition)
+	nmap <silent> gy <Plug>(coc-type-definition)
+	nmap <silent> gi <Plug>(coc-implementation)
+	nmap <silent> gr <Plug>(coc-references)
+
+	" Use K for show documentation in preview window
+	nnoremap <silent> K :call <SID>show_documentation()<CR>
+
+	function! s:show_documentation()
+	if &filetype == 'vim'
+		execute 'h '.expand('<cword>')
+	else
+		call CocAction('doHover')
+	endif
+	endfunction
+
+	" Highlight symbol under cursor on CursorHold
+	autocmd CursorHold * silent call CocActionAsync('highlight')
+
+	" Remap for rename current word
+	nmap <leader>rn <Plug>(coc-rename)
+
+	" Remap for format selected region
+	vmap <leader>f  <Plug>(coc-format-selected)
+	nmap <leader>f  <Plug>(coc-format-selected)
+
+	augroup mygroup
+		autocmd!
+		" Setup formatexpr specified filetype(s).
+		autocmd FileType typescript,json setl formatexpr=CocAction('formatSelected')
+		" Update signature help on jump placeholder
+		autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
+	augroup end
+
+	" Remap for do codeAction of selected region, ex: `<leader>aap` for current paragraph
+	vmap <leader>a  <Plug>(coc-codeaction-selected)
+	nmap <leader>a  <Plug>(coc-codeaction-selected)
+
+	" Remap for do codeAction of current line
+	nmap <leader>ac  <Plug>(coc-codeaction)
+	" Fix autofix problem of current line
+	nmap <leader>qf  <Plug>(coc-fix-current)
+
+	" Use `:Format` for format current buffer
+	command! -nargs=0 Format :call CocAction('format')
+
+	" if you want to disable auto detect, comment out those two lines
+	let g:airline#extensions#disable_rtp_load = 1
+	let g:airline_extensions = ['branch', 'hunks', 'coc']
+	let g:airline_section_error = '%{airline#util#wrap(airline#extensions#coc#get_error(),0)}'
+	let g:airline_section_warning = '%{airline#util#wrap(airline#extensions#coc#get_warning(),0)}'
+
+	" Using CocList
+	nnoremap <silent> <space>a  :<C-u>CocList diagnostics<cr>	"Show all diagnostics
+	nnoremap <silent> <space>e  :<C-u>CocList extensions<cr>	"Manage extensions
+	nnoremap <silent> <space>c  :<C-u>CocList commands<cr>		"Show commands
+	nnoremap <silent> <space>o  :<C-u>CocList outline<cr>		"Find symbol of current document
+	nnoremap <silent> <space>j  :<C-u>CocNext<CR>				"Do default action for next item.
+	nnoremap <silent> <space>k  :<C-u>CocPrev<CR>				"Do default action for previous item.
+	nnoremap <silent> <space>p  :<C-u>CocListResume<CR>			"Resume latest coc list
+	"--------------------
+endfunction
+
+" vim-plug :
 "--------------------
-let g:ctrlp_cache_dir = $HOME . '/.cache/ctrlp'
-if executable('ag')
-  let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
+if empty(glob('~/.vim/autoload/plug.vim'))
+	silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
+		\ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+	autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
 endif
 
-nnoremap <c-o> :CtrlPMRU<cr>
-nnoremap <c-t> :CtrlPTag<cr>
-let g:ctrlp_regexp = 0
-let g:ctrlp_show_hidden = 1
-let g:ctrlp_open_multiple_files = 'tj'
-let g:ctrlp_prompt_mappings = {
-\ 'AcceptSelection("h")': ['<c-s>', '<c-x>'],
-\ 'ToggleType(1)':        ['<c-l>', '<c-f>'],
-\ 'ToggleType(-1)':       ['<c-h>', '<c-b>'],
-\ }
+call plug#begin('~/.vim/plugged')
+if $VIMPLUG != 'NONE'
+	call LoadLightPlugins()
+	if $VIMPLUG != 'LIGHT'
+		call LoadMediumPlugins()
+		if $VIMPLUG != 'MEDIUM'
+			call LoadHeavyPlugins()
+		endif
+	endif
+endif
+call plug#end()
 
-nnoremap ]t :CtrlPtjump<cr>
-vnoremap ]t :CtrlPtjumpVisual<cr>
-nnoremap [t :pop<cr>
-vnoremap [t :pop<cr>
-let g:ctrlp_tjump_only_silent = 1
+if $VIMPLUG != 'NONE'
+	call ConfigLightPlugins()
+	if $VIMPLUG != 'LIGHT'
+		call ConfigMediumPlugins()
+		if $VIMPLUG != 'MEDIUM'
+			call ConfigHeavyPlugins()
+		endif
+	endif
+endif
 "--------------------
-
-"12" EditorConfig
-"--------------------
-let g:EditorConfig_exclude_patterns = ['fugitive://.*']
-"--------------------
-
-"13" vim-man
-"--------------------
-nnoremap K :Man <C-R><C-W><CR
-"--------------------
-
-"14" taboo
-"-------------------
-let g:taboo_tab_format = " #%N %f [%W] "
-let g:taboo_renamed_tab_format = " #%N %l [%W] "
-let g:taboo_modified_tab_flag = "*"
-let g:taboo_tabline = 0
-
-"15" vim-go
-"-------------------
-" Disable vim-go tags management, use CtrlPTag instead
-let g:go_def_mapping_enabled=0
-
 
 " Include local file
 "--------------------

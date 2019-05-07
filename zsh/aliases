@@ -23,7 +23,15 @@ alias cp="cp -i"
 alias mv="mv -i"
 alias ln="ln -i"
 
-# Misc.
+# Vim
 alias vimrs="vim -S .mysession.vim"
 alias nvimrs="nvim -S .mysession.vim"
+alias vimn="VIMPLUG=NONE vim"
+alias viml="VIMPLUG=LIGHT vim"
+alias vimm="VIMPLUG=MEDIUM vim"
+alias nvimn="VIMPLUG=NONE nvim"
+alias nviml="VIMPLUG=LIGHT nvim"
+alias nvimm="VIMPLUG=MEDIUM nvim"
+
+# Misc.
 alias tvod="livestreamer --twitch-oauth-token $TWITCH_OAUTH_TOKEN --player-passthrough=hls"
