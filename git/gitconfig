@@ -1,5 +1,5 @@
 [user]
-	signingkey = 3E2C5641
+	signingkey = 3AFF16923E2C5641
 	name = aeddi
 	email = antoine.e.b@gmail.com
 
@@ -47,3 +47,5 @@
 	smudge = git-lfs smudge -- %f
 	process = git-lfs filter-process
 	required = true
+[commit]
+	gpgsign = true
