@@ -242,9 +242,11 @@ function! LoadHeavyPlugins()
 			call coc#util#install_extension([
 				\'coc-tsserver',
 				\'coc-python',
+				\'coc-vimlsp',
 				\'coc-json',
 				\'coc-yaml',
 				\'coc-snippets',
+				\'coc-yank',
 				\'coc-css',
 				\'coc-html',
 				\'coc-svg'
@@ -458,13 +460,14 @@ function! ConfigHeavyPlugins()
 	let g:airline_section_warning = '%{airline#util#wrap(airline#extensions#coc#get_warning(),0)}'
 
 	" Using CocList
-	nnoremap <silent> <space>a  :<C-u>CocList diagnostics<cr>	"Show all diagnostics
-	nnoremap <silent> <space>e  :<C-u>CocList extensions<cr>	"Manage extensions
-	nnoremap <silent> <space>c  :<C-u>CocList commands<cr>		"Show commands
-	nnoremap <silent> <space>o  :<C-u>CocList outline<cr>		"Find symbol of current document
-	nnoremap <silent> <space>j  :<C-u>CocNext<CR>				"Do default action for next item.
-	nnoremap <silent> <space>k  :<C-u>CocPrev<CR>				"Do default action for previous item.
-	nnoremap <silent> <space>p  :<C-u>CocListResume<CR>			"Resume latest coc list
+	nnoremap <silent> <space>y  :<C-u>CocList -A --normal yank<cr>	"Show yank history
+	nnoremap <silent> <space>a  :<C-u>CocList diagnostics<cr>		"Show all diagnostics
+	nnoremap <silent> <space>e  :<C-u>CocList extensions<cr>		"Manage extensions
+	nnoremap <silent> <space>c  :<C-u>CocList commands<cr>			"Show commands
+	nnoremap <silent> <space>o  :<C-u>CocList outline<cr>			"Find symbol of current document
+	nnoremap <silent> <space>j  :<C-u>CocNext<CR>					"Do default action for next item.
+	nnoremap <silent> <space>k  :<C-u>CocPrev<CR>					"Do default action for previous item.
+	nnoremap <silent> <space>p  :<C-u>CocListResume<CR>				"Resume latest coc list
 	"--------------------
 endfunction
 

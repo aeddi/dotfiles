@@ -1,5 +1,8 @@
 ### Shell customization ###
 
+# Prevent brew from cleaning previous version on upgrade
+export HOMEBREW_NO_INSTALL_CLEANUP=1
+
 # Set history & misc. parameters
 HISTFILE=$HOME/.histfile
 HISTSIZE=10000
