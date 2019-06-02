@@ -1,0 +1,3 @@
+#!/bin/sh
+
+cat $1 | commitlint --config $HOME/.dotfiles/git/commitlint.config.js
