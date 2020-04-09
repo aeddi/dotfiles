@@ -33,5 +33,5 @@ alias nvimn="VIMPLUG=NONE nvim"
 alias nviml="VIMPLUG=LIGHT nvim"
 alias nvimm="VIMPLUG=MEDIUM nvim"
 
-# Misc.
-alias tvod="livestreamer --twitch-oauth-token $TWITCH_OAUTH_TOKEN --player-passthrough=hls"
+# fzf
+alias fzff="fzf --multi --preview 'bat --color always {}' --bind 'j:down,k:up,ctrl-d:preview-page-down,ctrl-u:preview-page-up' --preview-window='right:60%'"

@@ -52,3 +52,6 @@
 	gpgsign = true
 [init]
 	templatedir = ~/.git-templates
+[hub]
+	host = berty.tech
+	protocol = https

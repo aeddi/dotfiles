@@ -1,0 +1,36 @@
+Todo
+
+Vim:
+ • TODO Startify
+    • Write script that check PR on github
+    • Write script that update language servers
+    • Rebind open in new tab, split, etc...
+    • List notes on startify screen? Maybe only on bigger screen?
+ • TODO Improve fzf command / integration
+    • TODO Read readme entirely https://github.com/junegunn/fzf.vim
+    • TODO Setup shortcut
+    • TODO Replace relevant coc-list
+    • TODO Check this https://gist.github.com/danmikita/d855174385b3059cd6bc399ad799555e
+ • TODO Coc vim
+    • TODO Config list in coc-settings.json
+    • TODO Bind relevant commands
+ • TODO Work on git flow using Gitgutter https://github.com/airblade/vim-gitgutter and vugitive https://github.com/tpope/vim-fugitive
+ • TODO Define if it's usefull to integrate https://github.com/jreybert/vimagit or https://github.com/junegunn/gv.vim
+ • TODO Check or check again:
+    ◦ DONE check tabulous instead of taboo // Far better airline integration with Taboo
+    • DONE commenter plugin alternatives // Already have the best one (simple / efficient)
+    • TODO https://github.com/junegunn/vim-easy-align
+    • TODO https://github.com/simeji/winresizer
+    • TODO https://github.com/unfog-io/unfog-vim
+    • TODO https://github.com/skywind3000/asynctasks.vim
+ • TODO Improve unit test integration with reflex
+ • TODO check smartpairing option https://github.com/tmsvg/pear-tree
+ • TODO setup ranger config (and write plugin based on fzf one?)
+ • TODO read vim-galore https://github.com/mhinz/vim-galore
+ • TODO setup https://github.com/airblade/vim-rooter
+ • TODO check available keys using
+      {{{vim :redir! > vim_keys.txt
+      :silent verbose map
+      :redir END}}}
+ • TODO write notes about keybinds and commands
+ • WIP cleanup vimrc

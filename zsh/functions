@@ -8,16 +8,6 @@ function md()
 	fi
 }
 
-# Find files in path
-function f()
-{
-	if [[ $# -eq 2 ]]; then
-		find "$1" -iname "$2" 2> /dev/null
-	else
-		echo "${fg[red]}Error:${reset_color} usage: f dir pattern"
-	fi
-}
-
 # Launch ssh session with tmux control
 function tssh()
 {
@@ -28,18 +18,6 @@ function tssh()
 				else																\
 					tmux -CC attach -t $SESSION_NAME;								\
 				fi'"
-}
-
-# Merge classic git add / commit / push commands
-function gitf()
-{
-	if [ "$#" -ne 1 ]; then
-		echo "${fg[red]}Error:${reset_color} usage: gitf \"Commit message\"";
-	else
-		git add -A
-		git commit -m $1
-		git push
-	fi
 }
 
 # Set terminal title
@@ -258,30 +236,3 @@ funcion get-torb-ip()
 	TORBIP=$([ ! $TORBIP ] && echo 'none' || echo "$TORBIP")
 	echo "Tor Browser IP: $TORBIP"
 }
-
-### Bookmarks navigation functions ###
-
-export MARKPATH=$HOME/.marks
-
-function jump {
-    cd -P "$MARKPATH/$1" 2>/dev/null || echo "No such mark: $1"
-}
-
-function mark {
-    mkdir -p "$MARKPATH"; ln -s "$(pwd)" "$MARKPATH/$1"
-}
-
-function unmark {
-    rm -i "$MARKPATH/$1"
-}
-
-function marks {
-    \ls -l "$MARKPATH" | tail -n +2 | sed 's/  / /g' | cut -d' ' -f9- | awk -F ' -> ' '{printf "%-10s -> %s\n", $1, $2}'
-}
-
-function _completemarks {
-  reply=($(ls $MARKPATH))
-}
-
-compctl -K _completemarks jump
-compctl -K _completemarks unmark

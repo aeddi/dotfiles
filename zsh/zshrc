@@ -1,3 +1,10 @@
+# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
+# Initialization code that may require console input (password prompts, [y/n]
+# confirmations, etc.) must go above this block, everything else may go below.
+if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+fi
+
 ### Shell customization ###
 
 # Prevent brew from cleaning previous version on upgrade
@@ -21,22 +28,6 @@ fi
 # Enable ZSH completion
 autoload -Uz compinit && compinit
 
-# Get git branch name and dirtiness for right prompt
-function git_prompt_info()
-{
-	ref=$(git symbolic-ref HEAD 2> /dev/null) || return
-	if [[ -n $(git status -s 2> /dev/null) ]]; then
-		dirty="%{$fg_bold[red]%}"
-	else
-		dirty="%{$fg_bold[green]%}"
-	fi
-	echo "$dirty⎇ ${ref#refs/heads/}%{$reset_color%}"
-}
-
-# Prompt configuration
-PROMPT="%{$fg_bold[blue]%}%* %(!.%{$fg_bold[red]%}.%{$fg_bold[yellow]%})%~ %{$reset_color%}> "
-precmd() { RPROMPT="$(git_prompt_info) [%{$fg_no_bold[yellow]%}%?%{$reset_color%}]" } # Re-compute git_prompt_info on each command
-
 # Display CWD as title for xterm* terminals
  case $TERM in
      xterm*)
@@ -47,15 +38,25 @@ precmd() { RPROMPT="$(git_prompt_info) [%{$fg_no_bold[yellow]%}%?%{$reset_color%
 
 ### Zsh plugins ###
 
-source $HOME/.antigen/antigen.zsh
+ANTIGEN_BIN=$HOME/.antigen/antigen.zsh
 
-antigen bundle zsh-users/zsh-history-substring-search.git
+# If antigen is not installed, install it
+if [ ! -f $ANTIGEN_BIN ]; then
+	echo "Installing antigen!..."
+	curl -L git.io/antigen --silent > $ANTIGEN_BIN
+fi
+
+source $ANTIGEN_BIN
+
+antigen theme romkatv/powerlevel10k
+antigen bundle zsh-users/zsh-history-substring-search
 antigen bundle zsh-users/zsh-completions
 antigen bundle Tarrasch/zsh-bd
+antigen bundle jocelynmallon/zshmarks
 
 antigen apply
 
-# bind UP and DOWN arrow keys to history plugin
+# Bind UP and DOWN arrow keys to history plugin
 bindkey '^[[A' history-substring-search-up
 bindkey '^[[B' history-substring-search-down
 
@@ -71,6 +72,8 @@ function include()
 	fi
 }
 
+include $HOME/.p10k.zsh
+include $HOME/.fzf.zsh
 include $HOME/.zshrc_local
 include $HOME/.aliases
 include $HOME/.functions

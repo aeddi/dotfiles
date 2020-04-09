@@ -1,92 +1,69 @@
-" ==============================================================================
-" aeddi's Vim config - 11/2016
-" ==============================================================================
-"
-"	A. BASIC CONFIG
-"		1. Interface
-"		2. Colors
-"		3. Indentation
-"		4. Search
-"		5. Key mapping
-"		6. Commands
-"		7. Misc
-"		8. Yankless paste
-"
-"	B. PERSISTENCE
-"		1. Backups
-"		2. Swap files 3. Restore session
-"		4. Save buffers
-"		5. Undo history
-"
-"	C. PLUGINS
-"		1. Vundle
-"		2. Tomorrow-night
-"		3. ALE
-"		4. Mundo
-"		5. YouCompleteMe
-"		6. EasyMotion
-"		7. Airline
-"		8. Template
-"		9. Rainbow Parentheses
-"		10. UltiSnips
-"		11. CtrlP
-"		12. EditorConfig
-"		13. vim-man
-"		14. Taboo
-"
-" ==============================================================================
+" ===================================================================
+" aeddi's Vim config
+" Last update: 04/2020
+" ===================================================================
 
-" ========================= A. BASIC CONFIG =========================
-"1" Interface :
-"--------------------
-set title						" Display filename in title bar
-set ttyfast						" More reactive displaying
+" =========================
+" A. BASIC CONFIG
+" =========================
+"
+"1. Interface
+"-------------------- {{{
+set title						" Set 'filename [+=-] (path) - NVIM' as terminal title
+set ttyfast						" More reactive displaying (enabled in nvim by default)
 set mousehide					" Hide mouse cursor when typing
-set showcmd						" Show incomplete command
-set wildmenu					" Display command auto-completion with tab
+set mouse-=a					" Disable mouse support in vim
+set wildmenu					" Enable command auto-completion
 set splitbelow					" New horizontal split appears below
 set splitright					" New vertical split appears on right
-set number						" Enable aboslute numbers
-set relativenumber				" And relative numbers (hybrid mode)
-au InsertEnter * :set nornu		" Disable relative on insert
-au InsertLeave * :set rnu		" Enable relative out of insert
-"--------------------
+set number						" Display line numbers in left column
+"-------------------- }}}
 
-"2" Colors :
-"--------------------
-if &term == "screen"
-	set t_Co=256				" Enable 256 colors mode
+"2. Colors
+"-------------------- {{{
+" Setup colors according to the terminal and the vim version
+if (empty($TMUX) && &term != "screen")
+  if (has("nvim"))
+    let $NVIM_TUI_ENABLE_TRUE_COLOR=1
+  endif
+  if (has("termguicolors"))
+    set termguicolors
+  endif
+else
+	set t_Co=256
 endif
-syntax on						" Syntax coloration
-"--------------------
 
-"3" Indentation :
-"--------------------
+syntax on						" Enable syntax colors
+"-------------------- }}}
+
+"3. Indentation
+"-------------------- {{{
 set noexpandtab					" Disable tab to spaces
-set autoindent					" Same indent as previous lines
+set autoindent					" Current line indent based on previous line
 set smartindent					" Auto-indentation in while, if, etc...
-set tabstop=4					" 4 column by tab
+set tabstop=4					" Tab of 4 columns by default
 set shiftwidth=4				" Auto-indent with 4 columns
 set backspace=indent,eol,start	" Restore normal backspace comportement
-"--------------------
+"-------------------- }}}
 
-"4" Search :
-"--------------------
+"4. Search
+"-------------------- {{{
 set history=500					" 500 command line history
-set ignorecase					" Ignore case in search
-set smartcase					" Don't ignore case when capitale is typed
+set ignorecase					" Search in case-insensitive mode
+set smartcase					" Seach in case sensitive mode when query contains uppercase
 set incsearch					" Highlight typed word during typing
-set hlsearch					" Highlight typed word
-"--------------------
+set hlsearch					" Highlight typed word after typing
+"-------------------- }}}
 
-"5" Keybindings :
-"--------------------
+"5. Keybindings
+"-------------------- {{{
 " Enable/Disable paste mode
 set pastetoggle=<F6>
 " Replace escape key
 imap ;j <Esc>
 nmap ;j <Esc>
 vmap ;j <Esc>
+cmap ;j <Esc>
 " Move between splits
 nnoremap <C-J> <C-W><C-J>
 nnoremap <C-K> <C-W><C-K>
@@ -98,34 +75,55 @@ nnoremap } :tabnext <CR>
 " Switch between buffers
 nnoremap [b :bprevious <CR>
 nnoremap ]b :bnext <CR>
+" Scroll command history or completion
+cnoremap <expr> <C-j> pumvisible() ? "\<C-n>" : "\<DOWN>"
+cnoremap <expr> <C-k> pumvisible() ? "\<C-p>" : "\<UP>"
+" Trigger or confirm command completion
+set wildcharm=<TAB>
+cnoremap <expr> <C-l> pumvisible() ? "\<DOWN>" : "\<TAB>"
+" Quick tab switching using tab numbers
+noremap <space>1 1gt
+noremap <space>2 2gt
+noremap <space>3 3gt
+noremap <space>4 4gt
+noremap <space>5 5gt
+noremap <space>6 6gt
+noremap <space>7 7gt
+noremap <space>8 8gt
+noremap <space>9 9gt
+noremap <space>0 :tablast<cr>
+"-------------------- }}}
 
-"6" Commands :
-"--------------------
-" Allow saving file as sudo
+"6. Commands
+"-------------------- {{{
+" Save file as sudo
 command! W :execute ':silent w !sudo tee % > /dev/null' | :edit!
 command! Wq :execute ':W' | :q
 command! WQ :Wq
 " Reload vimrc
-command! Resource :source $MYVIMRC
+command! Source :source ~/.vimrc
 " Abreviation for tabnew
 ca tn tabnew
-"--------------------
+"-------------------- }}}
 
-"7" Misc :
-"--------------------
+"7. Misc
+"-------------------- {{{
+filetype plugin on				" Load the plugin files for specific file type
 set nocompatible				" Disable vi compatibility
 set autoread					" Refresh current file when modified by another editor
-set undolevels=500				" 500 undo history
-set showmatch					" Show matching bracket
+set showmatch					" Hightlight matching bracket
 set matchtime=10				" Show matching bracket for 1 second
-set scrolloff=5					" Display minimum five lines around the cursor
-set sidescrolloff=15			" Display minimum five columns around the cursor
+set scrolloff=5					" Display minimum five lines above/bellow the cursor
+set sidescrolloff=15			" Display minimum five columns on sides of the cursor
 set cursorline					" Display horizontal line on the cursor position
-set nowrap						" Don't wrap text on multiple lines
-"--------------------
+set nowrap						" Disable wrapping the text on multiple lines
+" Fold based on markers in vimrc files only
+autocmd BufRead,BufNewFile .vimrc* set foldmethod=manual
+"-------------------- }}}
 
-"8" Yankless paste :
-"--------------------
+"8. Yankless paste
+"-------------------- {{{
+" Disable copying content when erasing it with a paste
 function! RestoreRegister()
     let @" = s:restore_reg
     return ''
@@ -137,15 +135,15 @@ function! s:Repl()
 endfunction
 
 vnoremap <silent> <expr> p <sid>Repl()
-"--------------------
+"-------------------- }}}
 
 
 " =========================
 " B. PERSISTENCE
 " =========================
 
-"1" Backups :
-"--------------------
+"1. Backups
+"-------------------- {{{
 if isdirectory($HOME . '/.vim/backup') == 0
 	:silent !mkdir -p ~/.vim/backup >/dev/null 2>&1
 endif
@@ -154,32 +152,21 @@ set backupdir+=.
 set backupdir-=~/
 set backupdir^=~/.vim/backup/
 set backup
-"--------------------
+"-------------------- }}}
 
-"2" Swap files :
-"--------------------
+"2. Swap files
+"-------------------- {{{
 if isdirectory($HOME . '/.vim/swap') == 0
 	:silent !mkdir -p ~/.vim/swap >/dev/null 2>&1
 endif
 set directory=~/.vim/swap//
 set directory+=.
-"--------------------
+"-------------------- }}}
 
-"3" Restore session :
-"--------------------
-if !has('nvim')
-	set viminfo+=n~/.vim/viminfo
-endif
-"--------------------
+"3. Undo history
+"-------------------- {{{
+set undolevels=500	" 500 entries in undo history
 
-"4" Save/Restore buffers :
-"--------------------
-set sessionoptions+=tabpages,globals
-map <F5> :mksession! .mysession.vim<CR>
-"--------------------
-
-"5" Undo history :
-"--------------------
 if exists("+undofile")
 	if isdirectory($HOME . '/.vim/undo') == 0
 		:silent !mkdir -p ~/.vim/undo > /dev/null 2>&1
@@ -188,52 +175,76 @@ if exists("+undofile")
 	set undodir=~/.vim/undo//
 	set undofile
 endif
-"--------------------
+"-------------------- }}}
 
 
 " =========================
 " C. PLUGINS
 " =========================
 
+"1. Light plugins import
+""-------------------- {{{
 function! LoadLightPlugins()
-	" Undo tree visualizer
-	Plug 'simnalamburt/vim-mundo', {
-		\'on': 'MundoToggle'
-	\}
-	Plug 'tpope/vim-commentary'				" Comment/uncomment lines
-	Plug 'Lokaltog/vim-easymotion'			" Easier way of navigating within the file
-	Plug 'ctrlpvim/ctrlp.vim'				" Fuzzy content (file, buffer, tags, etc...) finder
-	Plug 'tpope/vim-fugitive'				" Provides git commands
-	Plug 'airblade/vim-gitgutter'			" Mark lines edited since last commit
-	Plug 'takac/vim-hardtime'				" Avoid using anti-pattern in vim
+	Plug 'tpope/vim-commentary'				" Comment/Uncomment faster
+	Plug 'Lokaltog/vim-easymotion'			" Motion improvements
+	Plug 'tpope/vim-fugitive'				" Git commands integration
+	Plug 'tpope/vim-rhubarb'				" Github support for vim-fugitive
+	Plug 'airblade/vim-gitgutter'			" Manage hunks/changes easily
+	Plug 'takac/vim-hardtime'				" Avoid using vim anti-patterns
+	Plug 'tpope/vim-repeat'					" Repeats more things using dot key
+	Plug 'vim-scripts/matchit.zip'			" Binds more matches on % key press
+	Plug 'ntpeters/vim-better-whitespace'	" Removes trailing whitespaces on save
+	Plug 'tmsvg/pear-tree'					" Pairs characters like (), {}, '', etc...
 
 	" Colorize matching parentheses
 	Plug 'luochen1990/rainbow', {
 		\'on': 'RainbowToggle'
 	\}
-	Plug 'vim-scripts/matchit.zip'			" Bind more matches on % key press
-	Plug 'tpope/vim-repeat'					" User-defined mappings can be repeated with . key
-	Plug 'ntpeters/vim-better-whitespace'	" Removes trailing whitespaces on save
-	Plug 'jiangmiao/auto-pairs'				" Auto-close brackets and other paired stuffs
 
-	Plug 'gcmt/taboo.vim'					" Better tabs
+	" Undo tree visualizer
+	Plug 'simnalamburt/vim-mundo', {
+		\'on': 'MundoToggle'
+	\}
+
+	Plug 'junegunn/fzf.vim'					" Fuzzy finder integration
+	Plug 'xolox/vim-misc'					" Required by vim-notes
+	Plug 'xolox/vim-notes'					" Notes/Todo lists manager
+	Plug 'wincent/terminus'					" Enhances vim integration in terminal
 	Plug 'vim-airline/vim-airline'			" Better status bar
+
+	Plug 'gcmt/taboo.vim'					" Improved tabs
 
 	" JS / JSX / JSON / CSS / HTML beautifier
 	Plug 'maksimr/vim-jsbeautify', {
 		\'do': 'git submodule update --init --recursive'
 	\}
-	" Plug 'pangloss/vim-javascript'		" Javascript plugin for syntax and indentation
-	" Plug 'mxw/vim-jsx'					" JSX plugin for syntax and indentation
-	" Plug 'prettier/vim-prettier'			" Pretty format JS, CSS, TS, JSON, etc...
-	Plug 'editorconfig/editorconfig-vim'	" Consistent coding styles across various editors
-endfunction
 
+	" Markdown preview while editing
+	Plug 'iamcco/markdown-preview.nvim', {
+		\'do': 'curl https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/4.0.0/github-markdown.min.css > github.css && cd app && yarn install'
+	\}
+
+	Plug 'editorconfig/editorconfig-vim'	" Consistent coding styles across editors
+	Plug 'mhinz/vim-startify'				" Fancy start screen
+	Plug 'chrisbra/Recover.vim'
+
+	" Plug 'skywind3000/asyncrun.vim'
+	" Plug 'aeddi/vim-floaterm', {
+	" 	\'do': 'pip3 install neovim-remote'
+	" \}
+endfunction
+""-------------------- }}}
+
+"2. Medium plugins import
+"-------------------- {{{
 function! LoadMediumPlugins()
-	Plug 'aeddi/tomorrow-theme'				" Tuned tomorrow-night colorscheme
+	Plug 'joshdick/onedark.vim'				" Clean dark theme
 	Plug 'vim-airline/vim-airline-themes'	" Airline themes
 endfunction
+"-------------------- }}}
 
+"3. Heavy plugins import
+"-------------------- {{{
 function! LoadHeavyPlugins()
 	" Completion framework and language server client
 	function! InstallCoc(info)
@@ -243,13 +254,18 @@ function! LoadHeavyPlugins()
 				\'coc-tsserver',
 				\'coc-python',
 				\'coc-vimlsp',
-				\'coc-json',
-				\'coc-yaml',
-				\'coc-snippets',
-				\'coc-yank',
+				\'coc-java',
+				\'coc-webpack',
 				\'coc-css',
 				\'coc-html',
-				\'coc-svg'
+				\'coc-markdownlint',
+				\'coc-json',
+				\'coc-yaml',
+				\'coc-xml',
+				\'coc-svg',
+				\'coc-snippets',
+				\'coc-lists',
+				\'coc-yank'
 			\])
 		elseif a:info.status == 'updated'
 			call coc#util#update_extensions(1)
@@ -259,17 +275,27 @@ function! LoadHeavyPlugins()
 	Plug 'neoclide/coc.nvim', {
 		\'do': function('InstallCoc')
 	\}
+	Plug 'fatih/vim-go', {
+		\'do': ':GoInstallBinaries'
+	\}
 	Plug 'honza/vim-snippets'				" Snippets collection for many languages
 endfunction
+"-------------------- }}}
 
+"4. Light plugins config
+"-------------------- {{{
 function! ConfigLightPlugins()
-	" Mundo :
+	" Mundo
 	"--------------------
 	nnoremap U :MundoToggle<CR>
 	"--------------------
 
-	" EasyMotion :
+	" EasyMotion
 	"--------------------
+	let g:EasyMotion_do_mapping = 0
+	let g:EasyMotion_smartcase = 1
+	let g:EasyMotion_startofline = 0	"Keep cursor column when JK motion
+
 	map  / <Plug>(easymotion-sn)
 	omap / <Plug>(easymotion-tn)
 
@@ -278,33 +304,17 @@ function! ConfigLightPlugins()
 	map <Leader>k <Plug>(easymotion-k)
 	map <Leader>h <Plug>(easymotion-linebackward)
 
-	let g:EasyMotion_startofline = 0	"Keep cursor column when JK motion
-	"--------------------
-
-	" CtrlP
-	"--------------------
-	let g:ctrlp_cache_dir = $HOME . '/.cache/ctrlp'
-	if executable('ag')
-	  let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
-	endif
-
-	nnoremap <c-o> :CtrlPMRU<cr>
-	nnoremap <c-t> :CtrlPTag<cr>
-	let g:ctrlp_regexp = 0
-	let g:ctrlp_show_hidden = 1
-	let g:ctrlp_open_multiple_files = 'tj'
-	let g:ctrlp_prompt_mappings = {
-	\ 'AcceptSelection("h")': ['<c-s>', '<c-x>'],
-	\ 'ToggleType(1)':        ['<c-l>', '<c-f>'],
-	\ 'ToggleType(-1)':       ['<c-h>', '<c-b>'],
-	\ }
+	augroup easymotion-keymap | au!
+	   au VimEnter * EMCommandLineNoreMap <C-J> <DOWN>
+	   au VimEnter * EMCommandLineNoreMap <C-K> <UP>
+	augroup END
 	"--------------------
 
 	" Gitgutter
 	"-------------------
 	let g:gitgutter_max_signs = 500
-	nmap ]h <Plug>GitGutterNextHunk
-	nmap [h <Plug>GitGutterPrevHunk
+	nmap ]h <Plug>(GitGutterNextHunk)
+	nmap [h <Plug>(GitGutterPrevHunk)
 	"-------------------
 
 	" Rainbow Parentheses :
@@ -315,33 +325,47 @@ function! ConfigLightPlugins()
 
 	" Better-Whitespace :
 	"--------------------
-	let g:strip_whitespace_on_save=1	" Strip on save
-	let g:strip_whitespace_confirm=0	" Strip without confirmation
-	let g:better_whitespace_enabled=0	" Don't highlight trailing whitespace
+	let g:strip_whitespace_on_save= 1	" Strip on save
+	let g:strip_whitespace_confirm= 1	" Strip without confirmation
+	let g:better_whitespace_enabled= 0	" Don't highlight trailing whitespace
 	"--------------------
 
 	" Taboo
 	"-------------------
-	let g:taboo_tab_format = " #%N %f [%W] "
-	let g:taboo_renamed_tab_format = " #%N %l [%W] "
-	let g:taboo_modified_tab_flag = "*"
-	let g:taboo_tabline = 0
+    " set sessionoptions+=tabpages,globals		" Save Taboo tab names in session
+
+	" Define format of tabs
+	let g:taboo_tab_format = "%N➤ %f %m"
+	let g:taboo_renamed_tab_format = "%N➤ %l %m"
+	let g:taboo_modified_tab_flag = "◉"
+
+	let g:airline#extensions#taboo#enabled = 1	" Enable Taboo integration with airline's tabline
 	"--------------------
 
 	" Airline :
 	"--------------------
-	set laststatus=2							"Always show airline
-	let g:airline_powerline_fonts = 1			"Enable patched fonts
+	set noshowmode								" Disable original mode displaying
+	set laststatus=2							" Always show airline
+	let g:airline_powerline_fonts = 1			" Enable patched fonts
+
+	" Enable airline tabline and let Taboo handle tab number
 	let g:airline#extensions#tabline#enabled = 1
-	let g:airline#extensions#tabline#left_sep = ""
-	let g:airline#extensions#tabline#left_alt_sep = ""
 	let g:airline#extensions#tabline#show_tab_nr = 0
-	let g:airline#extensions#tabline#show_buffers = 0
+
+	" Show tabs if at least two are opened
+	let g:airline#extensions#tabline#show_tabs = 1
 	let g:airline#extensions#tabline#tab_min_count = 2
+
+	" Display split list and tab count on the right
+	let g:airline#extensions#tabline#show_splits = 1
+	let g:airline#extensions#tabline#show_tab_count = 1
+
+	" Hide buffer list and close button
+	let g:airline#extensions#tabline#show_buffers = 0
 	let g:airline#extensions#tabline#show_close_button = 0
-	let g:airline#extensions#tabline#show_tab_type = 0
-	let g:airline#extensions#tabline#show_splits = 0
-	set noshowmode
+
+	" Display only filename in buffer list
+	let g:airline#extensions#tabline#fnamemod = ':t'
 	"--------------------
 
 	" JS-Beautify
@@ -368,43 +392,151 @@ function! ConfigLightPlugins()
 	" EditorConfig
 	"--------------------
 	let g:EditorConfig_exclude_patterns = ['fugitive://.*']
+	let g:EditorConfig_disable_rules = ['trim_trailing_whitespace']
 	"--------------------
+
+" Startify
+function! UpdatePlugins()
+	if $VIMPLUG == ''	" Vim config is in heavy mode so coc is loaded
+		:exec 'CocUpdate'
+	endif
+	:exec 'PlugUpgrade'
+	:exec 'PlugUpdate'
 endfunction
 
+function! UpdateLSP()
+endfunction
+
+function! CheckoutPR()
+	:exec "AsyncRun -raw echo 'Not implemented (yet)!'"
+endfunction
+
+let g:startify_commands = [
+	\ {'c': ['checkout pull requests', 'call CheckoutPR()']},
+	\ {'u': ['update plugins', 'call UpdatePlugins()']},
+	\ {'s': ['update language servers', 'call UpdateLSP()']},
+\ ]
+
+let g:startify_enable_special = 0
+let g:startify_files_number = 5
+let g:startify_session_persistence = 0
+let g:startify_session_sort = 1
+let g:startify_custom_header = startify#fortune#boxed(startify#fortune#quote())
+let g:startify_change_to_vcs_root = 0
+let g:startify_custom_indices = map(range(1,100), 'string(v:val)')
+let g:startify_bookmarks = [ {'v': '~/.vimrc'}, {'z': '~/.zshrc'} ]
+let g:startify_lists = [
+	\ { 'type': 'sessions',  'header': ['   Sessions']       },
+	\ { 'type': 'files',     'header': ['   Recent Files']   },
+	\ { 'type': 'commands',  'header': ['   Commands']       },
+	\ { 'type': 'bookmarks', 'header': ['   Bookmarks']      },
+\ ]
+
+autocmd User Startified setlocal buflisted
+
+" Fuzzy finder
+let g:fzf_preview_window = 'right:60%'
+command! -bang -nargs=? -complete=dir Files call fzf#vim#files(<q-args>, {'options': ['--bind', 'ctrl-d:preview-page-down,ctrl-u:preview-page-up', '--preview', 'bat {} --style="numbers,changes,grid" --theme TwoDark --color always', '--preview-window', 'right:60%']}, <bang>0)
+
+function! RipgrepFzf(query, fullscreen)
+	let command_fmt = 'rg --column --line-number --no-heading --color=always --smart-case %s || true'
+	let initial_command = printf(command_fmt, shellescape(a:query))
+	let reload_command = printf(command_fmt, '{q}')
+	let spec = {'options': ['--phony', '--query', a:query, '--bind', 'ctrl-d:preview-page-down,ctrl-u:preview-page-up,change:reload:'.reload_command]}
+	call fzf#vim#grep(initial_command, 1, fzf#vim#with_preview(spec), a:fullscreen)
+endfunction
+
+command! -nargs=* -bang RG call RipgrepFzf(<q-args>, <bang>0)
+
+" AsyncRun
+"--------------------
+let g:asyncrun_open = 8
+
+function! Test()
+	if &filetype == 'go'
+		:exec 'AsyncRun go test -v %:p:h'
+	else
+		:echo "No test command for '". &filetype . "' filetype"
+	endif
+endfunction
+
+command! Test :call Test()
+
+" Pear tree
+let g:pear_tree_repeatable_expand = 0
+
+" Terminus
+let g:TerminusMouse=0
+
+" Vim-notes
+let g:notes_directories=['~/.vim/notes_local', '~/.vim/notes']
+
+" MarkDown Preview
+let g:mkdp_auto_close = 0
+let g:mkdp_refresh_slow = 0
+if has('macunix')
+	let g:mkdp_browser = 'Safari'
+else
+	" TODO: select an unused browser
+endif
+let g:mkdp_markdown_css = expand('~/.vim/plugged/markdown-preview.nvim/github.css')
+endfunction
+"-------------------- }}}
+
+"5. Medium plugins config
+"-------------------- {{{
 function! ConfigMediumPlugins()
-	" Tomorrow-night :
+	" OneDark theme :
 	"--------------------
-	silent! colorscheme Tomorrow-Night		"Enable theme with silent! to avoid error on first launch
+	silent! colorscheme onedark		"Enable theme with silent! to avoid error on first launch
+	if ($TERM_PROGRAM == 'Iterm.app')
+		let g:onedark_terminal_italics=1
+	endif
 	"--------------------
 
 	" Airline :
 	"--------------------
-	let g:airline_theme = 'tomorrow'
+	let g:airline_theme = 'onedark'
 	"--------------------
 endfunction
+"-------------------- }}}
 
+"6. Heavy plugins config
+" vim-plug :
+""-------------------- {{{
 function! ConfigHeavyPlugins()
+	let g:go_fmt_command = "goimports"
 	" Coc :
 	"--------------------
+	let g:airline#extensions#coc#enabled = 1
+	" let airline#extensions#coc#error_symbol = 'Error:'
+	" let airline#extensions#coc#warning_symbol = 'Warning:'
+	" let airline#extensions#coc#stl_format_err = '%E{[%e(#%fe)]}'
+	" let airline#extensions#coc#stl_format_warn = '%W{[%w(#%fw)]}'
+
 	set hidden			"If hidden is not set, TextEdit might fail.
-	set cmdheight=2		"Better display for messages
 	set updatetime=300	"Smaller updatetime for CursorHold & CursorHoldI
 	set shortmess+=c	"Don't give |ins-completion-menu| messages.
 	set signcolumn=yes	"Always show signcolumns
 
-	" Some server have issues with backup files, see #649
+	" " Some server have issues with backup files, see #649
 	set nobackup
 	set nowritebackup
 
 	" Keybinds for completion
-	inoremap <silent><expr> <C-j> pumvisible() ? "\<C-n>" : "\<C-j>"	"Scroll downward
-	inoremap <expr> <C-k> pumvisible() ? "\<C-p>" : "\<C-k>"			"Scroll upward
-	inoremap <expr> <C-l> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"		"Confirm completion
-	inoremap <silent><expr> <c-space> coc#refresh()						"Trigger completion
+	inoremap <silent><expr> <C-j> pumvisible() ? "\<C-n>" : "\<C-j>"
+	inoremap <expr> <C-k> pumvisible() ? "\<C-p>" : "\<C-k>"
+	inoremap <silent><expr> <c-space> coc#refresh()
+
+	if has('patch8.1.1068')
+		inoremap <expr> <C-l> complete_info()["selected"] != "-1" ? "\<C-y>" : "\<C-g>u\<CR>"		"Confirm completion
+	else
+		imap <expr> <C-l> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"		"Confirm completion
+	endif
 
 	" Use `[c` and `]c` for navigate diagnostics
-	nmap <silent> [c <Plug>(coc-diagnostic-prev)
-	nmap <silent> ]c <Plug>(coc-diagnostic-next)
+	nmap <silent> [e <Plug>(coc-diagnostic-prev)
+	nmap <silent> ]e <Plug>(coc-diagnostic-next)
 
 	" Remap keys for gotos
 	nmap <silent> gd <Plug>(coc-definition)
@@ -412,11 +544,14 @@ function! ConfigHeavyPlugins()
 	nmap <silent> gi <Plug>(coc-implementation)
 	nmap <silent> gr <Plug>(coc-references)
 
+	nmap <silent> rs <Plug>(coc-rename)
+	nmap <silent> rr <Plug>(coc-refactor)
+
 	" Use K for show documentation in preview window
 	nnoremap <silent> K :call <SID>show_documentation()<CR>
 
 	function! s:show_documentation()
-	if &filetype == 'vim'
+	if (index(['vim','help'], &filetype) >= 0)
 		execute 'h '.expand('<cword>')
 	else
 		call CocAction('doHover')
@@ -426,12 +561,9 @@ function! ConfigHeavyPlugins()
 	" Highlight symbol under cursor on CursorHold
 	autocmd CursorHold * silent call CocActionAsync('highlight')
 
-	" Remap for rename current word
-	nmap <leader>rn <Plug>(coc-rename)
-
 	" Remap for format selected region
-	vmap <leader>f  <Plug>(coc-format-selected)
-	nmap <leader>f  <Plug>(coc-format-selected)
+	" vmap <leader>f  <Plug>(coc-format-selected)
+	" nmap <leader>f  <Plug>(coc-format-selected)
 
 	augroup mygroup
 		autocmd!
@@ -450,33 +582,50 @@ function! ConfigHeavyPlugins()
 	" Fix autofix problem of current line
 	nmap <leader>qf  <Plug>(coc-fix-current)
 
+	" Introduce function text object
+	" NOTE: Requires 'textDocument.documentSymbol' support from the language server.
+	xmap if <Plug>(coc-funcobj-i)
+	xmap af <Plug>(coc-funcobj-a)
+	omap if <Plug>(coc-funcobj-i)
+	omap af <Plug>(coc-funcobj-a)
+
 	" Use `:Format` for format current buffer
 	command! -nargs=0 Format :call CocAction('format')
 
-	" if you want to disable auto detect, comment out those two lines
-	let g:airline#extensions#disable_rtp_load = 1
-	let g:airline_extensions = ['branch', 'hunks', 'coc']
-	let g:airline_section_error = '%{airline#util#wrap(airline#extensions#coc#get_error(),0)}'
-	let g:airline_section_warning = '%{airline#util#wrap(airline#extensions#coc#get_warning(),0)}'
+	" Add `:Fold` command to fold current buffer.
+	command! -nargs=? Fold :call     CocAction('fold', <f-args>)
+
+	" Add `:OR` command for organize imports of the current buffer.
+	command! -nargs=0 OR   :call     CocAction('runCommand', 'editor.action.organizeImport')
 
 	" Using CocList
-	nnoremap <silent> <space>y  :<C-u>CocList -A --normal yank<cr>	"Show yank history
-	nnoremap <silent> <space>a  :<C-u>CocList diagnostics<cr>		"Show all diagnostics
-	nnoremap <silent> <space>e  :<C-u>CocList extensions<cr>		"Manage extensions
+	nnoremap <silent> <space>l  :<C-u>CocList --normal<cr>
+	nnoremap <silent> <space>b  :<C-u>CocList --auto-preview --normal buffers<cr>
+
+	nnoremap <silent> <space>y  :<C-u>CocList --normal yank<cr>	"Show yank history
+	nnoremap <silent> <space>e  :<C-u>CocList --normal diagnostics <cr>		"Manage extensions
+
 	nnoremap <silent> <space>c  :<C-u>CocList commands<cr>			"Show commands
+	" nnoremap <silent> <space>s  :<C-u>CocList --interactive grep -smartcase -workspace<cr>			"Show commands
+	" nnoremap <silent> <space>f  :<C-u>CocList files -workspace<cr>			"Show commands
+	nnoremap <silent> <space>s  :<C-u>RG<cr>
+	nnoremap <silent> <space>f  :<C-u>Files<cr>
+	nnoremap <silent> <space>/ 	:<C-u>Lines<cr>
+	nnoremap <silent> <space>:  :<C-u>CocList vimcommands<cr>
+
 	nnoremap <silent> <space>o  :<C-u>CocList outline<cr>			"Find symbol of current document
 	nnoremap <silent> <space>j  :<C-u>CocNext<CR>					"Do default action for next item.
 	nnoremap <silent> <space>k  :<C-u>CocPrev<CR>					"Do default action for previous item.
-	nnoremap <silent> <space>p  :<C-u>CocListResume<CR>				"Resume latest coc list
-	"--------------------
+	nnoremap <silent> <space>r  :<C-u>CocListResume<CR>				"Resume latest coc list
 endfunction
+""-------------------- }}}
 
-" vim-plug :
-"--------------------
+"7. Load import and config
+"-------------------- {{{
 if empty(glob('~/.vim/autoload/plug.vim'))
 	silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
 		\ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-	autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
+	autocmd VimEnter * PlugInstall --sync | source ~/.vimrc
 endif
 
 call plug#begin('~/.vim/plugged')
@@ -500,12 +649,12 @@ if $VIMPLUG != 'NONE'
 		endif
 	endif
 endif
-"--------------------
+"-------------------- }}}
 
 " Include local file
-"--------------------
+"-------------------- {{{
 let $LOCALFILE=expand("~/.vimrc_local")
 if filereadable($LOCALFILE)
 	source $LOCALFILE
 endif
-"--------------------
+"-------------------- }}}
