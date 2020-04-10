@@ -28,6 +28,7 @@ Vim:
  • TODO setup ranger config (and write plugin based on fzf one?)
  • TODO read vim-galore https://github.com/mhinz/vim-galore
  • TODO setup https://github.com/airblade/vim-rooter
+ • TODO map leader to space?
  • TODO check available keys using
       {{{vim :redir! > vim_keys.txt
       :silent verbose map
