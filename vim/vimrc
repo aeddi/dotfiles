@@ -43,14 +43,14 @@ set autoindent					" Current line indent based on previous line
 set smartindent					" Auto-indentation in while, if, etc...
 set tabstop=4					" Tab of 4 columns by default
 set shiftwidth=4				" Auto-indent with 4 columns
-set backspace=indent,eol,start	" Restore normal backspace comportement
+set backspace=indent,eol,start	" Restore normal backspace behavior
 "-------------------- }}}
 
 "4. Search
 "-------------------- {{{
 set history=500					" 500 command line history
 set ignorecase					" Search in case-insensitive mode
-set smartcase					" Seach in case sensitive mode when query contains uppercase
+set smartcase					" Search in case sensitive mode when query contains uppercase
 set incsearch					" Highlight typed word during typing
 set hlsearch					" Highlight typed word after typing
 "-------------------- }}}
@@ -102,7 +102,7 @@ command! Wq :execute ':W' | :q
 command! WQ :Wq
 " Reload vimrc
 command! Source :source ~/.vimrc
-" Abreviation for tabnew
+" Abbreviation for tabnew
 ca tn tabnew
 "-------------------- }}}
 
@@ -266,6 +266,8 @@ endfunction
 function! LoadMediumPlugins()
 	Plug 'joshdick/onedark.vim'				" Clean dark theme
 	Plug 'vim-airline/vim-airline-themes'	" Airline themes
+	Plug 'HerringtonDarkholme/yats.vim'		" Typescript react highlighting
+	Plug 'maxmellon/vim-jsx-pretty'			" React syntax highlighting (depends on yats for typescript)
 endfunction
 "-------------------- }}}
 
@@ -277,33 +279,35 @@ function! LoadHeavyPlugins()
 		if a:info.status == 'installed' || a:info.force
 			call coc#util#install()
 			call coc#util#install_extension([
-				\'coc-tsserver',
-				\'coc-python',
-				\'coc-vimlsp',
-				\'coc-java',
-				\'coc-webpack',
 				\'coc-css',
 				\'coc-html',
-				\'coc-markdownlint',
+				\'coc-java',
 				\'coc-json',
-				\'coc-yaml',
-				\'coc-xml',
-				\'coc-svg',
-				\'coc-snippets',
 				\'coc-lists',
+				\'coc-markdownlint',
+				\'coc-marketplace',
+				\'coc-prettier',
+				\'coc-python',
+				\'coc-snippets',
+				\'coc-svg',
+				\'coc-tsserver',
+				\'coc-vimlsp',
+				\'coc-webpack',
+				\'coc-xml',
+				\'coc-yaml',
 				\'coc-yank'
 			\])
-		elseif a:info.status == 'updated'
-			call coc#util#update_extensions(1)
+			"  'coc-spell-checker'
+			call InstallLSP()
 		endif
 	endfunction
 
 	Plug 'neoclide/coc.nvim', {
 		\'do': function('InstallCoc')
 	\}
-	Plug 'fatih/vim-go', {
-		\'do': ':GoInstallBinaries'
-	\}
+	" Plug 'fatih/vim-go', {
+	" 	\'do': ':GoInstallBinaries'
+	" \}
 	Plug 'honza/vim-snippets'				" Snippets collection for many languages
 endfunction
 "-------------------- }}}
@@ -360,6 +364,9 @@ function! ConfigLightPlugins()
 	let g:strip_whitespace_on_save= 1	" Strip on save
 	let g:strip_whitespace_confirm= 1	" Strip without confirmation
 	let g:better_whitespace_enabled= 0	" Don't highlight trailing whitespace
+	" On Markdown display trailing whitespace and don't strip them
+	autocmd FileType markdown EnableWhitespace
+	autocmd FileType markdown DisableStripWhitespaceOnSave
 	"-------------------- }}}
 
 	" Taboo
@@ -431,26 +438,68 @@ function! ConfigLightPlugins()
 
 	" Startify
 	"-------------------- {{{
-	" TODO: Comment this
-	function! UpdatePlugins()
-		if $VIMPLUG == ''	" Vim config is in heavy mode so coc is loaded
-			:exec 'CocUpdate'
+	function! UpdateAll()
+		" Update plug first then its plugins
+		exec 'PlugUpgrade'
+		exec 'PlugUpdate'
+
+		" Vim config is in heavy mode so coc is loaded
+		if $VIMPLUG == ''
+			autocmd BufLeave <buffer> call UpdateCoc()
 		endif
-		:exec 'PlugUpgrade'
-		:exec 'PlugUpdate'
 	endfunction
 
-	function! UpdateLSP()
+	function! UpdateCoc()
+		vertical topleft new
+
+		" Setup buffer only for next buffer then disable `autocmd BufEnter`
+		augroup custom_update_coc
+			autocmd BufEnter * call SetupCocUpdateBuffer() | autocmd! custom_update_coc BufEnter *
+		augroup END
+
+		call coc#rpc#notify('updateExtensions', [v:true])
+
+		function! SetupCocUpdateBuffer()
+			setlocal buftype=nofile bufhidden=wipe nobuflisted nolist noswapfile nowrap nocursorline modifiable nospell
+			setf vim-plug
+			autocmd BufLeave <buffer> call InstallLSP()
+			nnoremap <silent><nowait><buffer> q :q<CR>
+		endfunction
+	endfunction
+
+	function! InstallLSP()
+		let install_commands = [
+			\ {'name': 'gopls',                'command': 'GO111MODULE=on go get -v golang.org/x/tools/gopls@latest'},
+			\ {'name': 'bash-language-server', 'command': 'npm install --global bash-language-server'},
+			\ {'name': 'docker-langserver',    'command': 'npm install --global dockerfile-language-server-nodejs'},
+		\ ]
+
+		let i = 0
+		let t = len(install_commands)
+		let install_script = 'echo "$(tput bold)$(tput setaf 3)Install Language Server Protocols ('.string(t).')$(tput sgr0)" &&'
+
+		for install_command in install_commands
+			let i += 1
+			let install_script = install_script.' echo "\n$(tput bold)$(tput setaf 4)Install '.install_command['name'].' ['.string(i).'/'.string(t).']$(tput sgr0)\n" &&'
+			let install_script = install_script.' '.install_command['command'].' &&'
+		endfor
+
+		let install_script = install_script.' echo "\n$(tput bold)$(tput setaf 2)Success!$(tput sgr0)" || (echo "\n$(tput bold)$(tput setaf 1)Error!$(tput sgr0)" && exit 1)'
+
+		vertical topleft new
+		exec 'term '.install_script
+		silent! execute 'f' fnameescape(' ')
+		setlocal bufhidden=wipe nobuflisted nolist noswapfile nowrap nocursorline modifiable nospell
+		nnoremap <silent><nowait><buffer> q :q<CR>
 	endfunction
 
 	function! CheckoutPR()
-		:exec "AsyncRun -raw echo 'Not implemented (yet)!'"
+		echo 'Not implemented (yet)!'
 	endfunction
 
 	let g:startify_commands = [
 		\ {'c': ['checkout pull requests', 'call CheckoutPR()']},
-		\ {'u': ['update plugins', 'call UpdatePlugins()']},
-		\ {'s': ['update language servers', 'call UpdateLSP()']},
+		\ {'u': ['update plugins and language servers', 'call UpdateAll()']},
 	\ ]
 
 	let g:startify_session_persistence = 0			" TODO: Can't disable persistence
@@ -672,10 +721,12 @@ function! ConfigHeavyPlugins()
 	nnoremap <silent> <space>r  :<C-u>CocListResume<CR>				"Resume latest coc list
 	"-------------------- }}}
 
+	autocmd BufWritePre *.go :call CocAction('runCommand', 'editor.action.organizeImport')
 	" vim-go :
 	"-------------------- {{{
 	" TODO: Comment this
-	let g:go_fmt_command = "goimports"
+	" let g:go_fmt_command = "goimports"
+	" let g:go_gopls_enabled = 0
 	"-------------------- }}}
 endfunction
 "-------------------- }}}

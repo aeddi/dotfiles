@@ -1,16 +1,20 @@
 Todo
 
 Vim:
- • TODO Startify
-    • Write script that check PR on github
-    • Write script that update language servers
-    • Rebind open in new tab, split, etc...
-    • List notes on startify screen? Maybe only on bigger screen?
+ • TODO setup ranger config (and write plugin based on fzf one?)
  • TODO Improve fzf command / integration
     • TODO Read readme entirely https://github.com/junegunn/fzf.vim
     • TODO Setup shortcut
     • TODO Replace relevant coc-list
     • TODO Check this https://gist.github.com/danmikita/d855174385b3059cd6bc399ad799555e
+ • TODO setup https://github.com/airblade/vim-rooter
+ • TODO map leader to space?
+ • TODO check available keys using
+      {{{vim :redir! > vim_keys.txt
+      :silent verbose map
+      :redir END}}}
+ • TODO Fix coc config file path (.config/nvim)
+ • TODO write notes about keybinds and commands
  • TODO Coc vim
     • TODO Config list in coc-settings.json
     • TODO Bind relevant commands
@@ -25,13 +29,14 @@ Vim:
     • TODO https://github.com/skywind3000/asynctasks.vim
  • TODO Improve unit test integration with reflex
  • TODO check smartpairing option https://github.com/tmsvg/pear-tree
- • TODO setup ranger config (and write plugin based on fzf one?)
- • TODO read vim-galore https://github.com/mhinz/vim-galore
- • TODO setup https://github.com/airblade/vim-rooter
- • TODO map leader to space?
- • TODO check available keys using
-      {{{vim :redir! > vim_keys.txt
-      :silent verbose map
-      :redir END}}}
- • TODO write notes about keybinds and commands
  • WIP cleanup vimrc
+ • TODO Startify
+    • TODO Write script that check PR on github
+    • DONE Write script that update language servers
+    • TODO Rebind open in new tab, split, etc...
+    • TODO List notes on startify screen? Maybe only on bigger screen?
+ • TODO read vim-galore https://github.com/mhinz/vim-galore
+
+Zsh:
+  . TODO Cheat command
+  . TODO Fzf command

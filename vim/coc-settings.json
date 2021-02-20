@@ -1,33 +1,53 @@
 {
-	"list.autoResize": true,
-	"list.insertMappings": {
-		"<C-c>": "do:exit"
-	},
-	"list.normalMappings": {
-		"<C-c>": "do:exit"
-	},
-	"list.source.symbols.defaultOptions": [
-		"--interactive",
-		"--normal"
-	],
-	"list.source.output.defaultOptions": [
-		"--normal"
-	],
-	"coc.preferences.formatOnSaveFiletypes": [
-		"json"
-	],
-	"languageserver": {
-		"dockerfile": {
-		  "command": "docker-langserver",
-		  "filetypes": ["dockerfile"],
-		  "args": ["--stdio"]
-		},
-		"bash": {
-		  "command": "bash-language-server",
-		  "args": ["start"],
-		  "filetypes": ["sh"],
-		  "ignoredRootPaths": ["~"]
-		}
+  "coc.preferences.jumpCommand": "tab drop",
+  "list.autoResize": true,
+  "list.insertMappings": {
+    "<C-c>": "do:exit"
   },
-  "coc.preferences.extensionUpdateCheck": "daily"
+  "list.normalMappings": {
+    "<C-c>": "do:exit"
+  },
+  "list.source.symbols.defaultOptions": ["--interactive", "--normal"],
+  "list.source.output.defaultOptions": ["--normal"],
+  "coc.preferences.formatOnSaveFiletypes": [
+    "go",
+    "json",
+    "typescript",
+    "typescriptreact",
+    "javascript",
+    "javascriptreact"
+  ],
+  "languageserver": {
+    "golang": {
+      "command": "gopls",
+      "initializationOptions": {
+        "completeUnimported": true,
+        "usePlaceholders": true,
+        "gofumpt": true
+      },
+      "rootPatterns": ["go.mod"],
+      "disableWorkspaceFolders": true,
+      "filetypes": ["go"]
+    },
+    "dockerfile": {
+      "command": "docker-langserver",
+      "filetypes": ["dockerfile"],
+      "args": ["--stdio"]
+    },
+    "bash": {
+      "command": "bash-language-server",
+      "args": ["start"],
+      "filetypes": ["sh"],
+      "ignoredRootPaths": ["~"]
+    }
+  },
+  "coc.preferences.extensionUpdateCheck": "daily",
+  "cSpell.userWords": [
+    "Berty",
+    "Unmount",
+    "archs",
+    "elif",
+    "mkdir",
+    "unmarshaling"
+  ]
 }
