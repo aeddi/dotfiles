@@ -204,10 +204,10 @@ format_subscript()
 vim_config()
 {
 	DEP=('vim' 'git')
-	[[ "${SELECTED[@]}" =~ "vim-full" ]] && DEP+=('ycm')
-	install_packages "${DEP[@]}"															\
-	|| { printf -- "${OPS}Continue installation without depencies or Abort? [C|a]${RESET} "	\
-		&& read INPUT; [[ $INPUT == 'a' || $INPUT == 'A' ]] && return 2; }
+	# [[ "${SELECTED[@]}" =~ "vim-full" ]] && DEP+=('ycm')
+	# install_packages "${DEP[@]}"															\
+	# || { printf -- "${OPS}Continue installation without depencies or Abort? [C|a]${RESET} "	\
+	# 	&& read INPUT; [[ $INPUT == 'a' || $INPUT == 'A' ]] && return 2; }
 	cd $HOME
 
 	[[ "${SELECTED[@]}" =~ "vim-full" ]] && { create_symlink vim/vimrc $HOME/.vimrc || return; }
@@ -251,14 +251,14 @@ vim_config()
 		sleep 0.2
 	done
 
-	if [[ "${SELECTED[@]}" =~ "vim-full" ]]; then
-		printf "${OPS}Installing YouCompleteMe server...${RESET}\n"
-		printf -- "${DELIM4}\n"
-		$HOME/.vim/bundle/YouCompleteMe/install.py --all 2>&1	\
-		| (format_subscript; printf -- "${DELIM4}\n\n");		\
-		ERR=${PIPESTATUS[0]}; [[ $ERR -ne 0 ]] && return 1
-		cd $HOME
-	fi
+	# if [[ "${SELECTED[@]}" =~ "vim-full" ]]; then
+		# printf "${OPS}Installing YouCompleteMe server...${RESET}\n"
+		# printf -- "${DELIM4}\n"
+		# $HOME/.vim/bundle/YouCompleteMe/install.py --all 2>&1	\
+		# | (format_subscript; printf -- "${DELIM4}\n\n");		\
+		# ERR=${PIPESTATUS[0]}; [[ $ERR -ne 0 ]] && return 1
+		# cd $HOME
+	# fi
 
 	if [ ! -f $HOME/.vimrc_local ]; then
 		printf "${OPS}Adding .vimrc_local config file:${RESET} "

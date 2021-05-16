@@ -58,7 +58,7 @@ set hlsearch					" Highlight typed word after typing
 "5. Keybindings
 "-------------------- {{{
 " Enable/Disable paste mode
-set pastetoggle=<F6>
+set pastetoggle=<F12>
 " Replace escape key
 imap ;j <Esc>
 nmap ;j <Esc>
@@ -241,16 +241,16 @@ function! LoadLightPlugins()
 	Plug 'xolox/vim-misc'					" Required by vim-notes
 	Plug 'xolox/vim-notes'					" Notes/Todo lists manager
 
-	if isdirectory('/usr/local/opt/fzf')
-		" Use fzf command installed using brew
-		Plug '/usr/local/opt/fzf'
-	else
-		" Use fzf command installed using plug
-		Plug 'junegunn/fzf', {
-			/'do': { -> fzf#install() }
-		/}
-	endif
-	Plug 'junegunn/fzf.vim'					" Fuzzy Finder integration in vim
+	" if isdirectory('/usr/local/opt/fzf')
+	" 	" Use fzf command installed using brew
+	" 	Plug '/usr/local/opt/fzf'
+	" else
+	" 	" Use fzf command installed using plug
+	" 	Plug 'junegunn/fzf', {
+	" 		/'do': { -> fzf#install() }
+	" 	/}
+	" endif
+	" Plug 'junegunn/fzf.vim'					" Fuzzy Finder integration in vim
 	"-------------------- }}}
 
 	" TODO: Test and config (or remove) this plugins
@@ -305,9 +305,9 @@ function! LoadHeavyPlugins()
 	Plug 'neoclide/coc.nvim', {
 		\'do': function('InstallCoc')
 	\}
-	" Plug 'fatih/vim-go', {
-	" 	\'do': ':GoInstallBinaries'
-	" \}
+	Plug 'fatih/vim-go', {
+		\'do': ':GoUpdateBinaries'
+	\}
 	Plug 'honza/vim-snippets'				" Snippets collection for many languages
 endfunction
 "-------------------- }}}
@@ -507,7 +507,7 @@ function! ConfigLightPlugins()
 	let g:startify_enable_special = 0
 	let g:startify_files_number = 5
 	let g:startify_session_sort = 1
-	let g:startify_custom_header = startify#fortune#boxed(startify#fortune#quote())
+	" let g:startify_custom_header = startify#fortune#boxed(startify#fortune#quote())
 	let g:startify_custom_indices = map(range(1,100), 'string(v:val)')
 	let g:startify_bookmarks = [ {'v': '~/.vimrc'}, {'z': '~/.zshrc'} ]
 	let g:startify_lists = [
@@ -768,3 +768,7 @@ if filereadable($LOCALFILE)
 	source $LOCALFILE
 endif
 "-------------------- }}}
+
+" let g:go_gopls_enabled = 0
+let g:go_debug_breakpoint_sign_text = '=>'
+

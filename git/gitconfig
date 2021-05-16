@@ -1,5 +1,5 @@
 [user]
-	signingkey = 3AFF16923E2C5641
+	; signingkey = 3AFF16923E2C5641
 	name = aeddi
 	email = antoine.e.b@gmail.com
 
@@ -45,7 +45,7 @@
 	path = ~/.gitconfig_local
 
 [commit]
-	gpgsign = true
+	; gpgsign = true
 
 [init]
 	templatedir = ~/.git-templates

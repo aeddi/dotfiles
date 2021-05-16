@@ -1,3 +1,6 @@
+# Needs to be before P10K instant prompt
+source $HOME/.zshrc_patch_sudo
+
 # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
 # Initialization code that may require console input (password prompts, [y/n]
 # confirmations, etc.) must go above this block, everything else may go below.
@@ -11,9 +14,12 @@ fi
 export HOMEBREW_NO_INSTALL_CLEANUP=1
 
 # Set history & misc. parameters
-HISTFILE=$HOME/.histfile
+HISTFILE=$HOME/.zsh_history
 HISTSIZE=10000
 SAVEHIST=10000
+setopt    appendhistory     #Append history to the history file (no overwriting)
+setopt    sharehistory      #Share history across terminals
+setopt    incappendhistory  #Immediately append to the history file, not just when a term is killed
 setopt extendedglob
 autoload -U colors && colors
 
@@ -73,7 +79,7 @@ function include()
 }
 
 include $HOME/.p10k.zsh
-include $HOME/.fzf.zsh
+#include $HOME/.fzf.zsh
 include $HOME/.zshrc_local
 include $HOME/.aliases
 include $HOME/.functions
