@@ -17,10 +17,10 @@ export HOMEBREW_NO_INSTALL_CLEANUP=1
 HISTFILE=$HOME/.zsh_history
 HISTSIZE=10000
 SAVEHIST=10000
-setopt    appendhistory     #Append history to the history file (no overwriting)
-setopt    sharehistory      #Share history across terminals
-setopt    incappendhistory  #Immediately append to the history file, not just when a term is killed
-setopt extendedglob
+setopt   appendhistory     #Append history to the history file (no overwriting)
+setopt   sharehistory      #Share history across terminals
+setopt   incappendhistory  #Immediately append to the history file, not just when a term is killed
+setopt   extendedglob
 autoload -U colors && colors
 
 # Ensure permissions are correct for ZSH completion
@@ -44,11 +44,13 @@ autoload -Uz compinit && compinit
 
 ### Zsh plugins ###
 
-ANTIGEN_BIN=$HOME/.antigen/antigen.zsh
+ANTIGEN_DIR=$HOME/.antigen
+ANTIGEN_BIN=$ANTIGEN_DIR/antigen.zsh
 
 # If antigen is not installed, install it
 if [ ! -f $ANTIGEN_BIN ]; then
 	echo "Installing antigen!..."
+	mkdir -p $ANTIGEN_DIR
 	curl -L git.io/antigen --silent > $ANTIGEN_BIN
 fi
 

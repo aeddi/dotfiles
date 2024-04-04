@@ -30,3 +30,7 @@ a.out
 .Trashes
 ehthumbs.db
 Thumbs.db
+
+# Swift packages #
+##################
+.swiftpm

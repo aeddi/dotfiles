@@ -258,6 +258,9 @@ function! LoadLightPlugins()
 	" Plug 'aeddi/vim-floaterm', {
 	" 	\'do': 'pip3 install neovim-remote'
 	" \}
+
+	Plug 'norcalli/nvim-colorizer.lua'
+
 endfunction
 "-------------------- }}}
 
@@ -305,9 +308,9 @@ function! LoadHeavyPlugins()
 	Plug 'neoclide/coc.nvim', {
 		\'do': function('InstallCoc')
 	\}
-	Plug 'fatih/vim-go', {
-		\'do': ':GoUpdateBinaries'
-	\}
+	" Plug 'fatih/vim-go', {
+	" 	\'do': ':GoUpdateBinaries'
+	" \}
 	Plug 'honza/vim-snippets'				" Snippets collection for many languages
 endfunction
 "-------------------- }}}
@@ -469,7 +472,7 @@ function! ConfigLightPlugins()
 
 	function! InstallLSP()
 		let install_commands = [
-			\ {'name': 'gopls',                'command': 'GO111MODULE=on go get -v golang.org/x/tools/gopls@latest'},
+			\ {'name': 'gopls',                'command': 'go install -v golang.org/x/tools/gopls@latest'},
 			\ {'name': 'bash-language-server', 'command': 'npm install --global bash-language-server'},
 			\ {'name': 'docker-langserver',    'command': 'npm install --global dockerfile-language-server-nodejs'},
 		\ ]
@@ -626,14 +629,23 @@ function! ConfigHeavyPlugins()
 	set nowritebackup
 
 	" Keybinds for completion
-	inoremap <silent><expr> <C-j> pumvisible() ? "\<C-n>" : "\<C-j>"
-	inoremap <expr> <C-k> pumvisible() ? "\<C-p>" : "\<C-k>"
-	inoremap <silent><expr> <c-space> coc#refresh()
+	inoremap <silent><expr> <C-j> coc#pum#visible() ? coc#pum#next(1) : CheckBackspace() ? "\<C-j>" : coc#refresh()
+	inoremap <expr><C-k> coc#pum#visible() ? coc#pum#prev(1) : "\<C-h>"
 
-	if has('patch8.1.1068')
-		inoremap <expr> <C-l> complete_info()["selected"] != "-1" ? "\<C-y>" : "\<C-g>u\<CR>"		"Confirm completion
+	" Make <CR> to accept selected completion item or notify coc.nvim to format
+	" <C-g>u breaks current undo, please make your own choice.
+	inoremap <silent><expr> <C-l> coc#pum#visible() ? coc#pum#confirm() : "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
+
+	function! CheckBackspace() abort
+		let col = col('.') - 1
+		return !col || getline('.')[col - 1]  =~# '\s'
+	endfunction
+
+	" Use <c-space> to trigger completion.
+	if has('nvim')
+		inoremap <silent><expr> <c-space> coc#refresh()
 	else
-		imap <expr> <C-l> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"		"Confirm completion
+		inoremap <silent><expr> <c-@> coc#refresh()
 	endif
 
 	" Use `[c` and `]c` for navigate diagnostics
@@ -650,14 +662,14 @@ function! ConfigHeavyPlugins()
 	nmap <silent> rr <Plug>(coc-refactor)
 
 	" Use K for show documentation in preview window
-	nnoremap <silent> K :call <SID>show_documentation()<CR>
+	nnoremap <silent> K :call ShowDocumentation()<CR>
 
-	function! s:show_documentation()
-	if (index(['vim','help'], &filetype) >= 0)
-		execute 'h '.expand('<cword>')
-	else
-		call CocAction('doHover')
-	endif
+	function! ShowDocumentation()
+		if CocAction('hasProvider', 'hover')
+			call CocActionAsync('doHover')
+		else
+			call feedkeys('K', 'in')
+		endif
 	endfunction
 
 	" Highlight symbol under cursor on CursorHold
@@ -683,6 +695,9 @@ function! ConfigHeavyPlugins()
 	nmap <leader>ac  <Plug>(coc-codeaction)
 	" Fix autofix problem of current line
 	nmap <leader>qf  <Plug>(coc-fix-current)
+
+	" Run the Code Lens action on the current line.
+	nmap <leader>cl  <Plug>(coc-codelens-action)
 
 	" Introduce function text object
 	" NOTE: Requires 'textDocument.documentSymbol' support from the language server.
@@ -771,4 +786,5 @@ endif
 
 " let g:go_gopls_enabled = 0
 let g:go_debug_breakpoint_sign_text = '=>'
+lua require'colorizer'.setup()
 
