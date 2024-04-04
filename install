@@ -1,0 +1,47 @@
+#!/usr/bin/env bash
+
+set -e
+
+DOTBOT_DIR=".dotbot"
+DOTBOT_BIN="bin/dotbot"
+BASEDIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+ALL_CONFIG="all"
+CONFIG_LIST="$(find . -maxdepth 1 -type d ! -name '.*' | sed 's|^./||' | sort)"
+CONFIG_FILENAME="dotbot.conf.yml"
+
+printUsage() {
+  echo "$1"
+  echo "Usage: ./install $ALL_CONFIG | [$(echo $CONFIG_LIST | xargs)]"
+  exit 1
+}
+
+# Validate parameters
+if [ "$#" -eq 0 ]; then
+  printUsage "You must at least pass one parameter"
+fi
+for param in "$@"; do
+  if [ "$param" == "$ALL_CONFIG" ]; then
+    if [ "$#" -ne 1 ]; then
+      printUsage "Parameter '$ALL_CONFIG' must be used alone"
+    fi
+  elif ! echo "$CONFIG_LIST" | grep "$param" &> /dev/null; then
+    printUsage "Unknown parameter '$param'"
+  fi 
+done
+
+# Update Git submodules
+cd "${BASEDIR}"
+git -C "${DOTBOT_DIR}" submodule sync --quiet --recursive
+git submodule update --init --recursive "${DOTBOT_DIR}"
+
+# Install selected configs
+if [ "$1" == "$ALL_CONFIG" ]; then
+  CONFIGS="$(echo $CONFIG_LIST | xargs)"
+else
+  CONFIGS="$@"
+fi
+
+for config in ${CONFIGS}; do
+    "${BASEDIR}/${DOTBOT_DIR}/${DOTBOT_BIN}" -d "${BASEDIR}" -p dotbot-if/if.py --plugin-dir .dotbot-brew -c "${config}/${CONFIG_FILENAME}"
+done

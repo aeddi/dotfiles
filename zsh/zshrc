@@ -1,5 +1,7 @@
 # Needs to be before P10K instant prompt
-source $HOME/.zshrc_patch_sudo
+if [[ `uname` == "Darwin" ]]; then
+  source $HOME/.patch_sudo
+fi
 
 # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
 # Initialization code that may require console input (password prompts, [y/n]
@@ -60,7 +62,6 @@ antigen theme romkatv/powerlevel10k
 antigen bundle zsh-users/zsh-history-substring-search
 antigen bundle zsh-users/zsh-completions
 antigen bundle Tarrasch/zsh-bd
-antigen bundle jocelynmallon/zshmarks
 
 antigen apply
 
@@ -81,7 +82,6 @@ function include()
 }
 
 include $HOME/.p10k.zsh
-#include $HOME/.fzf.zsh
 include $HOME/.zshrc_local
 include $HOME/.aliases
 include $HOME/.functions

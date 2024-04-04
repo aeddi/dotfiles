@@ -1,0 +1,8 @@
+- shell:
+  - description: Set custom folder for iterm2 config
+    quiet: true
+    command: |
+      defaults write com.googlecode.iterm2 LoadPrefsFromCustomFolder -bool true \
+       && defaults write com.googlecode.iterm2 NoSyncNeverRemindPrefsChangesLostForFile -bool true \
+       && defaults write com.googlecode.iterm2 NoSyncNeverRemindPrefsChangesLostForFile_selection -int 0 \
+       && defaults write com.googlecode.iterm2 PrefsCustomFolder -string "$HOME/.dotfiles/iterm2"

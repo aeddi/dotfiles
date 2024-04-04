@@ -1,0 +1,13 @@
+# Add touchID as sudo auth method
+SUDO_FILE="/etc/pam.d/sudo"
+TID_PARAM='auth       sufficient     pam_tid.so'
+TID_PARAM_RG='auth\s{1,}sufficient\s{1,}pam_tid.so'
+
+if [ -f "$SUDO_FILE" ]; then
+	grep -Exq "$TID_PARAM_RG" "$SUDO_FILE" || {
+		echo "Adding touchID as sudo auth method"
+		sudo sed -i.bak -e $'/^# sudo: auth account password session/a\\\n'"$TID_PARAM" $SUDO_FILE
+	}
+else
+    echo "adding touchID as sudo auth failed: $SUDO_FILE does not exist"
+fi

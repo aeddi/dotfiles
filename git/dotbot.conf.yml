@@ -1,0 +1,15 @@
+- defaults:
+    link:
+      relink: true
+
+- clean: ['~']
+
+- link:
+    ~/.gitconfig: git/gitconfig
+    ~/.gitignore: git/gitignore
+    ~/.git-templates: git/git-templates
+
+- shell:
+  - description: Create .gitconfig_local if it doesn't exist
+    quiet: true
+    command: '[ ! -f ~/.gitconfig_local ] && touch ~/.gitconfig_local || true'

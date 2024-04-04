@@ -1,0 +1,70 @@
+# Taps
+tap "gromgit/fuse" # ntfs-3g-mac
+tap "homebrew/bundle"
+tap "homebrew/cask"
+tap "homebrew/cask-fonts"
+tap "homebrew/cask-versions"
+tap "homebrew/core"
+tap "noahgorstein/tap" # jqp
+
+# Cmd improvements / Cool TUIs
+brew "bat"
+brew "bmon" # Monitor bandwidth
+brew "broot" # Display improved dir tree
+brew "btop"
+brew "git-delta" # Improved git diff
+brew "gitui"
+brew "gping"
+brew "glow"
+brew "lazydocker"
+brew "lazygit"
+brew "mosh" # Reliable SSH on bad condition
+brew "ripgrep"
+brew "peco" # Filtered less-like
+brew "sshs"
+brew "tldr"
+brew "noahgorstein/tap/jqp" # jq playground
+
+# Misc.
+brew "asdf"
+brew "ffmpeg"
+brew "nmap"
+brew "streamlink"
+brew "neovim"
+brew "git"
+brew "wget"
+brew "tree"
+brew "zsh"
+brew "gromgit/fuse/ntfs-3g-mac"
+brew "pinentry-mac"
+
+# Casks
+cask "android-file-transfer"
+cask "android-studio"
+cask "appcleaner"
+cask "cutter"
+cask "dash"
+cask "deluge"
+cask "devtoys"
+cask "discord"
+cask "docker"
+cask "firefox"
+cask "font-fira-code-nerd-font"
+cask "foxitreader"
+cask "gimp"
+cask "hiddenbar"
+cask "iina"
+cask "iterm2"
+cask "jdownloader"
+cask "keka"
+cask "keybase"
+cask "macfuse"
+cask "microsoft-auto-update"
+cask "microsoft-edge"
+cask "raycast"
+cask "sf-symbols"
+cask "signal"
+cask "spotify"
+cask "utm"
+cask "veracrypt"
+cask "vlc"
