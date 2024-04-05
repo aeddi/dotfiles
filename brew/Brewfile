@@ -7,36 +7,50 @@ tap "homebrew/cask-versions"
 tap "homebrew/core"
 tap "noahgorstein/tap" # jqp
 
-# Cmd improvements / Cool TUIs
+# Great TUIs
+brew "atui"
 brew "bat"
 brew "bmon" # Monitor bandwidth
-brew "broot" # Display improved dir tree
+brew "bottom"
 brew "btop"
+brew "broot" # Display improved dir tree
+brew "dua"
+brew "duf"
+brew "gdu", link: true # improved and interactive du
 brew "git-delta" # Improved git diff
+brew "glow"
 brew "gitui"
 brew "gping"
-brew "glow"
+brew "jless"
+brew "jqp"
 brew "lazydocker"
 brew "lazygit"
 brew "mosh" # Reliable SSH on bad condition
-brew "ripgrep"
-brew "peco" # Filtered less-like
-brew "sshs"
-brew "tldr"
 brew "noahgorstein/tap/jqp" # jq playground
+brew "peco" # Filtered less-like
+brew "ripgrep"
+brew "sshs"
+brew "termshark"
+brew "tldr"
+brew "tokei"
+brew "trippy"
 
 # Misc.
 brew "asdf"
 brew "ffmpeg"
-brew "nmap"
-brew "streamlink"
-brew "neovim"
-brew "git"
-brew "wget"
-brew "tree"
-brew "zsh"
+brew "fd" # Find replacement
 brew "gromgit/fuse/ntfs-3g-mac"
+brew "neovim"
+brew "nmap"
+brew "git"
+brew "gh"
 brew "pinentry-mac"
+brew "progress" # Display cp, mv, etc. progress
+brew "streamlink"
+brew "tree"
+brew "wget"
+brew "yt-dlp"
+brew "zsh"
 
 # Casks
 cask "android-file-transfer"

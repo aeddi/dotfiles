@@ -1,2 +1,6 @@
+---
 - brewfile:
-  - brew/Brewfile
+    - brew/Brewfile
+
+- ghe:
+    - dlvhdr/gh-dash
