@@ -8,6 +8,7 @@ a.out
 # Misc #
 ########
 *.gch
+cspell.json
 
 # Temporary files #
 ###################

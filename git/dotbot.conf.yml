@@ -1,3 +1,4 @@
+---
 - defaults:
     link:
       relink: true
@@ -10,6 +11,9 @@
     ~/.git-templates: git/git-templates
 
 - shell:
-  - description: Create .gitconfig_local if it doesn't exist
-    quiet: true
-    command: '[ ! -f ~/.gitconfig_local ] && touch ~/.gitconfig_local || true'
+    - description: Create .gitconfig_local if it doesn't exist
+      quiet: true
+      command: |
+        if [ ! -f ~/.gitconfig_local ]; then \
+          touch ~/.gitconfig_local; \
+        fi
