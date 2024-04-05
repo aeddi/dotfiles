@@ -6,8 +6,17 @@ DOTBOT_DIR=".dotbot"
 DOTBOT_BIN="bin/dotbot"
 BASEDIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
+configList() {
+  local configs="$(find . -maxdepth 1 -type d ! -name '.*' | sed 's|^./||' | sort)"
+  if [ $(uname) != Darwin ]; then
+    configs="$(echo "$configs" | grep -v brew)"
+  fi
+
+  echo "$configs"
+}
+
 ALL_CONFIG="all"
-CONFIG_LIST="$(find . -maxdepth 1 -type d ! -name '.*' | sed 's|^./||' | sort)"
+CONFIG_LIST="$(configList)"
 CONFIG_FILENAME="dotbot.conf.yml"
 
 printUsage() {
@@ -25,9 +34,11 @@ for param in "$@"; do
     if [ "$#" -ne 1 ]; then
       printUsage "Parameter '$ALL_CONFIG' must be used alone"
     fi
-  elif ! echo "$CONFIG_LIST" | grep "$param" &> /dev/null; then
+  elif [ "$param" == "brew" ] && [ $(uname) != Darwin ]; then
+    printUsage "Use 'brew' on Darwin only"
+  elif ! echo "$CONFIG_LIST" | grep "$param" &>/dev/null; then
     printUsage "Unknown parameter '$param'"
-  fi 
+  fi
 done
 
 # Update Git submodules
@@ -43,5 +54,6 @@ else
 fi
 
 for config in ${CONFIGS}; do
-    "${BASEDIR}/${DOTBOT_DIR}/${DOTBOT_BIN}" -d "${BASEDIR}" -p dotbot-if/if.py --plugin-dir .dotbot-brew -c "${config}/${CONFIG_FILENAME}"
+  "${BASEDIR}/${DOTBOT_DIR}/${DOTBOT_BIN}" -d "${BASEDIR}" --plugin-dir .dotbot-brew -c "${config}/${CONFIG_FILENAME}"
+  "${BASEDIR}/${DOTBOT_DIR}/${DOTBOT_BIN}" -d "${BASEDIR}" --plugin-dir .dotbot-gh-extension -c "${config}/${CONFIG_FILENAME}"
 done
