@@ -1,0 +1,24 @@
+---
+- clean: ["~"]
+
+- link:
+    ~/.tool-versions:
+      create: true
+      path: asdf/tool-versions
+
+- shell:
+    - description: Install asdf plugins if needed
+      quiet: true
+      command: |
+        if command -v asdf &> /dev/null; then \
+          for plugin in $(cut -d ' ' -f1 ~/.tool-versions | grep "^[^\#]"); do \
+            asdf plugin add $plugin || [ $? -eq 2 ]; \
+          done; \
+        fi
+
+    - description: Install asdf tools if needed
+      quiet: true
+      command: |
+        if command -v asdf &> /dev/null; then \
+          cd ~ && asdf install; \
+        fi
