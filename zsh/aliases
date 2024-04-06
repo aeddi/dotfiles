@@ -1,13 +1,13 @@
 # Colorize ls output
 if [[ `uname` == "Darwin" ]]; then
-	alias ls="ls -G"
-	alias ll="ls -lAh"
+  alias ls="ls -G"
+  alias ll="ls -lAh"
 elif [[ `uname` == "Linux" ]]; then
-	alias egrep="egrep --color=auto"
-	alias fgrep="fgrep --color=auto"
-	alias grep="grep --color=auto"
-	alias ll="ls -AlFh"
-	alias ls="ls --color=auto"
+  alias egrep="egrep --color=auto"
+  alias fgrep="fgrep --color=auto"
+  alias grep="grep --color=auto"
+  alias ll="ls -AlFh"
+  alias ls="ls --color=auto"
 fi
 
 # Compiler flags alias
@@ -26,6 +26,3 @@ alias ln="ln -i"
 # Vim
 alias vim="nvim"
 alias vimdiff="nvim -d"
-
-# fzf
-alias fzff="fzf --multi --preview 'bat --color always {}' --bind 'j:down,k:up,ctrl-d:preview-page-down,ctrl-u:preview-page-up' --preview-window='right:60%'"

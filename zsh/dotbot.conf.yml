@@ -1,8 +1,9 @@
+---
 - defaults:
     link:
       relink: true
 
-- clean: ['~']
+- clean: ["~"]
 
 - link:
     ~/.zshrc: zsh/zshrc
@@ -10,18 +11,24 @@
     ~/.functions: zsh/functions
     ~/.p10k.zsh: zsh/p10k_config
     ~/.patch_sudo:
-      if: '[ `uname` = Darwin ]'
+      if: "[ `uname` = Darwin ]"
       path: zsh/patch_sudo
 
 - shell:
-  - description: Install antigen plugin manager if needed
-    quiet: true
-    command: '[ ! -d ~/.antigen ] && git clone https://github.com/zsh-users/antigen.git ~/.antigen || true'
+    - description: Install antigen plugin manager if needed
+      quiet: true
+      command: |
+        if [ ! -d ~/.antigen ]; then \
+          git clone https://github.com/zsh-users/antigen.git ~/.antigen; \
+        fi
 
-  - description: Install antigen plugins if needed
-    quiet: true
-    command: source ~/.zshrc
+    - description: Install antigen plugins if needed
+      quiet: true
+      command: source ~/.zshrc
 
-  - description: Create .zshrc_local if it doesn't exist
-    quiet: true
-    command: '[ ! -f ~/.zshrc_local ] && touch ~/.zshrc_local || true'
+    - description: Create .zshrc_local if it doesn't exist
+      quiet: true
+      command: |
+        if [ ! -f ~/.zshrc_local ]; then \
+          touch ~/.zshrc_local; \
+        fi

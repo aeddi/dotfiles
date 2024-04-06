@@ -17,8 +17,8 @@ export HOMEBREW_NO_INSTALL_CLEANUP=1
 
 # Set history & misc. parameters
 HISTFILE=$HOME/.zsh_history
-HISTSIZE=10000
-SAVEHIST=10000
+HISTSIZE=10000000
+SAVEHIST=10000000
 setopt   appendhistory     #Append history to the history file (no overwriting)
 setopt   sharehistory      #Share history across terminals
 setopt   incappendhistory  #Immediately append to the history file, not just when a term is killed
@@ -29,19 +29,19 @@ autoload -U colors && colors
 autoload -U compaudit
 [[ -n "$(compaudit)" ]] && compaudit | xargs chmod g-w
 if [[ `uname` == "Darwin" && -n "$(compaudit)" ]]; then
-	printf "Setting right permissions for compinit - "
-	sudo chown -RL root:staff /usr/local/share/zsh
+  printf "Setting right permissions for compinit - "
+  sudo chown -RL root:staff /usr/local/share/zsh
 fi
 
 # Enable ZSH completion
 autoload -Uz compinit && compinit
 
 # Display CWD as title for xterm* terminals
- case $TERM in
-     xterm*)
-		 chpwd() {print -Pn "\e]0;%~\a"}
-         ;;
- esac
+case $TERM in
+  xterm*)
+  chpwd() {print -Pn "\e]0;%~\a"}
+  ;;
+esac
 
 
 ### Zsh plugins ###
@@ -51,34 +51,34 @@ ANTIGEN_BIN=$ANTIGEN_DIR/antigen.zsh
 
 # If antigen is not installed, install it
 if [ ! -f $ANTIGEN_BIN ]; then
-	echo "Installing antigen!..."
-	mkdir -p $ANTIGEN_DIR
-	curl -L git.io/antigen --silent > $ANTIGEN_BIN
+  echo "Installing antigen!..."
+  mkdir -p $ANTIGEN_DIR
+  curl -L git.io/antigen --silent > $ANTIGEN_BIN
+fi
+
+# Add brew in path for atuin
+if [[ `uname` == "Darwin" ]]; then
+  export PATH="/opt/homebrew/bin:$PATH"
 fi
 
 source $ANTIGEN_BIN
 
 antigen theme romkatv/powerlevel10k
-antigen bundle zsh-users/zsh-history-substring-search
+antigen bundle atuinsh/atuin@main
 antigen bundle zsh-users/zsh-completions
 antigen bundle Tarrasch/zsh-bd
 
 antigen apply
 
-# Bind UP and DOWN arrow keys to history plugin
-bindkey '^[[A' history-substring-search-up
-bindkey '^[[B' history-substring-search-down
-
-
 ### Includes ###
 
 function include()
 {
-	if [[ -f $1 ]]; then
-		source $1
-	else
-		printf "$1 is missing\n"
-	fi
+  if [[ -f $1 ]]; then
+    source $1
+  else
+    printf "$1 is missing\n"
+  fi
 }
 
 include $HOME/.p10k.zsh

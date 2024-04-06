@@ -1,37 +1,63 @@
 # Create folder and jump to it
 function md()
 {
-	if [[ $# -eq 1 ]]; then
-		mkdir -p $1 && cd $1
-	else
-		echo "${fg[red]}Error:${reset_color} usage: md dir"
-	fi
+  if [[ $# -eq 1 ]]; then
+    mkdir -p $1 && cd $1
+  else
+    echo "${fg[red]}Error: usage: md <dir>${reset_color}"
+  fi
 }
 
 # Launch ssh session with tmux control
 function tssh()
 {
-	local SESSION_NAME='aeddi_tssh'
-	ssh $@ -t "bash -lc 'SESSION=\$(tmux ls -F \"#{session_name}\");				\
-				if [[ ! \$(grep $SESSION_NAME <<< \$SESSION) ]]; then 				\
-					tmux -CC new-session -s $SESSION_NAME -n \"tmux (\$HOSTNAME)\";	\
-				else																\
-					tmux -CC attach -t $SESSION_NAME;								\
-				fi'"
+  local SESSION_NAME='aeddi_tssh'
+  ssh $@ -t "bash -lc 'SESSION=\$(tmux ls -F \"#{session_name}\");        \
+    if [[ ! \$(grep $SESSION_NAME <<< \$SESSION) ]]; then         \
+      tmux -CC new-session -s $SESSION_NAME -n \"tmux (\$HOSTNAME)\";  \
+    else                                \
+      tmux -CC attach -t $SESSION_NAME;                \
+    fi'"
 }
 
 # Set terminal title
 function rename-term()
 {
-	if [[ $# -eq 1 ]]; then
-		if [[ -n "$TMUX" ]] ; then
-			tmux rename-window $1
-		else
-			print -Pn  "\e]1;$1\a"
-		fi
-	else
-		echo "${fg[red]}Error:${reset_color} usage: rename_term title"
-	fi
+  if [[ $# -eq 1 ]]; then
+    if [[ -n "$TMUX" ]] ; then
+      tmux rename-window $1
+    else
+      print -Pn  "\e]1;$1\a"
+    fi
+  else
+    echo "${fg[red]}Error: usage: rename_term <title>${reset_color}"
+  fi
+}
+
+# Type text on macOS
+function type()
+{
+  if [ "$(uname)" != "Darwin" ]; then
+    echo "${fg[red]}Error: type function not available on your OS '$(uname)'${reset_color}"
+  elif [[ $# -ne 2 ]]; then
+    echo "${fg[red]}Error: usage: type <delay_in_seconds> <text>${reset_color}"
+  elif ! [[ $1 =~ '^[0-9]+$' ]] ; then
+    echo "${fg[red]}Error: <delay_in_seconds> must be a positive number\nusage: type <delay_in_seconds> <text>${reset_color}"
+  else
+    echo "Wait $1s then type '$2'"
+    sleep $1
+    osascript \
+      -e 'tell application "System Events"' \
+      -e "set textToType to \"$2\"" \
+      -e 'repeat with charToType in textToType' \
+      -e 'keystroke charToType' \
+      -e 'delay 0.042' \
+      -e 'end repeat' \
+      -e 'end tell'
+    if [ $? -ne 0 ]; then \
+      echo "${fg[red]}Check if your terminal app has permission allowed in:\n\tPreferences → Security & Privacy → Privacy → Accessibility${reset_color}"; \
+    fi
+  fi
 }
 
 
@@ -39,63 +65,63 @@ function rename-term()
 
 function myip()
 {
-	if [[ $# -eq 0 ]]; then
-		get-public-ip
-		get-local-ip
-		get-torp-ip
-		get-torb-ip
-	elif [[ $1 == 'local' ]]; then
-		get-local-ip
-	elif [[ $1 == 'public' ]]; then
-		get-public-ip
-	elif [[ $1 == 'tor' ]]; then
-		get-torp-ip
-	elif [[ $1 == 'torb' ]]; then
-		get-torb-ip
-	else
-		echo "${fg[red]}Error:${reset_color} usage: myip [local|public|tor|torb]"
-	fi
+  if [[ $# -eq 0 ]]; then
+    get-public-ip
+    get-local-ip
+    get-torp-ip
+    get-torb-ip
+  elif [[ $1 == 'local' ]]; then
+    get-local-ip
+  elif [[ $1 == 'public' ]]; then
+    get-public-ip
+  elif [[ $1 == 'tor' ]]; then
+    get-torp-ip
+  elif [[ $1 == 'torb' ]]; then
+    get-torb-ip
+  else
+    echo "${fg[red]}Error: usage: myip [local|public|tor|torb]${reset_color}"
+  fi
 }
 
 function get-local-ip()
 {
-	FIRST=1
-	INTERFACES=$(ifconfig | awk -F: '/^[a-z]+[0-9]/{printf "%s ", $1} END {print ""}')
+  FIRST=1
+  INTERFACES=$(ifconfig | awk -F: '/^[a-z]+[0-9]/{printf "%s ", $1} END {print ""}')
 
-	for INTERFACE in ${(z)INTERFACES}; do
-		INFO=$(ifconfig $INTERFACE)
-		INET=$(awk -F' ' '/^[[:space:]]+inet /{print $2}' <<< "$INFO")
-		if [[ -n $INET && $INET != '127.0.0.1' ]]; then
-			if [[ $FIRST == 1 ]]; then
-				echo "Local IP:"
-				FIRST=0
-			fi
-			printf "\t- $INTERFACE: $INET\n"
-		fi
-	done
+  for INTERFACE in ${(z)INTERFACES}; do
+    INFO=$(ifconfig $INTERFACE)
+    INET=$(awk -F' ' '/^[[:space:]]+inet /{print $2}' <<< "$INFO")
+    if [[ -n $INET && $INET != '127.0.0.1' ]]; then
+      if [[ $FIRST == 1 ]]; then
+        echo "Local IP:"
+        FIRST=0
+      fi
+      printf "\t- $INTERFACE: $INET\n"
+    fi
+  done
 
-	if [[ $FIRST == 1 ]]; then
-		echo "Local IP: none"
-	fi
+  if [[ $FIRST == 1 ]]; then
+    echo "Local IP: none"
+  fi
 }
 
 function get-public-ip()
 {
-	PUBLICIP=$(curl -sS ipecho.net/plain 2> /dev/null)
-	PUBLICIP=$([ ! $PUBLICIP ] && echo 'none' || echo "$PUBLICIP")
-	echo "Public IP: $PUBLICIP"
+  PUBLICIP=$(curl -sS ipecho.net/plain 2> /dev/null)
+  PUBLICIP=$([ ! $PUBLICIP ] && echo 'none' || echo "$PUBLICIP")
+  echo "Public IP: $PUBLICIP"
 }
 
 funcion get-torp-ip()
 {
-	TORPIP=$(curl --proxy socks5://localhost:9050 -sS ipecho.net/plain 2> /dev/null)
-	TORPIP=$([ ! $TORPIP ] && echo 'none' || echo "$TORPIP")
-	echo "Tor Proxy IP: $TORPIP"
+  TORPIP=$(curl --proxy socks5://localhost:9050 -sS ipecho.net/plain 2> /dev/null)
+  TORPIP=$([ ! $TORPIP ] && echo 'none' || echo "$TORPIP")
+  echo "Tor Proxy IP: $TORPIP"
 }
 
 funcion get-torb-ip()
 {
-	TORBIP=$(curl --proxy socks5://localhost:9150 -sS ipecho.net/plain 2> /dev/null)
-	TORBIP=$([ ! $TORBIP ] && echo 'none' || echo "$TORBIP")
-	echo "Tor Browser IP: $TORBIP"
+  TORBIP=$(curl --proxy socks5://localhost:9150 -sS ipecho.net/plain 2> /dev/null)
+  TORBIP=$([ ! $TORBIP ] && echo 'none' || echo "$TORBIP")
+  echo "Tor Browser IP: $TORBIP"
 }
