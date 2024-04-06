@@ -1,4 +1,10 @@
+---
+- defaults:
+    link:
+      relink: true
+      create: true
+
+- clean: ["~/.config/nvim"]
+
 - link:
-  ~/.config/nvim/init.lua:
-    relink: true
-    path: vim/init.lua
+    ~/.config/nvim: vim/config
