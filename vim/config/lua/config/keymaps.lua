@@ -30,6 +30,17 @@ map("v", "<C-S-k>", ":m '<-2<CR>gv=gv", { desc = "Move line up", noremap = true,
 map("c", "<c-a>", "<Home>", { desc = "Move to beginning of command" })
 map("c", "<c-e>", "<End>", { desc = "Move to end of command" })
 
+-- Fix scroll on documentation popup open with <S-K>
+map({ "n", "i", "s" }, "<c-f>", function()
+  if not require("noice.lsp").scroll(4) then
+    return "<c-f>"
+  end
+end, { silent = true, expr = true })
+map({ "n", "i", "s" }, "<c-b>", function()
+  if not require("noice.lsp").scroll(-4) then
+    return "<c-b>"
+  end
+end, { silent = true, expr = true })
 
 -- Tui
 local defaultLazytermOptions =
