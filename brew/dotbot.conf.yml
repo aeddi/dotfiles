@@ -4,3 +4,12 @@
 
 - ghe:
     - dlvhdr/gh-dash
+
+- clean: ["~/Library/Application Support/lazygit"]
+
+- link:
+    "~/Library/Application Support/lazygit/config.yml":
+      force: true
+      relink: true
+      create: true
+      path: brew/lazygit.yml
