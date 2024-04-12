@@ -33,7 +33,9 @@ return {
           },
         },
         layout_config = {
-          preview_width = 0.6,
+          horizontal = {
+            preview_width = 0.6,
+          },
         },
       },
       -- Setup Telescope undo
