@@ -4,7 +4,8 @@
       relink: true
       create: true
 
-- clean: ["~/.config/nvim"]
+- clean: ["~/.config/nvim", "~"]
 
 - link:
     ~/.config/nvim: vim/config
+    ~/.prettierrc.json: vim/prettierrc.json
