@@ -56,15 +56,15 @@ map("n", "<leader>ft", lazyterm, { desc = "Terminal (root dir)" })
 map("n", "<c-/>", lazyterm, { desc = "Terminal (root dir)" })
 map("n", "<c-_>", lazyterm, { desc = "which_key_ignore" })
 
-map("n", "<leader>tc", function()
+map("n", "<leader>mc", function()
   LazyVim.terminal({ "smassh" }, defaultLazytermOptions)
 end, { desc = "Smassh typing test" })
 
-map("n", "<leader>td", function()
+map("n", "<leader>md", function()
   LazyVim.terminal({ "lazydocker" }, defaultLazytermOptions)
 end, { desc = "Lazydocker" })
 
-map("n", "<leader>tf", function()
+map("n", "<leader>mf", function()
   local max_width = math.floor(require("nui.utils").get_editor_size().width * 80 / 100 + 0.5)
   require("utils.popup").popup_cmd({
     cmd = "duf",
@@ -73,18 +73,18 @@ map("n", "<leader>tf", function()
   }, "duf - Free disk space")
 end, { desc = "Check free disk space" })
 
-map("n", "<leader>tg", function()
+map("n", "<leader>mg", function()
   LazyVim.terminal({ "gh", "dash" }, defaultLazytermOptions)
 end, { desc = "Github dashboard" })
 
-map("n", "<leader>ti", function()
+map("n", "<leader>mi", function()
   require("utils.popup").popup_cmd(
     { cmd = "tokei", cwd = LazyVim.root.get({ normalize = true }) },
     "tokei - Code statistics"
   )
 end, { desc = "Code dir stats" })
 
-map("n", "<leader>tj", function()
+map("n", "<leader>mj", function()
   if vim.bo.filetype == "json" then
     LazyVim.terminal({ "jqp", "-f", vim.api.nvim_buf_get_name(0) }, defaultLazytermOptions)
   else
@@ -92,7 +92,7 @@ map("n", "<leader>tj", function()
   end
 end, { desc = "JQ playground" })
 
-map("n", "<leader>tl", function()
+map("n", "<leader>ml", function()
   if vim.bo.filetype == "json" then
     LazyVim.terminal({ "jless", vim.api.nvim_buf_get_name(0) }, defaultLazytermOptions)
   else
@@ -100,23 +100,23 @@ map("n", "<leader>tl", function()
   end
 end, { desc = "JSON reader" })
 
-map("n", "<leader>tp", function()
+map("n", "<leader>mp", function()
   LazyVim.terminal({ "gping", "google.com" }, defaultLazytermOptions)
 end, { desc = "Ping google.com" })
 
-map("n", "<leader>ts", function()
+map("n", "<leader>ms", function()
   LazyVim.terminal({ "sshs" }, defaultLazytermOptions)
 end, { desc = "SSH connection" })
 
-map("n", "<leader>tt", function()
+map("n", "<leader>mt", function()
   LazyVim.terminal({ "sudo", "termshark" }, defaultLazytermOptions)
 end, { desc = "Termshark" })
 
-map("n", "<leader>tu", function()
+map("n", "<leader>mu", function()
   LazyVim.terminal({ "dua", "i", LazyVim.root.get({ normalize = true }) }, defaultLazytermOptions)
 end, { desc = "Disk usage analysis" })
 
-map("n", "<leader>tw", function()
+map("n", "<leader>mw", function()
   require("utils.popup").popup_cmd({ cmd = "curl", args = { "wttr.in/porto-vecchio?QF" } }, "Porto-Vecchio Weather")
 end, { desc = "Weather in Porto-Vecchio" })
 
