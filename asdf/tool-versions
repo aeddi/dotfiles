@@ -6,7 +6,7 @@ jq 1.6
 yarn 1.22.19
 
 # Languages
-golang 1.20.1
+golang 1.22.2
 nodejs 16.16.0
 python 3.11.2
 java openjdk-18.0.1.1
@@ -17,3 +17,4 @@ golangci-lint 1.50.1
 rust 1.67.1
 lua 5.4.4
 cmake 3.25.2
+cocoapods 1.15.2
