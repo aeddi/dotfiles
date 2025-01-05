@@ -1,15 +1,3 @@
-# Needs to be before P10K instant prompt
-if [[ `uname` == "Darwin" ]]; then
-  source $HOME/.patch_sudo
-fi
-
-# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
-# Initialization code that may require console input (password prompts, [y/n]
-# confirmations, etc.) must go above this block, everything else may go below.
-if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
-  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
-fi
-
 ### Shell customization ###
 
 # Prevent brew from cleaning previous version on upgrade
@@ -43,6 +31,11 @@ case $TERM in
   ;;
 esac
 
+# Use touch ID as sudo auth
+if [[ `uname` == "Darwin" ]]; then
+  source $HOME/.patch_sudo
+fi
+
 
 ### Zsh plugins ###
 
@@ -56,19 +49,19 @@ if [ ! -f $ANTIGEN_BIN ]; then
   curl -L git.io/antigen --silent > $ANTIGEN_BIN
 fi
 
-# Add brew in path for atuin
-if [[ `uname` == "Darwin" ]]; then
-  export PATH="/opt/homebrew/bin:$PATH"
-fi
-
 source $ANTIGEN_BIN
 
-antigen theme romkatv/powerlevel10k
-antigen bundle atuinsh/atuin@main
+antigen bundle zsh-users/zsh-history-substring-search
+antigen bundle zsh-users/zsh-syntax-highlighting
+antigen bundle zsh-users/zsh-autosuggestions
 antigen bundle zsh-users/zsh-completions
 antigen bundle Tarrasch/zsh-bd
 
 antigen apply
+
+# Bind UP and DOWN arrow keys to history plugin
+bindkey '^[[A' history-substring-search-up
+bindkey '^[[B' history-substring-search-down
 
 ### Includes ###
 
@@ -81,9 +74,14 @@ function include()
   fi
 }
 
-include $HOME/.p10k.zsh
 include $HOME/.zshrc_local
 include $HOME/.aliases
 include $HOME/.functions
 
 unfunction include
+
+# Load atuin with ctrl-r binding
+eval "$(atuin init zsh --disable-up-arrow)"
+
+# Load starship prompt
+eval "$(starship init zsh)"

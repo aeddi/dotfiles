@@ -46,6 +46,7 @@ brew "git"
 brew "gh"
 brew "pinentry-mac"
 brew "progress" # Display cp, mv, etc. progress
+brew "starship"
 brew "streamlink"
 brew "tree"
 brew "wget"

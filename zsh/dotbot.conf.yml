@@ -9,7 +9,7 @@
     ~/.zshrc: zsh/zshrc
     ~/.aliases: zsh/aliases
     ~/.functions: zsh/functions
-    ~/.p10k.zsh: zsh/p10k_config
+    ~/.config/starship.toml: zsh/starship.toml
     ~/.patch_sudo:
       if: "[ `uname` = Darwin ]"
       path: zsh/patch_sudo
