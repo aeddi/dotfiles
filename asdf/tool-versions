@@ -13,7 +13,7 @@ java openjdk-18.0.1.1
 ruby 3.1.2
 
 # Linters
-golangci-lint 1.50.1
+golangci-lint 1.54.0
 rust 1.67.1
 lua 5.4.4
 cmake 3.25.2
