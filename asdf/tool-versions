@@ -7,7 +7,7 @@ yarn 1.22.19
 
 # Languages
 golang 1.22.2
-nodejs 16.16.0
+nodejs 18.20.5
 python 3.11.2
 java openjdk-18.0.1.1
 ruby 3.1.2

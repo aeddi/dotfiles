@@ -3,17 +3,11 @@ return {
   -- Override default Lazyvim noice config
   opts = function(_)
     return {
-      cmdline = {
-        view = "cmdline_popup", -- Use bottom bar for command instead of popup prompt
-      },
       lsp = {
         override = {
           ["vim.lsp.util.convert_input_to_markdown_lines"] = true,
           ["vim.lsp.util.stylize_markdown"] = true,
           ["cmp.entry.get_documentation"] = true,
-        },
-        signature = {
-          enabled = true, -- Enable displaying doc for fonction parameter
         },
       },
       markdown = {
@@ -61,7 +55,14 @@ return {
             height = "auto",
           },
         },
+        confirm = {
+          position = {
+            row = "42%",
+            col = "50%",
+          },
+        },
       },
+
       routes = {
         {
           filter = {

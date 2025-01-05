@@ -5,15 +5,23 @@ return {
     "SmiteshP/nvim-navic",
     "MunifTanjim/nui.nvim",
   },
-  opts = {
-    lsp = {
-      auto_attach = true,
-    },
-    window = {
-      border = "rounded",
-    },
-  },
+
+  opts = function(_)
+    local actions = require("nvim-navbuddy")
+
+    return {
+      lsp = {
+        auto_attach = true,
+      },
+      window = {
+        border = "rounded",
+      },
+      mappings = {
+        -- [";j"] = actions.close(), // Doesn't work ???
+      },
+    }
+  end,
   keys = {
-    { "<leader>cn", "<cmd>Navbuddy<cr>", desc = "Breadcrumb navigation" },
+    { "<leader>cN", "<cmd>Navbuddy<cr>", desc = "Breadcrumb navigation" },
   },
 }

@@ -12,7 +12,7 @@ return {
     current_only = true,
 
     -- Customize signs on scrollbar
-    signs_on_startup = { "all" },
+    signs_on_startup = { "changelist" },
     diagnostics_error_symbol = "-",
     diagnostics_warn_symbol = "-",
     diagnostics_info_symbol = "-",

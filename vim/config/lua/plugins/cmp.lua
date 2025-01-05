@@ -105,6 +105,7 @@ return {
     "hrsh7th/cmp-cmdline",
     "hrsh7th/cmp-buffer",
     "davidsierradz/cmp-conventionalcommits",
+    "L3MON4D3/LuaSnip",
   },
   opts = function(_, opts)
     local cmp = require("cmp")
