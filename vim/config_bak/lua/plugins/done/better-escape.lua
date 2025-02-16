@@ -1,7 +1,6 @@
 -- Replace <Esc> key efficiently
 return {
   "max397574/better-escape.nvim",
-  event = { "LazyFile" }, -- Overrides default lazyvim keymaps https://github.com/LazyVim/LazyVim/blob/16a772452a515790c3304b358dd66a618fda3260/lua/lazyvim/config/keymaps.lua#L75
   opts = {
     default_mappings = false,
     mappings = {

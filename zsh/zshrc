@@ -85,3 +85,5 @@ eval "$(atuin init zsh --disable-up-arrow)"
 
 # Load starship prompt
 eval "$(starship init zsh)"
+
+source /Users/aeddi/.pymobiledevice3.zsh

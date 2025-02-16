@@ -105,7 +105,6 @@ return {
     "hrsh7th/cmp-cmdline",
     "hrsh7th/cmp-buffer",
     "davidsierradz/cmp-conventionalcommits",
-    "L3MON4D3/LuaSnip",
   },
   opts = function(_, opts)
     local cmp = require("cmp")
@@ -153,6 +152,13 @@ return {
           luasnip.expand_or_jump()
         elseif has_words_before() then
           cmp.complete()
+        else
+          fallback()
+        end
+      end, { "i", "s" }),
+      ["<CR>"] = cmp.mapping(function(fallback)
+        if cmp.visible() then
+          cmp.confirm({ select = true })
         else
           fallback()
         end
