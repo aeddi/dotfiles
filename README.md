@@ -4,7 +4,7 @@
 
 - Fork this repo
 - Clone your forked repo in your home directory
-    `git clone https://github.com/<username>/dotfiles ~/.dotfiles`
+    `git clone --recurse-submodules https://github.com/<username>/dotfiles ~/.dotfiles`
 - Launch the installation script `cd ~/.dotfiles && ./install all`
 
 ## Description
