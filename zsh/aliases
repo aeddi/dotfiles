@@ -26,3 +26,6 @@ alias ln="ln -i"
 # Vim
 alias vim="nvim"
 alias vimdiff="nvim -d"
+
+# Sshs
+alias sshs="sshs --template 'mosh \"{{{name}}}\"'"

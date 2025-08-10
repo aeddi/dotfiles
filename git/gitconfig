@@ -1,7 +1,16 @@
 [user]
-	; signingkey = 3AFF16923E2C5641
 	name = aeddi
 	email = antoine.e.b@gmail.com
+	; add 'signingkey' in ~/.gitconfig_local
+
+[gpg "ssh"]
+	allowedSignersFile = ~/.ssh/allowed_signers
+
+[gpg]
+	format = ssh
+
+[commit]
+	gpgsign = true
 
 [core]
 	editor = nvim
@@ -39,11 +48,9 @@
 [include]
 	path = ~/.gitconfig_local
 
-[commit]
-	; gpgsign = true
-
 [init]
 	defaultBranch = main
+
 [filter "lfs"]
 	process = git-lfs filter-process
 	required = true
