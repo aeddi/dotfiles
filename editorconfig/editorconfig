@@ -13,3 +13,8 @@ trim_trailing_whitespace = true
 # Disable triming on Markdown
 [*.md]
 trim_trailing_whitespace = false
+
+[*.txtar]
+indent_size = 4
+indent_style = tab
+trim_trailing_whitespace = false
