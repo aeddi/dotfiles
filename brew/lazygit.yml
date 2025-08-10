@@ -4,7 +4,7 @@ customCommands:
     command: |
       SHORT_SHA=`git rev-parse --short {{.SelectedLocalCommit.Sha}}` && \
       GIT_SEQUENCE_EDITOR="sed -ie 's/pick $SHORT_SHA/edit $SHORT_SHA/'" \
-      git rebase --interactive --autostash --no-autosquash --rebase-merges --root 2>&1 | grep 'Once you are satisfied with your changes, run' && \
+      git rebase --interactive --autostash --no-autosquash --rebase-merges "$SHORT_SHA^" 2>&1 | grep 'Once you are satisfied with your changes, run' && \
       GIT_COMMITTER_DATE='{{.Form.Date}}' git commit --amend --no-edit --date '{{.Form.Date}}' && \
       git rebase --continue
     context: "commits"

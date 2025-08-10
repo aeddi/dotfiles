@@ -1,85 +1,79 @@
 # Taps
-tap "gromgit/fuse" # ntfs-3g-mac
-tap "homebrew/bundle"
-tap "homebrew/cask"
-tap "homebrew/cask-fonts"
-tap "homebrew/cask-versions"
-tap "homebrew/core"
-tap "noahgorstein/tap" # jqp
+tap "gromgit/fuse"      # ntfs-3g-mac
+tap "noahgorstein/tap"  # jqp
 
 # Great TUIs
-brew "atui"
-brew "bat"
-brew "bmon" # Monitor bandwidth
-brew "bottom"
-brew "btop"
-brew "broot" # Display improved dir tree
-brew "dua"
-brew "duf"
-brew "gdu", link: true # improved and interactive du
-brew "git-delta" # Improved git diff
-brew "glow"
-brew "gitui"
-brew "gping"
-brew "jless"
-brew "jqp"
-brew "lazydocker"
-brew "lazygit"
-brew "mosh" # Reliable SSH on bad condition
-brew "noahgorstein/tap/jqp" # jq playground
-brew "peco" # Filtered less-like
-brew "ripgrep"
-brew "sshs"
-brew "termshark"
-brew "tldr"
-brew "tokei"
-brew "trippy"
+brew "atuin"                # Shell history
+brew "bat"                  # Improved cat
+brew "bmon"                 # Monitor bandwidth
+brew "btop"                 # Resource monitor
+brew "broot"                # Display improved dir tree
+brew "diskonaut"            # Disk usage navigator
+brew "dua"                  # Disk usage analyzer
+brew "duf"                  # Disk usage utility
+brew "git-delta"            # Improved git diff
+brew "gitui"                # Terminal UI for git
+brew "gping"                # Ping with graph
+brew "jless"                # Less replacement with syntax highlighting
+brew "lazydocker"           # Docker management
+brew "lazygit"              # Git management
+brew "noahgorstein/tap/jqp" # JQ playground
+brew "peco"                 # Filtered less-like
+brew "sshs"                 # SSH session manager
+brew "termshark"            # Terminal UI for tshark
+brew "tldr"                 # TLDR pages for cli tools
+brew "tokei"                # Count lines of code
+brew "trippy"               # Terminal UI for traceroute
+brew "zoxide"               # Smart cd replacement
 
 # Misc.
-brew "asdf"
-brew "ffmpeg"
-brew "fd" # Find replacement
-brew "gromgit/fuse/ntfs-3g-mac"
-brew "neovim"
-brew "nmap"
-brew "git"
-brew "gh"
-brew "pinentry-mac"
-brew "progress" # Display cp, mv, etc. progress
-brew "starship"
-brew "streamlink"
-brew "tree"
-brew "wget"
-brew "yt-dlp"
-brew "zsh"
+brew "cmake"                    # Build system
+brew "ext4fuse"                 # Read ext4 filesystems
+brew "eza"                      # Improved ls
+brew "ffmpeg"                   # Multimedia framework
+brew "fd"                       # Find replacement
+brew "gromgit/fuse/ntfs-3g-mac" # NTFS support
+brew "mise"                     # Tools version manager
+brew "mosh"                     # Reliable SSH on bad condition
+brew "neovim"                   # Text editor
+brew "nmap"                     # Network exploration tool
+brew "git"                      # Version control system
+brew "gh"                       # GitHub CLI
+brew "progress"                 # Display cp, mv, etc. progress
+brew "ripgrep"                  # Search tool
+brew "starship"                 # Cross-shell prompt
+brew "streamlink"               # Stream media from sites
+brew "tree"                     # Display directory tree
+brew "wget"                     # Retrieve files from web
+brew "yt-dlp"                   # Download videos from YouTube and other sites
+brew "zsh"                      # Z shell
 
 # Casks
-cask "android-file-transfer"
-cask "android-studio"
-cask "appcleaner"
-cask "cutter"
-cask "dash"
-cask "deluge"
-cask "devtoys"
-cask "discord"
-cask "docker"
-cask "firefox"
-cask "font-fira-code-nerd-font"
-cask "foxitreader"
-cask "gimp"
-cask "iina"
-cask "iterm2"
-cask "jdownloader"
-cask "jordanbaird-ice"
-cask "keka"
-cask "keybase"
-cask "macfuse"
-cask "microsoft-auto-update"
-cask "microsoft-edge"
-cask "raycast"
-cask "sf-symbols"
-cask "signal"
-cask "spotify"
-cask "utm"
-cask "veracrypt"
-cask "vlc"
+cask "appcleaner"               # App uninstaller
+cask "android-file-transfer"    # File transfer for Android devices
+cask "brave-browser"            # Chromium-based browser
+cask "claude"                   # AI assistant
+cask "cutter"                   # Reverse engineering tool
+cask "deluge"                   # Torrent client
+cask "devtoys"                  # Developer toolbox
+cask "discord"                  # Communication platform
+cask "docker"                   # Container platform
+cask "font-fira-code-nerd-font" # Programming font
+cask "gimp"                     # Image editor
+cask "iina"                     # Media player
+cask "jdownloader"              # Download manager
+cask "jordanbaird-ice"          # Menubar icons manager
+cask "keka"                     # File archiver
+cask "lulu"                     # Firewall for macOS
+cask "macfuse"                  # Filesystem in userspace
+cask "raycast"                  # Application launcher
+cask "rustdesk"                 # Remote desktop assistance
+cask "signal"                   # Encrypted messaging app
+cask "spotify"                  # Music streaming service
+cask "steam"                    # Gaming platform
+cask "tabby"                    # Terminal emulator
+cask "utm"                      # Virtual machine host
+cask "veracrypt"                # Disk encryption software
+casl "visual-studio-code"       # Code editor
+cask "vlc"                      # Media player
+cask "zen"                      # Firefox based browser
