@@ -32,6 +32,11 @@ cspell.json
 ehthumbs.db
 Thumbs.db
 
+# Claude files #
+################
+.claude
+CLAUDE.md
+
 # Swift packages #
 ##################
 .swiftpm
