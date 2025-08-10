@@ -61,6 +61,18 @@ function type()
 }
 
 
+# Govee led strip (TV) related functions
+private function govee_switch() {
+  curl -X PUT  https://developer-api.govee.com/v1/devices/control \
+   -H "Content-Type: application/json" \
+   -H "Govee-API-Key: $GOVEE_API_KEY" \
+   -d "{\"device\": \"$GOVEE_LED_STRIP_MAC_ADDR\", \"model\": \"H6199\", \"cmd\": {\"name\": \"turn\", \"value\": \"$1\"}}"
+}
+
+function govee_on() { govee_switch 'on' }
+function govee_off() { govee_switch 'off' }
+
+
 ### Display local and/or public ip ###
 
 function myip()
