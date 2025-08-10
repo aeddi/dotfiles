@@ -3,13 +3,7 @@
 # Prevent brew from cleaning previous version on upgrade
 export HOMEBREW_NO_INSTALL_CLEANUP=1
 
-# Set history & misc. parameters
-HISTFILE=$HOME/.zsh_history
-HISTSIZE=10000000
-SAVEHIST=10000000
-setopt   appendhistory     #Append history to the history file (no overwriting)
-setopt   sharehistory      #Share history across terminals
-setopt   incappendhistory  #Immediately append to the history file, not just when a term is killed
+# Set misc. parameters
 setopt   extendedglob
 autoload -U colors && colors
 
@@ -39,29 +33,15 @@ fi
 
 ### Zsh plugins ###
 
-ANTIGEN_DIR=$HOME/.antigen
-ANTIGEN_BIN=$ANTIGEN_DIR/antigen.zsh
-
-# If antigen is not installed, install it
-if [ ! -f $ANTIGEN_BIN ]; then
-  echo "Installing antigen!..."
-  mkdir -p $ANTIGEN_DIR
-  curl -L git.io/antigen --silent > $ANTIGEN_BIN
-fi
+ANTIGEN_BIN=$HOME/.antigen/antigen.zsh
 
 source $ANTIGEN_BIN
 
-antigen bundle zsh-users/zsh-history-substring-search
 antigen bundle zsh-users/zsh-syntax-highlighting
 antigen bundle zsh-users/zsh-autosuggestions
 antigen bundle zsh-users/zsh-completions
-antigen bundle Tarrasch/zsh-bd
 
 antigen apply
-
-# Bind UP and DOWN arrow keys to history plugin
-bindkey '^[[A' history-substring-search-up
-bindkey '^[[B' history-substring-search-down
 
 ### Includes ###
 
@@ -80,10 +60,6 @@ include $HOME/.functions
 
 unfunction include
 
-# Load atuin with ctrl-r binding
-eval "$(atuin init zsh --disable-up-arrow)"
-
-# Load starship prompt
-eval "$(starship init zsh)"
-
-source /Users/aeddi/.pymobiledevice3.zsh
+command -v atuin >/dev/null 2>&1 && eval "$(atuin init zsh --disable-up-arrow)"
+command -v mise >/dev/null 2>&1 && eval "$(mise activate zsh)"
+command -v starship >/dev/null 2>&1 && eval "$(starship init zsh)"
