@@ -1,0 +1,8 @@
+[tools]
+deno = "latest"
+go = "prefix:1.24"
+lua = "latest"
+node = "lts"
+python = "latest"
+rust = "latest"
+yarn = "latest"

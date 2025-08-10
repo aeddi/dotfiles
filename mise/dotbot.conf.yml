@@ -1,0 +1,15 @@
+---
+- clean: ['~/.config/mise']
+
+- link:
+      ~/.config/mise/config.toml:
+          create: true
+          path: mise/config.toml
+
+- shell:
+      - description: Install mise tools
+        quiet: true
+        command: |
+            if command -v asdf &> /dev/null; then \
+              mise install --cd $HOME; \
+            fi
