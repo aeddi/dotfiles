@@ -14,12 +14,12 @@
       quiet: true
       command: |
         if [ ! -f ~/.gitconfig_local ]; then \
-          echo "[user]\n	signingkey = <algo> <pubkey> <email>" >> ~/.gitconfig_local; \
+          echo "[user]\n	signingkey = <algo> <pubkey> <email>" > ~/.gitconfig_local; \
         fi
 
     - description: Create .ssh/allowed_signers if it doesn't exist
       quiet: true
       command: |
         if [ ! -f ~/.ssh/allowed_signers ]; then \
-          echo "You must add a line with:\n<email> <algo> <pubkey>" >> ~/.ssh/allowed_signers; \
+          echo "You must add a line with:\n<email> <algo> <pubkey>" > ~/.ssh/allowed_signers; \
         fi

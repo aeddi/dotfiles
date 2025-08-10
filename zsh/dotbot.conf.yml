@@ -30,5 +30,5 @@
       quiet: true
       command: |
         if [ ! -f ~/.zshrc_local ]; then \
-          touch ~/.zshrc_local; \
+          echo "export SSH_AUTH_SOCK='<ssh_agent_sock>'" > ~/.zshrc_local; \
         fi
